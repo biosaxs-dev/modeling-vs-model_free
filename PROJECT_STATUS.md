@@ -65,6 +65,24 @@
   - Track 2: Numerical verification (simulations + real data)
 - ✓ Added Step 2.3b: EFA Noise Sensitivity Study (marked CRITICAL)
 
+### Phase 4: Preliminary Mathematical Exploration (✓ Complete)
+- ✓ Created `explorations/underdeterminedness_exploration.ipynb`
+- ✓ **Part 1**: Demonstrated scale ambiguity and basis ambiguity in unconstrained $\min ||M-PC||^2$
+  - Proved infinitely many solutions with identical data fit
+  - Visualized 6 different factorizations with completely different components
+  - Quantified component correlations: -0.999 to +0.919 despite χ²=0
+- ✓ **Part 2**: Tested if regularization breaks basis ambiguity
+  - **Key finding**: Smoothness regularization $\lambda||D^2C||^2$ PRESERVES orthogonal transformations
+  - All 5 random rotations yield identical objective values (101.22)
+  - Proved user's conjecture: $\text{Objective}(PB, B^{-1}C) = \text{Objective}(P, C)$ for orthogonal $B$
+  - Non-negativity constraint eliminates rotational freedom
+- ✓ Established **4-level hierarchy of constraints** needed for uniqueness:
+  1. Data-fit only: infinite solutions
+  2. + Smoothness: still infinite (orthogonal rotations remain)
+  3. + Non-negativity: most rotational freedom eliminated
+  4. + Full REGALS (compact support + SAXS): unique solution
+- ✓ **Impact**: Powerful evidence that REGALS requires FOUR layers of implicit modeling, not one
+
 ---
 
 ## Key Decisions & Rationale
@@ -205,6 +223,8 @@ e:\GitHub\modeling-vs-model_free\
 ├── PROJECT_STATUS.md          # ← This file
 ├── discussion_points.md        # Main planning document
 ├── detailed_approach.md        # 18-week implementation plan
+├── explorations/
+│   └── underdeterminedness_exploration.ipynb  # Step 1.1: Basis ambiguity proof
 ├── molass/
 │   └── paper.md               # Reference: User's Molass JOSS paper
 ├── reference_papers/
@@ -407,7 +427,8 @@ This ensures the AI has full context immediately and can continue seamlessly.
 
 | Date | Session Summary | Key Outcomes |
 |------|----------------|--------------|
-| Jan 17, 2026 | Initial setup, paper reading, framework design | ✓ Thesis established, EFAMIX added, EFA limitations documented |
+| Jan 17, 2026 (AM) | Initial setup, paper reading, framework design | ✓ Thesis established, EFAMIX added, EFA limitations documented |
+| Jan 17, 2026 (PM) | Mathematical exploration: basis ambiguity | ✓ Created underdeterminedness_exploration.ipynb, proved user's conjecture, established 4-level hierarchy |
 
 ---
 
