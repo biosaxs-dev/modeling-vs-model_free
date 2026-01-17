@@ -206,6 +206,12 @@ minimize: χ² + λ_C ||D²C||² + λ_P ||D²P||²
    - Reveals how much improvement comes from regularization (Stage 2)
    - Creates spectrum: Explicit (Molass) → Pure EFA (EFAMIX) → EFA+Regularization (REGALS)
 
+6. **Regularization alone is insufficient for uniqueness** (from today's exploration):
+   - Smoothness penalty $\lambda||D^2C||^2$ preserves orthogonal transformations
+   - Need 4-level constraint hierarchy: data-fit → smoothness → non-negativity → full constraints
+   - Each level is an implicit modeling choice
+   - "Model-free" requires multiple layers of implicit assumptions
+
 ---
 
 ## Technical Setup
@@ -286,8 +292,22 @@ This ensures the AI has full context immediately and can continue seamlessly.
 ### Priority 1: Mathematical Derivation (Track 1) - FOR MOLASS vs REGALS
 **Goal**: Derive the implicit functional form from smoothness regularization (core of comparison)
 
+**Status**: Step 1.1 ✓ Complete (underdeterminedness proven, 4-level hierarchy established)
+
 **Tasks**:
-- [ ] Formalize what $\lambda ||D^2 C||^2$ minimization produces (Gaussian? Polynomial?)
+- [x] **Step 1.1**: Prove underdeterminedness of $\min ||M-PC||^2$ and test if regularization breaks ambiguity
+  - ✓ Demonstrated scale and basis ambiguity (infinitely many solutions)
+  - ✓ Proved smoothness regularization preserves orthogonal transformations
+  - ✓ Established 4-level hierarchy (data-fit → smoothness → non-negativity → full REGALS)
+- [ ] **Step 1.2**: Bayesian interpretation of regularization
+  - What prior distribution corresponds to $\lambda||D^2C||^2$?
+  - Gaussian process? Integrated Wiener process?
+- [ ] **Step 1.3**: Characterize implicit functional form
+  - Variational calculus: minimize $||D^2C||^2$ → cubic splines?
+  - Frequency domain: high-frequency suppression → Gaussian?
+  - Kernel methods: reproducing kernel Hilbert space
+- [ ] **Step 1.4**: Connection to explicit models
+  - When does REGALS ≈ Gaussian mixture?
 - [ ] Combine with EFA's concentration window constraint
 - [ ] Show conditions where REGALS ≈ Gaussian mixture model
 - [ ] Identify when explicit models (EGH/SDM/EDM) diverge from implicit
@@ -420,6 +440,41 @@ This ensures the AI has full context immediately and can continue seamlessly.
 - Contact Nozomi Ando (REGALS author) for insights?
 - Griffin Chure (hplc-py author) for comparison perspective?
 - Chromatography modeling community for validation?
+
+---
+
+---
+
+## Today's Accomplishments (January 17, 2026)
+
+### Morning Session
+- Established paper thesis and comparison framework
+- Read and analyzed 6 reference papers
+- Documented EFA limitations from inventors' own papers
+- Created comprehensive planning documents
+
+### Afternoon Session
+- **Created `explorations/underdeterminedness_exploration.ipynb`**
+  - 27 cells, fully executed and validated
+  - Part 1: Proved infinitely many solutions to unconstrained problem
+  - Part 2: Tested and confirmed user's conjecture about regularization
+- **Key Mathematical Results**:
+  - Scale ambiguity: $(\alpha P, C/\alpha)$ fits identically
+  - Basis ambiguity: $(PR, R^{-1}C)$ fits identically for any invertible $R$
+  - **Critical finding**: Smoothness regularization $\lambda||D^2C||^2$ is invariant under orthogonal transformations
+  - All 5 random rotations yielded objective = 101.22 (identical to 14 decimal places)
+- **Established 4-Level Hierarchy**:
+  1. Data-fit only → infinite solutions
+  2. + Smoothness → still infinite (orthogonal rotations preserved)
+  3. + Non-negativity → most rotational freedom eliminated  
+  4. + Full REGALS → unique solution
+- **Impact**: Powerful evidence that REGALS requires FOUR layers of implicit modeling, not one
+- Organized project with `explorations/` folder and comprehensive README
+
+### What's Ready for Next Session
+- ✓ Foundation established: "model-free" is mathematically impossible
+- ✓ Quantitative proof: regularization alone insufficient
+- ✓ Next step clear: Characterize what implicit functional form smoothness assumes (Step 1.2-1.4)
 
 ---
 
