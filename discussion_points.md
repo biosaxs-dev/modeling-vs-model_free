@@ -25,6 +25,8 @@ All solve: M = P·C (decompose overlapping signals into components)
 
 **Key distinction**: EFAMIX uses only Stage 1 (EFA), while REGALS adds Stage 2 (regularization)
 
+**Note on CHROMIXS** (Panjkovich & Svergun 2018): Part of ATSAS suite (includes EFAMIX). Automates SEC-SAXS processing for **"well resolved fractions (i.e. baseline separated sample elution peaks)"** but for overlapping peaks, "may help in diagnosing and preparing the data for further processing by other programs" like REGALS, BioXTAS RAW, or UltraScan-SOMO. **This admission is significant**: even "automatic" tools acknowledge they need help with overlapping peaks—precisely where EFA claims advantage.
+
 ---
 
 ## Key Arguments
@@ -102,7 +104,13 @@ If true, this means:
 
 ## Comparison of Constraints
 
-| Aspect | Molass (Explicit) | EFAMIX (EFA Only) | REGALS (EFA + Regularization) |
+### Main Comparison: Molass vs REGALS
+
+**Focus**: Both methods tackle overlapping peaks (the hard problem). Direct contrast between explicit parametric modeling vs implicit regularization.
+
+**Supplementary**: EFAMIX (pure EFA) and CHROMIXS (automated pipeline) provide supporting evidence for limitations of "automatic" approaches.
+
+| Aspect | Molass (Explicit) | EFAMIX (EFA Only) [*Supplement*] | REGALS (EFA + Regularization) |
 |--------|------------------|-------------------|-------------------------------|
 | **Peak shape** | Parametric (EGH/SDM/EDM) | SVD rotation only | Smoothness regularization → Gaussian-like |
 | **Elution order** | Not constrained | EFA enforces first-in-first-out | EFA enforces first-in-first-out |
@@ -112,10 +120,11 @@ If true, this means:
 | **Interpretability** | Direct parameter meaning | Indirect (must interpret profiles) | Indirect (must interpret profiles) |
 | **Component detection** | Manual specification (transparent) | "Automatic" via EFA (manual tuning) | "Automatic" via EFA (manual tuning) |
 | **Reproducibility** | Same input → same output | Depends on user threshold choices | Depends on thresholds + λ choices |
-| **Noise sensitivity** | Moderate (fitting algorithm) | High (SVD rank estimation) | High (SVD) + moderate (regularization) |
+| **Noise sensitivity** | Moderate (fitting algorithm) | **High**: 2-comp needs SNR≥10²; 3-comp needs ≥10³; 4-comp needs ≥10⁴ (Konarev 2021) | High (SVD) + moderate (regularization) |
 | **Rank estimation** | Manual (user specifies N) | Automatic but unreliable (rank inflation from nonlinearities) | Automatic but unreliable (same as EFAMIX) |
 | **Quantification** | Requires calibration standards | Relative shapes only - needs external calibration | Relative shapes only - needs external calibration |
-| **Tailing tolerance** | Good (parametric forms handle skew) | Poor (breaks FIFO assumption) | Poor (EFA stage affected) |
+| **Tailing tolerance** | Good (parametric forms handle skew) | **Poor**: Fails at τ>2 (Konarev 2021) | Poor (EFA stage affected) |
+| **Peak overlap tolerance** | Flexible | **Limited**: Must be ≥2× width, ratio ≤1:10 (Konarev 2021) | Stage 1 limited, Stage 2 improves |
 | **Baseline requirements** | Moderate (fitted as parameter) | Strict (sloping baseline → false factors) | Strict (inherited from EFA) |
 | **Regularization** | None | None | Smoothness, compact support, non-negativity |
 
@@ -154,7 +163,7 @@ If true, this means:
 
 **Theoretical claim**: Automatic component detection via SVD rank estimation
 
-**Practical reality** (based on experience with noisy data):
+**Practical reality** (based on experience + EFAMIX paper quantifications):
 - **Noise blurs rank estimation**: With even small noise, all singular values are non-zero
 - **No clear cutoff**: Where is the boundary between "significant" and "noise"?
 - **Manual tuning required**:
@@ -163,7 +172,15 @@ If true, this means:
   - Fine-tuning of concentration windows (as RAW tutorial explicitly shows)
 - **Subjective decisions**: User judgment replaces algorithmic objectivity
 
-**Key insight**: EFA is not "automatic" - it requires human intervention, which means **implicit modeling decisions**
+**Quantified from Konarev 2021 (EFAMIX simulations)**:
+- **Two components**: Require SNR ≥ 10² photons (high noise threshold)
+- **Three components**: Require SNR ≥ 10³ photons (moderate noise only)
+- **Four components**: Only work at SNR ≥ 10⁴ photons (exceptional data quality)
+- **Peak asymmetry**: EFA assumes symmetric (Gaussian) profiles; fails when τ > 2 (EGH parameter)
+- **Overlap distance**: Must be ≥ 2× individual peak width
+- **Concentration ratio**: Cannot detect minor component if > 1:10 ratio
+
+**Key insight**: EFA is not "automatic" - it requires human intervention, which means **implicit modeling decisions**. EFAMIX developers quantify exact thresholds where the method breaks.
 
 **Comparison to Molass**:
 - Molass: User explicitly specifies number of components upfront (transparent)
@@ -171,9 +188,31 @@ If true, this means:
 - **Both require human judgment, but Molass is honest about it**
 
 **Questions to investigate**:
-- How sensitive is EFA to noise level?
+- How sensitive is EFA to noise level? (Now quantified: see above)
 - How much do results vary with different threshold choices?
 - Can we quantify the "subjectivity" in EFA component detection?
+- How much do results vary with different threshold choices?
+- Can we quantify the "subjectivity" in EFA component detection?
+
+**CHROMIXS Evidence** (Panjkovich & Svergun 2018):
+- Automated SEC-SAXS tool (part of ATSAS suite with EFAMIX)
+- **Explicitly limited to baseline-separated peaks**: "well resolved fractions (i.e. baseline separated sample elution peaks)"
+- **For overlapping peaks**: Defers to REGALS, BioXTAS RAW, or UltraScan-SOMO
+- Uses "quality measure" scoring: accounts for negative intensities, Guinier fit residuals
+  - **This is subjective**: What threshold defines "best quality"?
+- **Key admission**: Even developers of "automatic" tools recognize limitations for overlapping cases
+
+**EFAMIX Evidence** (Konarev et al. 2021):
+- Pure EFA implementation (Stage 1 of REGALS: forward/backward SVD + rotation matrix)
+- Part of ATSAS 3.1+, "requires minimal user intervention"
+- **Quantified limitations** from simulations:
+  - **Noise sensitivity**: Two components require SNR ≥ 10² photons; three components need ≥ 10³; four components only work at ≥ 10⁴
+  - **Peak asymmetry**: Works for symmetric (Gaussian) peaks; fails when τ > 2 (EGH asymmetry parameter)
+  - **Overlap distance**: Peak separation must be ≥ 2× individual peak width
+  - **Concentration ratio**: Cannot detect minor component if ratio > 1:10
+- **Quote**: "EFA does show limitations when applied to systems with significantly asymmetric concentration profiles"
+- **Quote**: "potentially ambiguous" for overlapping peaks
+- **Key insight**: EFAMIX developers provide exact quantitative thresholds where EFA breaks down
 
 ### 3c. EFA Limitations Acknowledged by Inventors (Maeder 1988, Keller 1991)
 
@@ -220,6 +259,8 @@ If true, this means:
 **Citation**:
 - Maeder, M. and Zilian, A. (1988). "Evolving factor analysis, a new multivariate technique in chromatography." *Chemometrics and Intelligent Laboratory Systems*, 3, 205-213.
 - Keller, H.R. and Massart, D.L. (1991). "Evolving factor analysis." *Chemometrics and Intelligent Laboratory Systems*, 12, 209-224.
+- Panjkovich, A. and Svergun, D.I. (2018). "CHROMIXS: automatic and interactive analysis of chromatography-coupled small-angle X-ray scattering data." *Bioinformatics*, 34(11), 1944-1946.
+- Konarev, P.V., Graewert, M.A., Jeffries, C.M., et al. (2021). "EFAMIX, a tool to decompose inline chromatography SAXS data from partially overlapping components." *Protein Science*, 31, 269-282.
 
 ### 4. Empirical Validation
 
@@ -270,7 +311,7 @@ Both are **modeling approaches**, differing in **how constraints are specified**
 "Implicit vs Explicit Modeling in SEC-SAXS Deconvolution: Unveiling the Hidden Assumptions in 'Model-Free' Regularization"
 
 ### Abstract
-Show that REGALS's "model-free" approach actually involves two layers of implicit modeling: (1) EFA's sequential elution assumption and (2) regularization's implicit Gaussian-like peak shapes. Clarify relationship to explicit parametric methods like Molass, and provide guidance on method selection.
+Show that REGALS's "model-free" approach actually involves two layers of implicit modeling: (1) EFA's sequential elution assumption and (2) regularization's implicit Gaussian-like peak shapes. Direct comparison with Molass (explicit parametric) reveals both methods require modeling assumptions - the key difference is transparency. EFAMIX and CHROMIXS provide supplementary evidence that "automatic" approaches have quantified limitations.
 
 ### Sections
 
@@ -332,6 +373,7 @@ Show that REGALS's "model-free" approach actually involves two layers of implici
 ### Immediate
 1. [x] **Literature review**: 
    - **✓ EFA original papers** (Maeder 1988, Keller 1991) - read and documented
+   - **✓ CHROMIXS** (Panjkovich 2018) - automated tool limitations for overlapping peaks
    - Bayesian interpretation of regularization
    - Equivalence between regularization and parametric priors
    - Sequential elution in chromatography

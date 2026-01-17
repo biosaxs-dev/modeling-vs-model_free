@@ -26,6 +26,8 @@
 | **tools/README.md** | Python environment policy & Windows quirks | ✓ Documents global Python usage |
 | **tools/extracted_papers.txt** | Full text of Meisburger 2021 + Chure 2024 | ✓ Extracted |
 | **tools/efa_papers.txt** | Full text of Maeder 1988 + Keller 1991 | ✓ Extracted |
+| **tools/chromixs_paper.txt** | Full text of Panjkovich 2018 (CHROMIXS) | ✓ Extracted |
+| **tools/efamix_paper.txt** | Full text of Konarev 2021 (EFAMIX - pure EFA) | ✓ Extracted |
 | **molass/paper.md** | User's JOSS paper on Molass Library | Read-only reference |
 | **reference_papers/** | Four PDFs (REGALS, hplc-py, EFA x2) | ✓ All read |
 
@@ -38,6 +40,8 @@
 - ✓ Extracted and analyzed Meisburger 2021 (REGALS method paper)
 - ✓ Extracted and analyzed Chure 2024 (hplc-py tool paper)
 - ✓ Extracted and analyzed Maeder 1988 + Keller 1991 (EFA original papers)
+- ✓ Extracted and analyzed Panjkovich 2018 (CHROMIXS - automated SEC-SAXS tool)
+- ✓ Extracted and analyzed Konarev 2021 (EFAMIX - pure EFA implementation)
 
 ### Phase 2: Thesis Development (✓ Complete)
 - ✓ Identified two-stage nature of REGALS (EFA + regularization)
@@ -74,14 +78,18 @@
 
 ### Comparison Tools
 - **Original plan**: Two-way comparison (Molass vs REGALS)
-- **Updated plan**: Four-way comparison
+- **Current focus** (January 17, 2026): 
+  - **Main**: Molass vs REGALS (both tackle overlapping peaks)
+  - **Supplementary**: EFAMIX + CHROMIXS (supporting evidence in SI)
 - **Why EFAMIX added**: Isolates pure EFA effect (Stage 1) from regularization (Stage 2)
-- **Why hplc-py**: Another explicit modeling baseline with simpler functional form (skew-normal)
+- **Why CHROMIXS important**: Shows automation tools defer to REGALS for hard cases
+- **Why hplc-py**: Another explicit modeling baseline (not main focus)
 
 ### Research Focus
-- **Primary question**: What implicit model does REGALS embed?
+- **Primary question**: What implicit model does REGALS embed? (Core of Molass vs REGALS comparison)
 - **Critical addition**: EFA noise sensitivity study (user's practical concern validated by inventors' own papers)
 - **Approach**: Both mathematical derivation AND empirical testing
+- **Paper strategy**: Keep Molass↔REGALS in main text; EFAMIX/CHROMIXS limitations in SI
 
 ---
 
@@ -132,6 +140,26 @@ minimize: χ² + λ_C ||D²C||² + λ_P ||D²P||²
    - Chemometrics and Intelligent Laboratory Systems, 12, 209-224
    - **Quote**: "rank of data matrix will be higher than number of underlying chemical species"
    - Documented rank inflation from instrumental nonlinearities
+
+5. **Panjkovich & Svergun (2018)** - CHROMIXS tool
+   - Bioinformatics, 34(11), 1944-1946
+   - Automated SEC-SAXS processing (part of ATSAS suite with EFAMIX)
+   - **Quote**: Works for "well resolved fractions (i.e. baseline separated sample elution peaks)"
+   - For overlapping peaks: defers to REGALS, BioXTAS RAW, or UltraScan-SOMO
+   - **Key insight**: Even "automatic" tools admit limitations for overlapping cases
+
+6. **Konarev et al. (2021)** - EFAMIX tool (pure EFA)
+   - Protein Science, 31, 269-282
+   - Pure EFA implementation: forward/backward SVD + rotation matrix method
+   - Part of ATSAS 3.1+ package
+   - **Quote**: "EFA does show limitations when applied to systems with significantly asymmetric concentration profiles"
+   - **Quote**: "potentially ambiguous" for overlapping peaks
+   - **Quantified limitations**: 
+     - Two components: SNR ≥ 10² photons, symmetric peaks (τ ≤ 2), concentration ratio ≤ 1:10
+     - Three components: SNR ≥ 10³ photons required
+     - Four components: SNR ≥ 10⁴ photons (very high quality only)
+     - Peak separation ≥ 2× width, fails for asymmetric peaks (τ > 2)
+   - **Key insight**: EFAMIX developers quantify exact conditions where EFA breaks down
 
 ### Key Insights
 
@@ -230,8 +258,13 @@ This ensures the AI has full context immediately and can continue seamlessly.
 
 ## Immediate Priorities (Next Work Session)
 
-### Priority 1: Mathematical Derivation (Track 1)
-**Goal**: Derive the implicit functional form from smoothness regularization
+**Paper Focus Strategy** (Updated January 17, 2026):
+- **Main**: Molass vs REGALS (explicit vs implicit modeling of overlapping peaks)
+- **Supplementary**: EFAMIX (Stage 1 limitations) + CHROMIXS (automation limitations)
+- **Rationale**: Clean narrative focused on intellectual core; supporting evidence in SI
+
+### Priority 1: Mathematical Derivation (Track 1) - FOR MOLASS vs REGALS
+**Goal**: Derive the implicit functional form from smoothness regularization (core of comparison)
 
 **Tasks**:
 - [ ] Formalize what $\lambda ||D^2 C||^2$ minimization produces (Gaussian? Polynomial?)
@@ -339,6 +372,8 @@ This ensures the AI has full context immediately and can continue seamlessly.
 - Chure, G. and Cremer, J. (2024). JOSS, 9(94), 6270  
 - Maeder, M. and Zilian, A. (1988). Chemom. Intell. Lab. Syst., 3, 205-213
 - Keller, H.R. and Massart, D.L. (1991). Chemom. Intell. Lab. Syst., 12, 209-224
+- Panjkovich, A. and Svergun, D.I. (2018). Bioinformatics, 34(11), 1944-1946
+- Konarev, P.V., Graewert, M.A., Jeffries, C.M., et al. (2021). Protein Sci., 31, 269-282
 
 ### Software Resources
 - **REGALS**: https://github.com/ando-lab/regals (Python & MATLAB)
