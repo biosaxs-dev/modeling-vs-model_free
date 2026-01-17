@@ -1,0 +1,404 @@
+# Project Status & Resumption Guide
+**Last Updated**: January 17, 2026
+
+---
+
+## Quick Overview
+
+**Project Goal**: Write a paper clarifying the relationship between "modeling" (Molass) and "model-free" (REGALS) approaches in SEC-SAXS analysis.
+
+**Core Thesis**: "Model-free" is a misnomer - REGALS involves implicit modeling at THREE levels:
+1. **EFA Stage 1**: Sequential "first-in-first-out" elution assumption (physical model)
+2. **EFA Stage 2**: Manual threshold tuning for component detection (subjective modeling decisions)  
+3. **Regularization**: Smoothness constraints → implicit Gaussian-like functional forms
+
+**User's Key Insight** (from practical experience): EFA's "automatic" component detection is actually very sensitive to noise and requires extensive manual tuning - skeptical about real-world reliability.
+
+---
+
+## Document Map
+
+| File | Purpose | Status |
+|------|---------|--------|
+| **discussion_points.md** | Main paper planning - thesis, arguments, outline | ✓ Up-to-date with EFA critique |
+| **detailed_approach.md** | 18-week implementation plan (Track 1: Math, Track 2: Numerical) | ✓ Includes EFAMIX, EFA noise study |
+| **tools/read_pdfs.py** | Python script to extract text from reference PDFs | ✓ Working |
+| **tools/README.md** | Python environment policy & Windows quirks | ✓ Documents global Python usage |
+| **tools/extracted_papers.txt** | Full text of Meisburger 2021 + Chure 2024 | ✓ Extracted |
+| **tools/efa_papers.txt** | Full text of Maeder 1988 + Keller 1991 | ✓ Extracted |
+| **molass/paper.md** | User's JOSS paper on Molass Library | Read-only reference |
+| **reference_papers/** | Four PDFs (REGALS, hplc-py, EFA x2) | ✓ All read |
+
+---
+
+## Completed Work
+
+### Phase 1: Foundation (✓ Complete)
+- ✓ Read Molass JOSS paper (user's own work)
+- ✓ Extracted and analyzed Meisburger 2021 (REGALS method paper)
+- ✓ Extracted and analyzed Chure 2024 (hplc-py tool paper)
+- ✓ Extracted and analyzed Maeder 1988 + Keller 1991 (EFA original papers)
+
+### Phase 2: Thesis Development (✓ Complete)
+- ✓ Identified two-stage nature of REGALS (EFA + regularization)
+- ✓ Recognized EFA's sequential elution assumption as implicit modeling
+- ✓ Integrated user's practical skepticism about EFA noise sensitivity
+- ✓ **Critical addition**: Found that EFA inventors (Maeder, Keller) themselves documented fundamental limitations:
+  - Rank inflation from instrumental nonlinearities
+  - Tailing as "the most serious difficulty"
+  - Baseline sensitivity causing false factors
+  - Quantification impossibility without external calibration
+  - FIFO assumption fragility
+
+### Phase 3: Framework Design (✓ Complete)
+- ✓ Created comparison framework with four tools:
+  - **Molass** (explicit parametric: EGH/SDM/EDM)
+  - **EFAMIX** (pure EFA, no regularization)
+  - **REGALS** (EFA + regularization)
+  - **hplc-py** (explicit: skew-normal)
+- ✓ Developed two-track approach:
+  - Track 1: Mathematical proof (implicit functional forms)
+  - Track 2: Numerical verification (simulations + real data)
+- ✓ Added Step 2.3b: EFA Noise Sensitivity Study (marked CRITICAL)
+
+---
+
+## Key Decisions & Rationale
+
+### Python Environment
+- **Decision**: Use Python 3.13.11 global environment (NOT virtualenv)
+- **Location**: `C:\Program Files\Python313\python.exe`
+- **Reason**: User preference for simplicity
+- **Documented in**: `tools/README.md`
+- **Windows quirk**: Use `& "C:\Program Files\Python313\python.exe"` in PowerShell
+
+### Comparison Tools
+- **Original plan**: Two-way comparison (Molass vs REGALS)
+- **Updated plan**: Four-way comparison
+- **Why EFAMIX added**: Isolates pure EFA effect (Stage 1) from regularization (Stage 2)
+- **Why hplc-py**: Another explicit modeling baseline with simpler functional form (skew-normal)
+
+### Research Focus
+- **Primary question**: What implicit model does REGALS embed?
+- **Critical addition**: EFA noise sensitivity study (user's practical concern validated by inventors' own papers)
+- **Approach**: Both mathematical derivation AND empirical testing
+
+---
+
+## Important Context
+
+### Key Equations
+
+**Matrix Decomposition**:
+```
+M = P·C
+```
+- M: Measured data matrix (SAXS intensities over time)
+- P: SAXS profiles matrix (scattering patterns)
+- C: Concentration/elution curves matrix
+
+**REGALS Optimization**:
+```
+minimize: χ² + λ_C ||D²C||² + λ_P ||D²P||²
+```
+- χ²: Data fit error
+- λ_C ||D²C||²: Smoothness penalty on concentrations
+- λ_P ||D²P||²: Smoothness penalty on profiles
+- Plus: compact support, non-negativity, real-space constraints
+
+**EFA Sequential Assumption**:
+- Forward SVD: Detect component appearances (first-in)
+- Backward SVD: Detect component disappearances (first-out)
+- **Assumption**: First component to appear is first to disappear
+
+### Critical Citations
+
+1. **Meisburger et al. (2021)** - REGALS method
+   - IUCrJ, 8, 225-237
+   - Two-stage process: EFA → regularized deconvolution
+   - Applications: AEX-SAXS, titrations, time-resolved
+
+2. **Chure & Cremer (2024)** - hplc-py tool  
+   - JOSS, 9(94), 6270
+   - Skew-normal distributions for peak fitting
+   - Can deconvolve completely overlapping signals
+
+3. **Maeder & Zilian (1988)** - EFA invention
+   - Chemometrics and Intelligent Laboratory Systems, 3, 205-213
+   - **Quote**: "tailing seems to be the most serious difficulty"
+   - Identified baseline and noise sensitivity issues
+
+4. **Keller & Massart (1991)** - EFA tutorial
+   - Chemometrics and Intelligent Laboratory Systems, 12, 209-224
+   - **Quote**: "rank of data matrix will be higher than number of underlying chemical species"
+   - Documented rank inflation from instrumental nonlinearities
+
+### Key Insights
+
+1. **REGALS is not one method but TWO sequential stages**:
+   - Stage 1: EFA (component detection, window determination)
+   - Stage 2: Regularized deconvolution (within windows)
+
+2. **EFA makes a strong physical assumption**: Sequential elution (FIFO)
+   - This is a chromatographic model, not data-driven mathematics
+   - Breaks down with tailing, column overload, non-equilibrium
+
+3. **EFA "automatic detection" requires manual tuning** (from user experience):
+   - Singular value significance threshold
+   - Concentration window boundaries
+   - Autocorrelation cutoffs
+   - **This is subjective modeling** - not algorithmic objectivity
+
+4. **EFA limitations documented by inventors**:
+   - Rank inflation (false positives from noise/artifacts)
+   - Tailing intolerance (breaks FIFO assumption)
+   - Baseline sensitivity (drift → spurious factors)
+   - No quantification without external calibration
+
+5. **EFAMIX as the missing link**:
+   - Tests pure EFA (Stage 1 only)
+   - Reveals how much improvement comes from regularization (Stage 2)
+   - Creates spectrum: Explicit (Molass) → Pure EFA (EFAMIX) → EFA+Regularization (REGALS)
+
+---
+
+## Technical Setup
+
+### Reading PDFs
+```powershell
+& "C:\Program Files\Python313\python.exe" tools/read_pdfs.py "path/to/paper.pdf"
+```
+Output saved to `tools/extracted_papers.txt` or `tools/efa_papers.txt`
+
+### Current Workspace Structure
+```
+e:\GitHub\modeling-vs-model_free\
+├── README.md
+├── PROJECT_STATUS.md          # ← This file
+├── discussion_points.md        # Main planning document
+├── detailed_approach.md        # 18-week implementation plan
+├── molass/
+│   └── paper.md               # Reference: User's Molass JOSS paper
+├── reference_papers/
+│   ├── 2021, Steve P. Meisburger.pdf    # REGALS
+│   ├── 2024, Griffin Chure.pdf          # hplc-py
+│   ├── 1988, Marcel Maeder.pdf          # EFA original
+│   └── 1991, H.R. Keller.pdf            # EFA tutorial
+└── tools/
+    ├── README.md              # Python environment policy
+    ├── read_pdfs.py           # PDF extraction script
+    ├── extracted_papers.txt   # REGALS + hplc-py full text
+    └── efa_papers.txt         # EFA papers full text
+```
+
+---
+
+## Next Session: How to Resume
+
+### 💡 **BEST PRACTICE: Start Every New Copilot Session With**
+```
+"I'm working on modeling vs model-free SEC-SAXS paper. 
+Read PROJECT_STATUS.md for context. 
+Then let's work on Priority 1: Mathematical Derivation."
+```
+(Replace "Priority 1" with Priority 2 or 3 depending on what you want to work on)
+
+This ensures the AI has full context immediately and can continue seamlessly.
+
+---
+
+### Option A: Quick Review (10 minutes)
+1. Open `discussion_points.md` - read **Section 3c** (EFA limitations from inventors)
+2. Review the **comparison table** - now includes rank estimation, quantification, tailing
+3. Check **Section 3b** - your practical EFA skepticism + proposed noise sensitivity study
+4. Jump to **"Next Steps → Immediate"** section
+
+### Option B: Deep Dive (30 minutes)  
+1. Read this entire `PROJECT_STATUS.md` file
+2. Skim `detailed_approach.md` - focus on:
+   - **Step 2.3b** (EFA Noise Sensitivity Study - lines ~150-185)
+   - **Key Milestones** (bottom of file)
+3. Review `discussion_points.md`:
+   - Central Thesis
+   - Section 3 (REGALS: Two Layers of Implicit Modeling)
+   - Section 3b + 3c (EFA practical/theoretical limitations)
+4. Check `tools/efa_papers.txt` - search for key quotes:
+   - "tailing seems to be the most serious difficulty"
+   - "rank of data matrix will be higher"
+
+---
+
+## Immediate Priorities (Next Work Session)
+
+### Priority 1: Mathematical Derivation (Track 1)
+**Goal**: Derive the implicit functional form from smoothness regularization
+
+**Tasks**:
+- [ ] Formalize what $\lambda ||D^2 C||^2$ minimization produces (Gaussian? Polynomial?)
+- [ ] Combine with EFA's concentration window constraint
+- [ ] Show conditions where REGALS ≈ Gaussian mixture model
+- [ ] Identify when explicit models (EGH/SDM/EDM) diverge from implicit
+
+**Starting point**: 
+- Consult literature on Tikhonov regularization and implicit priors
+- Look at Bayesian interpretation of regularization (MacKay 1992?)
+- Search for "smoothness penalty implicit model" in chemometrics
+
+### Priority 2: Simulation Framework Setup (Track 2)
+**Goal**: Set up code to test REGALS vs Molass empirically
+
+**Tasks**:
+- [ ] Generate synthetic SEC-SAXS data with known ground truth
+  - Gaussian peaks (test case 1)
+  - EGH peaks (test case 2)  
+  - Overlapping, non-sequential (test EFA failure)
+- [ ] Obtain/implement REGALS code (with full EFA stage)
+- [ ] Run Molass on same data
+- [ ] Compare reconstructions quantitatively
+
+**Starting point**:
+- Check if REGALS code is available (GitHub: ando-lab/regals)
+- Set up Molass if not already installed
+- Design data generation function: `generate_sec_saxs(peak_type, noise_level, overlap, ...)`
+
+### Priority 3: EFA Noise Sensitivity Study (CRITICAL)
+**Goal**: Empirically validate user's skepticism about EFA reliability
+
+**Tasks**:
+- [ ] Step 2.3b.1: Noise impact on rank estimation
+  - Generate identical data at SNR = 100, 50, 20, 10, 5
+  - Plot singular value spectra
+  - Measure where signal/noise boundary becomes ambiguous
+- [ ] Step 2.3b.2: Threshold sensitivity
+  - Same data, vary EFA threshold parameters
+  - Quantify result variability
+- [ ] Step 2.3b.3: Inter-user variability
+  - If possible, have multiple people manually tune EFA
+  - Measure disagreement in component count, window boundaries
+- [ ] Step 2.3b.4: Compare to explicit detection
+  - Run Molass peak detection on same noisy data
+  - Which is more robust?
+
+**Starting point**:
+- This is new - no prior code
+- Focus on Step 2.3b.1 first (most fundamental)
+- Can simulate quickly, don't need real data
+
+---
+
+## Long-Term Roadmap
+
+### Phase 4: Simulation Studies (Weeks 6-12)
+- Generate synthetic data with known ground truth
+- Apply all four methods: Molass, EFAMIX, REGALS, hplc-py
+- Quantify agreement/disagreement
+- **Critical**: EFA noise sensitivity experiments (Step 2.3b)
+
+### Phase 5: Real Data Analysis (Weeks 13-15)
+- Select benchmark SEC-SAXS datasets
+- Apply all methods systematically
+- Interpret differences physically
+- Validate simulation predictions
+
+### Phase 6: Writing (Weeks 16-18)
+- Draft paper following outline in `discussion_points.md`
+- Emphasize three-level "model-free" misnomer:
+  1. EFA sequential assumption (physical model)
+  2. Manual tuning (subjective modeling)
+  3. Regularization (implicit functional form)
+- Cite Maeder & Keller's own documentation of EFA limitations
+- Provide guidance for method selection
+
+---
+
+## Questions to Carry Forward
+
+### High Priority
+1. **Does REGALS ≈ Gaussian mixture when data is Gaussian?** (Core hypothesis)
+2. **At what noise level does EFA fail to detect components reliably?** (User's concern)
+3. **How much do EFA results vary with threshold choices?** (Reproducibility)
+4. **When does tailing break EFA windows?** (Maeder's identified problem)
+
+### Medium Priority
+5. Can we show rank inflation empirically? (Keller's warning)
+6. Is EFA+regularization better than pure EFA (EFAMIX)?
+7. When does REGALS outperform Molass, and vice versa?
+8. Can we use EFA for detection but explicit models for fitting? (Hybrid approach)
+
+### Lower Priority
+9. How general is the implicit model derivation?
+10. Can EFA be reformulated as an explicit parametric model?
+11. What about non-SEC applications where FIFO assumption is invalid?
+
+---
+
+## Key Contacts & Resources
+
+### Papers to Cite (Full References)
+- Meisburger, S.P., Xu, D., and Ando, N. (2021). IUCrJ, 8, 225-237
+- Chure, G. and Cremer, J. (2024). JOSS, 9(94), 6270  
+- Maeder, M. and Zilian, A. (1988). Chemom. Intell. Lab. Syst., 3, 205-213
+- Keller, H.R. and Massart, D.L. (1991). Chemom. Intell. Lab. Syst., 12, 209-224
+
+### Software Resources
+- **REGALS**: https://github.com/ando-lab/regals (Python & MATLAB)
+- **Molass**: [User's own library - ask for details]
+- **hplc-py**: https://github.com/cremerlab/hplc-py (Python)
+- **EFAMIX**: Part of ATSAS suite (may need to check availability)
+
+### Additional Literature to Explore
+- MacKay (1992) - Bayesian interpretation of regularization
+- Tikhonov & Arsenin (1977) - Regularization theory
+- EFA applications in different domains (equilibrium studies, time-resolved, FIA)
+
+---
+
+## Notes for Future Development
+
+### Possible Extensions
+1. **Hybrid method**: EFA for detection + explicit models for fitting
+2. **Relaxed EFA**: Non-sequential variant for IEX-SAXS, titrations
+3. **Benchmarking suite**: Standard test cases for method comparison
+4. **Software tool**: Unified interface for all four methods
+
+### Potential Collaborators
+- Contact Nozomi Ando (REGALS author) for insights?
+- Griffin Chure (hplc-py author) for comparison perspective?
+- Chromatography modeling community for validation?
+
+---
+
+## Session Log
+
+| Date | Session Summary | Key Outcomes |
+|------|----------------|--------------|
+| Jan 17, 2026 | Initial setup, paper reading, framework design | ✓ Thesis established, EFAMIX added, EFA limitations documented |
+
+---
+
+**END OF STATUS DOCUMENT**
+
+---
+
+## Quick Command Reference
+
+### Start New Session
+```
+Say: "Read PROJECT_STATUS.md and let's continue from Priority [1/2/3]"
+```
+
+### Check Document Status
+```
+Read: discussion_points.md (main planning)
+Read: detailed_approach.md (implementation plan)
+```
+
+### Run PDF Extraction
+```powershell
+& "C:\Program Files\Python313\python.exe" tools/read_pdfs.py "file.pdf"
+```
+
+### Search Extracted Papers
+```powershell
+Select-String "search term" tools/efa_papers.txt
+```
