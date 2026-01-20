@@ -1,5 +1,5 @@
 # Project Status & Resumption Guide
-**Last Updated**: January 20, 2026
+**Last Updated**: January 20, 2026 (Evening)
 
 ---
 
@@ -48,17 +48,147 @@
 - ✓ Extracted and analyzed Maeder 1988 + Keller 1991 (EFA original papers)
 - ✓ Extracted and analyzed Panjkovich 2018 (CHROMIXS - automated SEC-SAXS tool)
 - ✓ Extracted and analyzed Konarev 2021 (EFAMIX - pure EFA implementation)
+- ✓ Extracted and analyzed Hopkins 2024 (BioXTAS RAW 2 - latest state of art)
 
-### Phase 2: Supporting Mathematical Analysis (✓ Complete)
+### Phase 2: EFA Limitation Verification (✓ Limitations 1-3 Complete)
+Created systematic verification notebooks in `evidence/efa_original/`:
+- ✓ `limitation_1_baseline_problems.ipynb` (10 cells, all executed)
+  - Confirmed rank inflation from constant baseline
+  - Quantified: 4th eigenvalue 0.232-0.247 appears
+  - Evidence: σ₃/σ₄ gap shrinks from 231 trillion to 8-9
+  
+- ✓ `limitation_2_noise_sensitivity.ipynb` (18 cells, all executed)
+  - Multi-sample analysis (SAMPLE1-4) from real data
+  - Confirmed: Real SNR (avg 16.3) < simulated worst-case (10)
+  - Evidence: Simulations were optimistic vs reality
+  
+- ✓ `limitation_3_tailing_effects.ipynb` (15 cells, all executed)
+  - **CRITICAL DISCOVERY**: Problem MORE SEVERE than expected
+  - FIFO assumption fails even with ideal Gaussian peaks (not just tailing!)
+  - Evidence: Component 3 window [60, 51] = **negative width (-9 frames)**
+  - Mathematical impossibility: Component disappears BEFORE it appears
+  - This is fundamental to overlapping components, not tailing-specific
+
+- ✓ `EFA_limitations_overview.md` - Navigation index for all limitation notebooks
+
+### Phase 3: Literature Analysis (✓ Complete - Jan 20, 2026)
+**Task**: Understand how modern methods (2018-2024) address EFA limitations
+
+**Papers Analyzed**:
+1. **CHROMIXS (2018, Panjkovich & Svergun)** - 3 pages
+2. **EFAMIX (2021, Konarev et al.)** - 14 pages  
+3. **REGALS (2021, Meisburger et al.)** - 13 pages
+4. **BioXTAS RAW 2 (2024, Hopkins et al.)** - 15 pages
+
+**Method**: 
+- Updated `tools/read_pdfs.py` to extract all 4 papers
+- Ran extraction with global Python 3.13
+- Agent analyzed 215,947 characters of extracted text
+- Created comprehensive comparison document
+
+**Output**: `evidence/SAXS_methods_analysis.md`
+
+**CRITICAL FINDING**: 
+None of the 4 modern papers (2018-2024) explicitly acknowledge the fundamental FIFO mathematical impossibility discovered in our Limitation 3 verification:
+- **CHROMIXS**: "Can't handle overlapping peaks" (defers to other tools, no explanation WHY)
+- **EFAMIX**: Uses EFA but enforces strict FIFO; Figure 3 shows failures at τ > 2 (likely OUR phenomenon) but blames "high asymmetry" rather than mathematical root cause
+- **REGALS**: Built to AVOID FIFO assumption via smoothness constraints; implicitly acknowledges problem but never states the mathematical impossibility
+- **BioXTAS RAW 2**: Automated range-finding explicitly AVOIDS overlapping regions; detects FIFO violation condition without naming it
+
+**Key Insight for Paper**: 
+All modern methods work around this limitation without documenting the underlying mathematical failure mode. Our work **makes explicit what has been implicit in tool development** - the mathematical impossibility (negative window widths) that forces all post-EFA methods to abandon FIFO assumptions.
+
+### Phase 4: Supporting Mathematical Analysis (✓ Complete)
 Created detailed mathematical analysis in `explorations/` demonstrating the multi-layered constraint requirements for REGALS uniqueness. While this exceeds the validation needs, it provides rigorous supporting evidence.
 
-### Phase 3: Repository Restructuring (✓ Complete - Jan 20, 2026)
+### Phase 5: Repository Restructuring (✓ Complete - Jan 20, 2026)
 - ✓ Created `evidence/` directory structure for systematic claim validation
+- ✓ Created `evidence/efa_original/` for EFA limitation verification notebooks
 - ✓ Archived broader research documents to `archive/`
 - ✓ Maintained `explorations/` as supporting mathematical analysis
 - ✓ Clarified repository purpose: JOSS claim validation (not standalone paper)
 
-### Phase 4: Evidence Extraction (⏳ Current Priority)
+---
+
+## Current Status Summary
+
+### What's Complete (✓)
+1. **EFA Limitations Verified** (3 of 10):
+   - Limitation 1 (Baseline problems) ✓
+   - Limitation 2 (Noise sensitivity) ✓
+   - Limitation 3 (Tailing/FIFO violations) ✓ - **Critical finding: more severe than expected**
+   
+2. **Literature Analysis Complete**:
+   - All 4 modern papers analyzed (CHROMIXS, EFAMIX, REGALS, BioXTAS RAW 2)
+   - Comparative analysis document created
+   - Key insight: Nobody explicitly documents the mathematical root cause we discovered
+   
+3. **Documentation Standardized**:
+   - Tool name unified to CHROMIXS (all caps) throughout workspace
+   - Python environment policy documented (global Python 3.13, no venv)
+   - PDF extraction utility working and documented
+
+### What's Next (⏳)
+1. **Continue EFA Limitation Verification**:
+   - Limitation 4: No Quantification Without Calibration
+   - Limitation 5: Resolution Limitation  
+   - Limitation 9: Rank Inflation (noise-related)
+   - Limitation 10: FIFO Assumption Failures (comprehensive)
+   
+2. **Synthesize Findings for JOSS Paper**:
+   - Update Research Impact Statement if needed
+   - Document evidence chain: EFA limitations → Modern workarounds → Molass contribution
+   - Emphasize original contribution: explicit mathematical documentation of FIFO impossibility
+
+### Key Files Ready for Next Session
+- `evidence/EFA_limitations_overview.md` - Index of all limitation notebooks
+- `evidence/limitation_3_tailing_effects.ipynb` - Most critical verification
+- `evidence/SAXS_methods_analysis.md` - Comprehensive literature comparison
+- `tools/extracted_papers.txt` - Full text of 4 papers (215,947 chars)
+
+---
+
+## Recent Accomplishments
+
+### January 20, 2026 - Full Day Session
+
+#### Morning: EFA Limitation Verification
+- **Created `limitation_3_tailing_effects.ipynb`**:
+  - 15 cells, fully executed (counts 1-7)
+  - Implemented Exponentially Modified Gaussian (EMG) for tailing simulation
+  - Tested 3 conditions: Gaussian (τ=0), mild tailing (τ=0.5), severe tailing (τ=1.5)
+  - Applied forward/backward EFA to detect concentration windows
+  - **CRITICAL FINDING**: Component 3 shows negative window widths in ALL conditions
+    - Gaussian: [60, 51] → width = -9 frames
+    - Mild tailing: [60, 50] → width = -10 frames  
+    - Severe tailing: [60, 49] → width = -11 frames
+  - **Unexpected Result**: Problem exists even for ideal Gaussian peaks (not tailing-specific!)
+  - **Interpretation**: FIFO assumption fundamentally fails for overlapping components
+  - **Mathematical impossibility**: Component appears at frame 60 but disappears at frame 51
+
+#### Afternoon: Literature Analysis
+- **Literature Review Request**: User asked how alternative tools address tailing limitation
+- **Papers to Analyze**: 2018 Panjkovich, 2021 Konarev, 2021 Meisburger, 2024 Hopkins
+- **Method**: Updated `tools/read_pdfs.py` to extract all 4 papers
+- **Environment Setup**: Configured global Python 3.13 (no venv per project policy)
+- **Extraction Success**: 4 papers, 45 pages total, 215,947 characters extracted
+- **Agent Analysis**: Comprehensive review of all extracted text
+- **Output Created**: `evidence/SAXS_methods_analysis.md` with:
+  - Paper-by-paper summaries
+  - Direct quotes about handling tailing/overlap
+  - Comparison table across all 4 tools
+  - Analysis of what each paper says vs doesn't say
+  - Identification of critical gap in literature
+  - Implications for our original contribution
+
+#### Evening: Documentation Cleanup
+- **Spelling Unification**: Changed all "ChromixS" instances to "CHROMIXS" (official name)
+- **Files Updated**: 
+  - `tools/README.md` - Papers list
+  - `evidence/SAXS_methods_analysis.md` - Multiple locations
+- **Updated `PROJECT_STATUS.md`**: Added comprehensive session summary (this document)
+
+### January 18, 2026 - Morning Session
 - ✓ Created `explorations/underdeterminedness_exploration.ipynb`
 - ✓ **Part 1**: Demonstrated scale ambiguity and basis ambiguity in unconstrained $\min ||M-PC||^2$
   - Proved infinitely many solutions with identical data fit
@@ -318,50 +448,46 @@ Quick Start Options
 
 ## Immediate Priorities (Next Work Session)
 
-**JOSS Validation Focus** (Updated January 20, 2026):
-Extract direct evidence for the three specific claims in the Research Impact Statement.
+### Priority 1: Continue EFA Limitation Verification ⏳
+**Goal**: Systematically verify remaining documented EFA limitations
 
-### Priority 1: CHROMIXS Evidence Extraction ⏳
-**Goal**: Document that CHROMIXS explicitly defers overlapping peak analysis
+**Remaining Limitations** (from Maeder 1988 / Keller 1991):
+- [ ] **Limitation 4**: No Quantification Without Calibration
+- [ ] **Limitation 5**: Resolution Limitation (cannot resolve close peaks)
+- [ ] **Limitation 9**: Rank Inflation from noise/artifacts
+- [ ] **Limitation 10**: FIFO Assumption Failures (comprehensive treatment)
 
-**Tasks**:
-- [ ] Search `tools/chromixs_paper.txt` for relevant sections
-- [ ] Extract direct quotes about deferral to "other methods"
-- [ ] Note page/section references
-- [ ] Document in `evidence/chromixs/`
+**Approach**: Create one notebook per limitation following established pattern
+- Synthetic data with controlled conditions
+- Quantitative measurements
+- Visual demonstrations
+- Compare with real data where applicable
 
-**Expected outcome**: Clear quotation showing CHROMIXS acknowledges limitations for overlapping peaks
+**Estimated time**: 2-3 hours per limitation
 
-**Estimated time**: 30 minutes
-
-### Priority 2: EFAMIX Threshold Documentation ⏳
-**Goal**: Extract specific quantified failure thresholds
-
-**Tasks**:
-- [ ] Search `tools/efamix_paper.txt` for SNR requirements
-- [ ] Find peak asymmetry (τ) thresholds
-- [ ] Extract baseline separation requirements
-- [ ] Locate concentration ratio limits
-- [ ] Document all with figure/table references in `evidence/efamix/`
-
-**Expected outcome**: Table of quantitative thresholds with source references
-
-**Estimated time**: 45 minutes
-
-### Priority 3: REGALS Architecture Documentation ⏳
-**Goal**: Document two-stage approach and inherited EFA limitations
+### Priority 2: Synthesize Literature + Verification Findings 📝
+**Goal**: Connect our verification work with literature analysis
 
 **Tasks**:
-- [ ] Extract method description from `tools/extracted_papers.txt` (REGALS paper)
-- [ ] Document Stage 1 (EFA) and Stage 2 (regularization) separation
-- [ ] Extract EFA limitation quotes from `tools/efa_papers.txt`:
-  - Maeder & Zilian (1988): "tailing" quote
-  - Keller & Massart (1991): "rank inflation" quote
-- [ ] Synthesize in `evidence/regals/`
+- [ ] Review limitation_3 findings alongside SAXS_methods_analysis.md
+- [ ] Draft "gap in literature" section for paper
+- [ ] Document how our explicit mathematical treatment adds value
+- [ ] Prepare evidence chain: EFA limitations → Modern workarounds → Molass contribution
 
-**Expected outcome**: Clear documentation of two-stage architecture with supporting quotes on inherited limitations
+**Expected outcome**: Clear narrative connecting verification work to JOSS Research Impact Statement
 
-**Estimated time**: 60 minutes
+**Estimated time**: 1-2 hours
+
+### Priority 3: Update JOSS Paper (if needed) 📄
+**Goal**: Ensure Research Impact Statement reflects verified findings
+
+**Tasks**:
+- [ ] Review current claims in molass/paper.md
+- [ ] Check if Limitation 3 severity upgrade changes narrative
+- [ ] Consider adding explicit mathematical impossibility language
+- [ ] Ensure citations align with evidence
+
+**Estimated time**: 30-60 minutes
 
 ---
 
@@ -525,6 +651,9 @@ Deeper questions about implicit functional forms, comparative performance, and a
 | Jan 17, 2026 (AM) | Initial setup, paper reading, framework design | ✓ Thesis established, EFAMIX added, EFA limitations documented |
 | Jan 17, 2026 (PM) | Mathematical exploration: basis ambiguity | ✓ Created underdeterminedness_exploration.ipynb, proved user's conjecture, established 4-level hierarchy |
 | Jan 18, 2026 (AM) | Mathematical precision, permutation ambiguity | ✓ Refined constraint hierarchy, created permutation_ambiguity_examples.ipynb, comprehensive REGALS_critique_summary.md |
+| Jan 20, 2026 (AM) | EFA Limitation 3 verification | ✓ Created limitation_3_tailing_effects.ipynb, discovered FIFO fails even for Gaussian peaks, negative window widths |
+| Jan 20, 2026 (PM) | Literature analysis: modern methods | ✓ Extracted 4 papers (45 pages), created SAXS_methods_analysis.md, identified critical gap in literature |
+| Jan 20, 2026 (Eve) | Documentation cleanup | ✓ Unified CHROMIXS spelling, updated PROJECT_STATUS.md with full session summary |
 
 ---
 

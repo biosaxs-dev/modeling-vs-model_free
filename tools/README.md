@@ -60,5 +60,10 @@ cd E:\GitHub\modeling-vs-model_free
 **Output:** `tools/extracted_papers.txt` - Full text extraction of both reference papers for analysis and discussion preparation.
 
 ### Papers Processed:
-- **Paper 1:** Meisburger et al. (2021) - REGALS method for model-free SEC-SAXS deconvolution
-- **Paper 2:** Chure & Cremer (2024) - hplc-py for model-based chromatogram quantification
+- **Paper 1:** Panjkovich & Svergun (2018) - CHROMIXS for SEC-SAXS data analysis
+- **Paper 2:** Konarev et al. (2021) - EOM 3.0 ensemble optimization method
+- **Paper 3:** Meisburger et al. (2021) - REGALS method for model-free SEC-SAXS deconvolution
+- **Paper 4:** Hopkins et al. (2024) - Latest advances in SEC-SAXS analysis methods
+
+### Purpose:
+Extract text from alternative tool papers to understand how they address EFA limitations (especially tailing effects and FIFO assumption failures) documented in the original 1988 Maeder and 1991 Keller papers.
