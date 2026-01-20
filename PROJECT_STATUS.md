@@ -1,37 +1,43 @@
 # Project Status & Resumption Guide
-**Last Updated**: January 17, 2026
+**Last Updated**: January 20, 2026
 
 ---
 
 ## Quick Overview
 
-**Project Goal**: Write a paper clarifying the relationship between "modeling" (Molass) and "model-free" (REGALS) approaches in SEC-SAXS analysis.
+**Project Goal**: Validate the Research Impact Statement claims for the Molass Library JOSS paper submission ([#9424](https://github.com/openjournals/joss-reviews/issues/9424)).
 
-**Core Thesis**: "Model-free" is a misnomer - REGALS involves implicit modeling at THREE levels:
-1. **EFA Stage 1**: Sequential "first-in-first-out" elution assumption (physical model)
-2. **EFA Stage 2**: Manual threshold tuning for component detection (subjective modeling decisions)  
-3. **Regularization**: Smoothness constraints → implicit Gaussian-like functional forms
+**Primary Objective**: Document evidence that existing "model-free" methods (CHROMIXS, EFAMIX, REGALS) have documented limitations for overlapping peak decomposition, which Molass Library addresses through explicit parametric modeling.
 
-**User's Key Insight** (from practical experience): EFA's "automatic" component detection is actually very sensitive to noise and requires extensive manual tuning - skeptical about real-world reliability.
+**JOSS Context**: Following JOSS policy update (January 2026), the Research Impact Statement requires concrete evidence of either realized impact or credible near-term significance. This repository provides systematic validation of the documented limitations cited in our submission.
 
----
-
-## Document Map
-
-| File | Purpose | Status |
-|------|---------|--------|
-| **discussion_points.md** | Main paper planning - thesis, arguments, outline | ✓ Up-to-date with EFA critique |
-| **detailed_approach.md** | 18-week implementation plan (Track 1: Math, Track 2: Numerical) | ✓ Includes EFAMIX, EFA noise study |
-| **tools/read_pdfs.py** | Python script to extract text from reference PDFs | ✓ Working |
-| **tools/README.md** | Python environment policy & Windows quirks | ✓ Documents global Python usage |
-| **tools/extracted_papers.txt** | Full text of Meisburger 2021 + Chure 2024 | ✓ Extracted |
-| **tools/efa_papers.txt** | Full text of Maeder 1988 + Keller 1991 | ✓ Extracted |
-| **tools/chromixs_paper.txt** | Full text of Panjkovich 2018 (CHROMIXS) | ✓ Extracted |
-| **tools/efamix_paper.txt** | Full text of Konarev 2021 (EFAMIX - pure EFA) | ✓ Extracted |
-| **molass/paper.md** | User's JOSS paper on Molass Library | Read-only reference |
-| **reference_papers/** | Four PDFs (REGALS, hplc-py, EFA x2) | ✓ All read |
+**Key Claims to Validate**:
+1. **CHROMIXS**: Explicitly defers overlapping peak analysis to "other methods"
+2. **EFAMIX**: Quantified failure thresholds (SNR ≥10³ for 3 components; τ≤2; separation ≥2× width)
+3. **REGALS**: Two-stage approach (EFA + regularization) inheriting EFA's fundamental limitations
 
 ---
+
+## Repository Structure
+
+| Directory/File | Purpose | Status |
+|----------------|---------|--------|
+| **evidence/** | Documented validation of JOSS claims | 🚧 In progress |
+| ├─ **chromixs/** | Evidence CHROMIXS defers overlapping peaks | ⏳ To be extracted |
+| ├─ **efamix/** | Quantified EFAMIX failure thresholds | ⏳ To be extracted |
+| └─ **regals/** | REGALS two-stage architecture & EFA limitations | ⏳ To be extracted |
+| **explorations/** | Mathematical analysis (supporting) | ✓ Complete |
+| ├─ underdeterminedness_exploration.ipynb | Constraint hierarchy proof | ✓ Complete |
+| ├─ permutation_ambiguity_examples.ipynb | Discrete ambiguity scenarios | ✓ Complete |
+| └─ REGALS_analysis_summary.md | Comprehensive findings | ✓ Complete |
+| **archive/** | Original research project documents | ✓ Archived |
+| ├─ discussion_points.md | Broader research paper planning | Archived |
+| └─ detailed_approach.md | 18-week research implementation plan | Archived |
+| **tools/** | PDF extraction utilities | ✓ Working |
+| **reference_papers/** | Source PDFs | ✓ Available |
+| *Validation Progress
+
+### Phase 1: Literature Extrac
 
 ## Completed Work
 
@@ -43,29 +49,16 @@
 - ✓ Extracted and analyzed Panjkovich 2018 (CHROMIXS - automated SEC-SAXS tool)
 - ✓ Extracted and analyzed Konarev 2021 (EFAMIX - pure EFA implementation)
 
-### Phase 2: Thesis Development (✓ Complete)
-- ✓ Identified two-stage nature of REGALS (EFA + regularization)
-- ✓ Recognized EFA's sequential elution assumption as implicit modeling
-- ✓ Integrated user's practical skepticism about EFA noise sensitivity
-- ✓ **Critical addition**: Found that EFA inventors (Maeder, Keller) themselves documented fundamental limitations:
-  - Rank inflation from instrumental nonlinearities
-  - Tailing as "the most serious difficulty"
-  - Baseline sensitivity causing false factors
-  - Quantification impossibility without external calibration
-  - FIFO assumption fragility
+### Phase 2: Supporting Mathematical Analysis (✓ Complete)
+Created detailed mathematical analysis in `explorations/` demonstrating the multi-layered constraint requirements for REGALS uniqueness. While this exceeds the validation needs, it provides rigorous supporting evidence.
 
-### Phase 3: Framework Design (✓ Complete)
-- ✓ Created comparison framework with four tools:
-  - **Molass** (explicit parametric: EGH/SDM/EDM)
-  - **EFAMIX** (pure EFA, no regularization)
-  - **REGALS** (EFA + regularization)
-  - **hplc-py** (explicit: skew-normal)
-- ✓ Developed two-track approach:
-  - Track 1: Mathematical proof (implicit functional forms)
-  - Track 2: Numerical verification (simulations + real data)
-- ✓ Added Step 2.3b: EFA Noise Sensitivity Study (marked CRITICAL)
+### Phase 3: Repository Restructuring (✓ Complete - Jan 20, 2026)
+- ✓ Created `evidence/` directory structure for systematic claim validation
+- ✓ Archived broader research documents to `archive/`
+- ✓ Maintained `explorations/` as supporting mathematical analysis
+- ✓ Clarified repository purpose: JOSS claim validation (not standalone paper)
 
-### Phase 4: Preliminary Mathematical Exploration (✓ Complete)
+### Phase 4: Evidence Extraction (⏳ Current Priority)
 - ✓ Created `explorations/underdeterminedness_exploration.ipynb`
 - ✓ **Part 1**: Demonstrated scale ambiguity and basis ambiguity in unconstrained $\min ||M-PC||^2$
   - Proved infinitely many solutions with identical data fit
@@ -79,33 +72,26 @@
 - ✓ Established **4-level hierarchy of constraints** needed for uniqueness:
   1. Data-fit only: infinite solutions
   2. + Smoothness: still infinite (orthogonal transformations remain)
-  3. + Non-negativity: continuous ambiguity eliminated; discrete permutation ambiguity may persist
-  4. + Full REGALS (compact support + SAXS): unique for generic data; edge cases may have permutation ambiguity
-- ✓ **Impact**: Powerful evidence that REGALS requires FOUR layers of implicit modeling, not one
-- ✓ Created `explorations/permutation_ambiguity_examples.ipynb`
-  - **Scenario 1**: Overlapping monomer-dimer → permutation likely (20-30% risk)
-  - **Scenario 2**: Well-separated components → uniqueness guaranteed
-  - **Scenario 3**: Oligomeric series → high ambiguity risk (30-50%)
-  - **Risk quantification**: 5-50% of real-world SEC-SAXS datasets may have discrete permutation ambiguity
-  - **Practical implication**: Manual validation required, undermining "model-free" claim
-- ✓ Created `explorations/REGALS_critique_summary.md`
-  - Comprehensive summary of all mathematical findings
-  - Documents constraint hierarchy, terminology critiques, permutation ambiguity
-  - Attribution to GitHub Copilot (Claude Sonnet 4.5)
-  - Ready reference for paper writing
-
----
-
-## Key Decisions & Rationale
-
-### Python Environment
-- **Decision**: Use Python 3.13.11 global environment (NOT virtualenv)
-- **Location**: `C:\Program Files\Python313\python.exe`
-- **Reason**: User preference for simplicity
-- **Documented in**: `tools/README.md`
-- **Windows quirk**: Use `& "C:\Program Files\Python313\python.exe"` in PowerShell
-
-### Comparison Tools
+**Tasks** (in priority order):
+- [ ] **CHROMIXS**: Extract direct quotes showing deferral to other methods for overlapping peaks
+  - Source: Panjkovich & Svergun (2018), Section on limitations
+  - Already noted in tools/chromixs_paper.txt
+  - Target: `evidence/chromixs/`
+  
+- [ ] **EFAMIX**: Document specific quantified thresholds
+  - SNR requirements: 10² (2 comp), 10³ (3 comp), 10⁴ (4 comp)
+  - Peak asymmetry: τ ≤ 2
+  - Separation: ≥ 2× peak width
+  - Source: Konarev et al. (2021), Results/Discussion sections
+  - Already extracted in tools/efamix_paper.txt
+  - Target: `evidence/efamix/`
+  
+- [ ] **REGALS**: Document two-stage architecture and inherited EFA limitations
+  - Source 1: Meisburger et al. (2021) - method description
+  - Source 2: Maeder & Zilian (1988) - "tailing" quote
+  - Source 3: Keller & Massart (1991) - "rank inflation" quote
+  - Already extracted in tools/extracted_papers.txt and tools/efa_papers.txt
+  - Target: `evidence/regals/`
 - **Original plan**: Two-way comparison (Molass vs REGALS)
 - **Current focus** (January 17, 2026): 
   - **Main**: Molass vs REGALS (both tackle overlapping peaks)
@@ -116,12 +102,25 @@
 
 ### Research Focus
 - **Primary question**: What implicit model does REGALS embed? (Core of Molass vs REGALS comparison)
-- **Critical addition**: EFA noise sensitivity study (user's practical concern validated by inventors' own papers)
-- **Approach**: Both mathematical derivation AND empirical testing
-- **Paper strategy**: Keep Molass↔REGALS in main text; EFAMIX/CHROMIXS limitations in SI
+- *Supporting Mathematical Analysis (Optional Context)
 
----
+The `explorations/` directory contains rigorous mathematical analysis that, while not required for JOSS validation, provides deep supporting evidence:
 
+- **underdeterminedness_exploration.ipynb**: Proves REGALS requires 4-level constraint hierarchy
+- **permutation_ambiguity_examples.ipynb**: Quantifies discrete ambiguity risk (5-50% of datasets)
+- **REGALS_analysis_summary.md**: Comprehensive mathematical critique
+
+This work demonstrates expertise but exceeds validation requirements. It may support future research publications.
+Scope Definition
+- **In scope**: Direct evidence extraction from peer-reviewed papers supporting JOSS claims
+- **Optional**: Mathematical explorations in `explorations/` (supporting, not required)
+- **Out of scope** (archived): New simulations, comparative studies, full research paper development
+
+### Validation Approach
+- **Method**: Direct quote extraction with page/section references
+- **Sources**: Papers already extracted to `tools/` directory
+- **Output**: Organized evidence in `evidence/` subdirectories
+- **Goal**: Defensible documentation that JOSS reviewers/editors can verify
 ## Important Context
 
 ### Key Equations
@@ -257,133 +256,112 @@ e:\GitHub\modeling-vs-model_free\
 ├── detailed_approach.md        # 18-week implementation plan
 ├── explorations/
 │   ├── underdeterminedness_exploration.ipynb  # Step 1.1: Basis ambiguity proof
-│   ├── permutation_ambiguity_examples.ipynb   # Discrete ambiguity scenarios
-│   └── REGALS_critique_summary.md             # Comprehensive findings summary
+c:\Users\takahashi\GitHub\modeling-vs-model_free\
+├── README.md                  # Repository purpose statement
+├── PROJECT_STATUS.md          # ← This file (validation tracking)
+├── evidence/                  # 🎯 VALIDATION DELIVERABLES
+│   ├── README.md              # Validation overview
+│   ├── chromixs/              # CHROMIXS deferral evidence
+│   ├── efamix/                # EFAMIX threshold evidence
+│   └── regals/                # REGALS two-stage & EFA limitations
+├── explorations/              # Supporting mathematical analysis (optional)
+│   ├── underdeterminedness_exploration.ipynb
+│   ├── permutation_ambiguity_examples.ipynb
+│   └── REGALS_analysis_summary.md
+├── archive/                   # Original research project (for future)
+│   ├── README.md              # Archive context
+│   ├── discussion_points.md   # Broader paper planning
+│   └── detailed_approach.md   # 18-week research plan
 ├── molass/
-│   └── paper.md               # Reference: User's Molass JOSS paper
-├── reference_papers/
+│   └── paper.md               # 📄 JOSS SUBMISSION (deliverable)
+├── reference_papers/          # Source PDFs
 │   ├── 2021, Steve P. Meisburger.pdf    # REGALS
-│   ├── 2024, Griffin Chure.pdf          # hplc-py
+│   ├── 2024, Griffin Chure.pdf          # hplc-py  
 │   ├── 1988, Marcel Maeder.pdf          # EFA original
 │   └── 1991, H.R. Keller.pdf            # EFA tutorial
-└── tools/
-    ├── README.md              # Python environment policy
-    ├── read_pdfs.py           # PDF extraction script
-    ├── extracted_papers.txt   # REGALS + hplc-py full text
-    └── efa_papers.txt         # EFA papers full text
+└── tools/                     # Utilities & extracted text
+    ├── README.md
+    ├── read_pdfs.py
+    ├── extracted_papers.txt   # REGALS + hplc-py
+    ├── efa_papers.txt         # Maeder + Keller
+    ├── chromixs_paper.txt     # Panjkovich & Svergun
+    └validating JOSS Research Impact Statement claims.
+Read PROJECT_STATUS.md for context.
+Then let's extract evidence for [CHROMIXS/EFAMIX/REGALS]."
 ```
 
----
-
-## Next Session: How to Resume
-
-### 💡 **BEST PRACTICE: Start Every New Copilot Session With**
-```
-"I'm working on modeling vs model-free SEC-SAXS paper. 
-Read PROJECT_STATUS.md for context. 
-Then let's work on Priority 1: Mathematical Derivation."
-```
-(Replace "Priority 1" with Priority 2 or 3 depending on what you want to work on)
+This ensures the AI has full context for the validation workk on)
 
 This ensures the AI has full context immediately and can continue seamlessly.
 
 ---
+Quick Start Options
 
-### Option A: Quick Review (10 minutes)
-1. Open `discussion_points.md` - read **Section 3c** (EFA limitations from inventors)
-2. Review the **comparison table** - now includes rank estimation, quantification, tailing
-3. Check **Section 3b** - your practical EFA skepticism + proposed noise sensitivity study
-4. Jump to **"Next Steps → Immediate"** section
+**Option A: Extract CHROMIXS Evidence (30 min)**
+1. Read `evidence/chromixs/README.md` for claim details
+2. Search `tools/chromixs_paper.txt` for overlapping peak deferral quotes
+3. Document findings with page/section references
 
-### Option B: Deep Dive (30 minutes)  
-1. Read this entire `PROJECT_STATUS.md` file
-2. Skim `detailed_approach.md` - focus on:
-   - **Step 2.3b** (EFA Noise Sensitivity Study - lines ~150-185)
-   - **Key Milestones** (bottom of file)
-3. Review `discussion_points.md`:
-   - Central Thesis
-   - Section 3 (REGALS: Two Layers of Implicit Modeling)
-   - Section 3b + 3c (EFA practical/theoretical limitations)
-4. Check `tools/efa_papers.txt` - search for key quotes:
-   - "tailing seems to be the most serious difficulty"
+**Option B: Extract EFAMIX Thresholds (45 min)**
+1. Read `evidence/efamix/README.md` for specific thresholds
+2. Search `tools/efamix_paper.txt` for SNR, τ, and separation values
+3. Extract quantitative requirements with context
+
+**Option C: Document REGALS Architecture (60 min)**
+1. Read `evidence/regals/README.md` for multi-source validation
+2. Extract two-stage process from `tools/extracted_papers.txt`
+3. Extract EFA limitation quotes from `tools/efa_papers.txt`
+4. Synthesize into coherent documentations difficulty"
    - "rank of data matrix will be higher"
 
 ---
 
 ## Immediate Priorities (Next Work Session)
 
-**Paper Focus Strategy** (Updated January 17, 2026):
-- **Main**: Molass vs REGALS (explicit vs implicit modeling of overlapping peaks)
-- **Supplementary**: EFAMIX (Stage 1 limitations) + CHROMIXS (automation limitations)
-- **Rationale**: Clean narrative focused on intellectual core; supporting evidence in SI
+**JOSS Validation Focus** (Updated January 20, 2026):
+Extract direct evidence for the three specific claims in the Research Impact Statement.
 
-### Priority 1: Mathematical Derivation (Track 1) - FOR MOLASS vs REGALS
-**Goal**: Derive the implicit functional form from smoothness regularization (core of comparison)
-
-**Status**: Step 1.1 ✓ Complete (underdeterminedness proven, 4-level hierarchy established)
+### Priority 1: CHROMIXS Evidence Extraction ⏳
+**Goal**: Document that CHROMIXS explicitly defers overlapping peak analysis
 
 **Tasks**:
-- [x] **Step 1.1**: Prove underdeterminedness of $\min ||M-PC||^2$ and test if regularization breaks ambiguity
-  - ✓ Demonstrated scale and basis ambiguity (infinitely many solutions)
-  - ✓ Proved smoothness regularization preserves orthogonal transformations
-  - ✓ Established 4-level hierarchy (data-fit → smoothness → non-negativity → full REGALS)
-- [ ] **Step 1.2**: Bayesian interpretation of regularization
-  - What prior distribution corresponds to $\lambda||D^2C||^2$?
-  - Gaussian process? Integrated Wiener process?
-- [ ] **Step 1.3**: Characterize implicit functional form
-  - Variational calculus: minimize $||D^2C||^2$ → cubic splines?
-  - Frequency domain: high-frequency suppression → Gaussian?
-  - Kernel methods: reproducing kernel Hilbert space
-- [ ] **Step 1.4**: Connection to explicit models
-  - When does REGALS ≈ Gaussian mixture?
-- [ ] Combine with EFA's concentration window constraint
-- [ ] Show conditions where REGALS ≈ Gaussian mixture model
-- [ ] Identify when explicit models (EGH/SDM/EDM) diverge from implicit
+- [ ] Search `tools/chromixs_paper.txt` for relevant sections
+- [ ] Extract direct quotes about deferral to "other methods"
+- [ ] Note page/section references
+- [ ] Document in `evidence/chromixs/`
 
-**Starting point**: 
-- Consult literature on Tikhonov regularization and implicit priors
-- Look at Bayesian interpretation of regularization (MacKay 1992?)
-- Search for "smoothness penalty implicit model" in chemometrics
+**Expected outcome**: Clear quotation showing CHROMIXS acknowledges limitations for overlapping peaks
 
-### Priority 2: Simulation Framework Setup (Track 2)
-**Goal**: Set up code to test REGALS vs Molass empirically
+**Estimated time**: 30 minutes
+
+### Priority 2: EFAMIX Threshold Documentation ⏳
+**Goal**: Extract specific quantified failure thresholds
 
 **Tasks**:
-- [ ] Generate synthetic SEC-SAXS data with known ground truth
-  - Gaussian peaks (test case 1)
-  - EGH peaks (test case 2)  
-  - Overlapping, non-sequential (test EFA failure)
-- [ ] Obtain/implement REGALS code (with full EFA stage)
-- [ ] Run Molass on same data
-- [ ] Compare reconstructions quantitatively
+- [ ] Search `tools/efamix_paper.txt` for SNR requirements
+- [ ] Find peak asymmetry (τ) thresholds
+- [ ] Extract baseline separation requirements
+- [ ] Locate concentration ratio limits
+- [ ] Document all with figure/table references in `evidence/efamix/`
 
-**Starting point**:
-- Check if REGALS code is available (GitHub: ando-lab/regals)
-- Set up Molass if not already installed
-- Design data generation function: `generate_sec_saxs(peak_type, noise_level, overlap, ...)`
+**Expected outcome**: Table of quantitative thresholds with source references
 
-### Priority 3: EFA Noise Sensitivity Study (CRITICAL)
-**Goal**: Empirically validate user's skepticism about EFA reliability
+**Estimated time**: 45 minutes
+
+### Priority 3: REGALS Architecture Documentation ⏳
+**Goal**: Document two-stage approach and inherited EFA limitations
 
 **Tasks**:
-- [ ] Step 2.3b.1: Noise impact on rank estimation
-  - Generate identical data at SNR = 100, 50, 20, 10, 5
-  - Plot singular value spectra
-  - Measure where signal/noise boundary becomes ambiguous
-- [ ] Step 2.3b.2: Threshold sensitivity
-  - Same data, vary EFA threshold parameters
-  - Quantify result variability
-- [ ] Step 2.3b.3: Inter-user variability
-  - If possible, have multiple people manually tune EFA
-  - Measure disagreement in component count, window boundaries
-- [ ] Step 2.3b.4: Compare to explicit detection
-  - Run Molass peak detection on same noisy data
-  - Which is more robust?
+- [ ] Extract method description from `tools/extracted_papers.txt` (REGALS paper)
+- [ ] Document Stage 1 (EFA) and Stage 2 (regularization) separation
+- [ ] Extract EFA limitation quotes from `tools/efa_papers.txt`:
+  - Maeder & Zilian (1988): "tailing" quote
+  - Keller & Massart (1991): "rank inflation" quote
+- [ ] Synthesize in `evidence/regals/`
 
-**Starting point**:
-- This is new - no prior code
-- Focus on Step 2.3b.1 first (most fundamental)
-- Can simulate quickly, don't need real data
+**Expected outcome**: Clear documentation of two-stage architecture with supporting quotes on inherited limitations
+
+**Estimated time**: 60 minutes
 
 ---
 
@@ -415,48 +393,28 @@ This ensures the AI has full context immediately and can continue seamlessly.
 ## Questions to Carry Forward
 
 ### High Priority
-1. **Does REGALS ≈ Gaussian mixture when data is Gaussian?** (Core hypothesis)
-2. **At what noise level does EFA fail to detect components reliably?** (User's concern)
-3. **How much do EFA results vary with threshold choices?** (Reproducibility)
-4. **When does tailing break EFA windows?** (Maeder's identified problem)
+1. Success Criteria
 
-### Medium Priority
-5. Can we show rank inflation empirically? (Keller's warning)
-6. Is EFA+regularization better than pure EFA (EFAMIX)?
-7. When does REGALS outperform Molass, and vice versa?
-8. Can we use EFA for detection but explicit models for fitting? (Hybrid approach)
+### For JOSS Validation (Current Focus)
+- ✅ All three evidence directories populated with direct quotes
+- ✅ Page/section references documented for verification
+- ✅ Evidence aligns precisely with Research Impact Statement claims
+- ✅ Documentation defensible to JOSS reviewers/editors
 
-### Lower Priority
-9. How general is the implicit model derivation?
-10. Can EFA be reformulated as an explicit parametric model?
-11. What about non-SEC applications where FIFO assumption is invalid?
-
----
-
-## Key Contacts & Resources
-
-### Papers to Cite (Full References)
-- Meisburger, S.P., Xu, D., and Ando, N. (2021). IUCrJ, 8, 225-237
+### For Future Research (Archived)
+The broader research agenda (mathematical derivations, simulations, comparative studies) is documented in `archive/` and may be pursued as a separate project after JOSS publication.. (2021). IUCrJ, 8, 225-237
 - Chure, G. and Cremer, J. (2024). JOSS, 9(94), 6270  
 - Maeder, M. and Zilian, A. (1988). Chemom. Intell. Lab. Syst., 3, 205-213
-- Keller, H.R. and Massart, D.L. (1991). Chemom. Intell. Lab. Syst., 12, 209-224
-- Panjkovich, A. and Svergun, D.I. (2018). Bioinformatics, 34(11), 1944-1946
-- Konarev, P.V., Graewert, M.A., Jeffries, C.M., et al. (2021). Protein Sci., 31, 269-282
+- KValidation Questions
 
-### Software Resources
-- **REGALS**: https://github.com/ando-lab/regals (Python & MATLAB)
-- **Molass**: [User's own library - ask for details]
-- **hplc-py**: https://github.com/cremerlab/hplc-py (Python)
-- **EFAMIX**: Part of ATSAS suite (may need to check availability)
+### For JOSS Defense
+1. **Can we verify CHROMIXS deferral claim?** → Extract from Panjkovich & Svergun (2018)
+2. **Are EFAMIX thresholds as stated?** → Verify from Konarev et al. (2021)
+3. **Is REGALS two-stage architecture documented?** → Confirm from Meisburger et al. (2021)
+4. **Did EFA inventors document limitations?** → Confirm from Maeder & Keller papers
 
-### Additional Literature to Explore
-- MacKay (1992) - Bayesian interpretation of regularization
-- Tikhonov & Arsenin (1977) - Regularization theory
-- EFA applications in different domains (equilibrium studies, time-resolved, FIA)
-
----
-
-## Notes for Future Development
+### For Future Research (Archived)
+Deeper questions about implicit functional forms, comparative performance, and alternative approaches are documented in `archive/` for potential future work.
 
 ### Possible Extensions
 1. **Hybrid method**: EFA for detection + explicit models for fitting
