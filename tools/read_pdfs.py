@@ -13,7 +13,12 @@ try:
         '2018, Alejandro Panjkovich.pdf',
         '2021, Petr V. Konarev.pdf', 
         '2021, Steve P. Meisburger.pdf',
-        '2024, Jesse B. Hopkins.pdf'
+        '2021, Steve P. Meisburger-support.pdf',
+        '2024, Jesse B. Hopkins.pdf',
+        '2004, Joaquim Jaumot.pdf',
+        '2018, Mackenzie J. Parker.pdf',
+        '2018, Mackenzie J. Parker-appendix.pdf',
+        '2025, Boyang Zhang.pdf'
     ]
     
     all_texts = []

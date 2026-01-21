@@ -26,6 +26,11 @@
 | ├─ **chromixs/** | Evidence CHROMIXS defers overlapping peaks | ⏳ To be extracted |
 | ├─ **efamix/** | Quantified EFAMIX failure thresholds | ⏳ To be extracted |
 | └─ **regals/** | REGALS two-stage architecture & EFA limitations | ⏳ To be extracted |
+| **algorithms/** | Matrix factorization algorithm explorations | ✓ Complete |
+| ├─ zhang2025_simple_concept.ipynb | 3×3 pedagogical example | ✓ Complete |
+| ├─ zhang2025_joint_optimization_demo.ipynb | 100×50 full demonstration | ✓ Complete |
+| ├─ zhang2025_denoising_comparison.ipynb | Real data comparison with REGALS discussion | ✓ Complete |
+| └─ matrix_factorization_trends_2025.md | Zhang 2025 relevance analysis | ✓ Complete |
 | **explorations/** | Mathematical analysis (supporting) | ✓ Complete |
 | ├─ underdeterminedness_exploration.ipynb | Constraint hierarchy proof | ✓ Complete |
 | ├─ permutation_ambiguity_examples.ipynb | Discrete ambiguity scenarios | ✓ Complete |
@@ -108,6 +113,37 @@ Created detailed mathematical analysis in `explorations/` demonstrating the mult
 - ✓ Maintained `explorations/` as supporting mathematical analysis
 - ✓ Clarified repository purpose: JOSS claim validation (not standalone paper)
 
+### Phase 6: Algorithm Exploration - Zhang 2025 (✓ Complete - Jan 21, 2026)
+- ✓ Analyzed Zhang 2025 paper: "Loss-Minimizing Model Compression via Joint Factorization Optimization"
+- ✓ Created `algorithms/` directory (moved from `evidence/algorithms/`)
+- ✓ **zhang2025_simple_concept.ipynb**: 3×3 pedagogical example demonstrating gradient·noise insight
+  - Showed 75% better loss when factorization noise opposes gradient direction
+- ✓ **zhang2025_joint_optimization_demo.ipynb**: Full 100×50 demonstration
+  - Iterative optimization showing 1.7% better loss than SVD at same rank
+- ✓ **zhang2025_denoising_comparison.ipynb**: Real SEC-SAXS data analysis
+  - Used molass_data SAMPLE1 at analyst-chosen rank k=5
+  - Compared SVD denoising vs Zhang joint optimization with smoothness objective
+  - User confirmed "significant improvement in smoothness"
+  - Added comparison to REGALS iterative optimization (ALS vs gradient descent)
+- ✓ **REGALS code verification**: Analyzed actual Python implementation
+  - Verified alternating least squares structure in regals.py
+  - Confirmed closed-form solutions via sparse linear solver
+  - Validated regularization implementation (H_profile, H_concentration)
+  - Created verification document in algorithms/temp_regals/
+- ✓ **Moore 1980 IFT analysis**: Read foundational paper on Indirect Fourier Transform
+  - Understood IFT as implicit denoising (dimension reduction: 1000 measurements → 20 coefficients)
+  - Recognized regularization matrix H controls smoothness
+  - Validated user's intuition: "Crucial denoising through IFT"
+- ✓ **Key architectural distinction identified**:
+  - **REGALS**: No separate denoising stage (IFT regularization during ALS = implicit denoising)
+  - **Molass**: Explicit SVD denoising stage before parametric fitting
+  - Zhang 2025's critique applies more to Molass than REGALS
+- ✓ **Pragmatic solution developed**: Dual-evaluation approach for Molass
+  - Optimize on M_clean (smooth landscape for convergence)
+  - Validate against M_noisy (robustness check)
+  - Simple to implement (just add final evaluation)
+  - Addresses Zhang 2025 concern differently (validation vs joint optimization)
+
 ---
 
 ## Current Status Summary
@@ -119,16 +155,24 @@ Created detailed mathematical analysis in `explorations/` demonstrating the mult
    - Limitation 3 (Tailing/FIFO violations) ✓ - **Critical finding: more severe than expected**
    
 2. **Literature Analysis Complete**:
-   - All 4 modern papers analyzed (CHROMIXS, EFAMIX, REGALS, BioXTAS RAW 2)
-   - Comparative analysis document created
-   - Key insight: Nobody explicitly documents the mathematical root cause we discovered
-   
-3. **Documentation Standardized**:
-   - Tool name unified to CHROMIXS (all caps) throughout workspace
-   - Python environment policy documented (global Python 3.13, no venv)
-   - PDF extraction utility working and documented
 
-### What's Next (⏳)
+**Note**: Algorithm exploration (Zhang 2025) complete. Returning focus to JOSS validation.
+
+1. **Continue EFA Limitation Verification**:
+   - Limitation 4: No Quantification Without Calibration
+   - Limitation 5: Resolution Limitation  
+   - Limitation 9: Rank Inflation (noise-related)
+   - Limitation 10: FIFO Assumption Failures (comprehensive)
+   
+2. **Synthesize Findings for JOSS Paper**:
+   - Update Research Impact Statement if needed
+   - Document evidence chain: EFA limitations → Modern workarounds → Molass contribution
+   - Emphasize original contribution: explicit mathematical documentation of FIFO impossibility
+
+3. **Consider Algorithm Insights for Future Work** (Optional):
+   - Dual-evaluation approach (optimize clean, validate noisy) for Molass robustness checks
+   - Potential gradient-informed initialization from Zhang 2025 framework
+   - These are enhancements, not required for JOSS validation
 1. **Continue EFA Limitation Verification**:
    - Limitation 4: No Quantification Without Calibration
    - Limitation 5: Resolution Limitation  
@@ -394,6 +438,12 @@ c:\Users\takahashi\GitHub\modeling-vs-model_free\
 │   ├── chromixs/              # CHROMIXS deferral evidence
 │   ├── efamix/                # EFAMIX threshold evidence
 │   └── regals/                # REGALS two-stage & EFA limitations
+├── algorithms/                # Matrix factorization explorations
+│   ├── matrix_factorization_trends_2025.md
+│   ├── zhang2025_simple_concept.ipynb
+│   ├── zhang2025_joint_optimization_demo.ipynb
+│   ├── zhang2025_denoising_comparison.ipynb
+│   └── temp_regals/           # REGALS-related explorations
 ├── explorations/              # Supporting mathematical analysis (optional)
 │   ├── underdeterminedness_exploration.ipynb
 │   ├── permutation_ambiguity_examples.ipynb
@@ -587,6 +637,133 @@ Deeper questions about implicit functional forms, comparative performance, and a
 - **Impact**: Powerful evidence that REGALS requires FOUR layers of implicit modeling, not one
 - Organized project with `explorations/` folder and comprehensive README
 
+### January 21, 2026 - Algorithm Exploration Session
+
+#### Zhang 2025 Matrix Factorization Analysis
+- **Context**: User asked to explore latest trends in matrix factorization algorithms
+- **Paper Added**: Zhang et al. (2025) "Loss-Minimizing Model Compression via Joint Factorization Optimization"
+  - Core insight: ΔLoss = ∂Loss/∂W · δ (gradient · factorization noise)
+  - Key innovation: Joint optimization of factorization + downstream objective
+  - Lemma 3: Framework for optimal rank determination
+
+#### Three Demonstration Notebooks Created
+
+1. **zhang2025_simple_concept.ipynb** (Pedagogical)
+   - 3×3 matrix example for understanding
+   - Demonstrates gradient·noise alignment effect
+   - Result: 75% better loss when noise opposes gradient
+   - Status: Complete, tested
+
+2. **zhang2025_joint_optimization_demo.ipynb** (Full Demo)
+   - 100×50 synthetic data matrix
+   - Iterative optimization with gradient computation
+   - Visualization of optimization trajectory
+   - Result: 1.7% better loss than SVD
+   - Status: Complete, tested
+
+3. **zhang2025_denoising_comparison.ipynb** (Real Data)
+   - **Data**: SEC-SAXS SAMPLE1 from molass_data (Photon Factory, KEK)
+   - **Philosophy**: Analyst chooses rank k=5 (Molass approach)
+   - **Comparison**: Traditional SVD vs Zhang joint optimization
+   - **Objective**: Elution profile smoothness (second-order differences)
+   - **Result**: User confirmed "significant improvement in smoothness"
+   - **Added**: Comparison to REGALS iterative optimization
+     - REGALS: Alternating Least Squares (fix one factor, optimize other)
+     - Zhang 2025: Simultaneous gradient descent (update both factors)
+     - Both start from SVD, both iterate toward better solution
+   - Status: Complete, tested by user
+
+#### Key Architectural Insight Identified
+
+**Two-Stage Separation Problem**:
+- **Molass**: SVD denoising (Stage 1) → Parametric fitting (Stage 2: EGH/SDM/EDM)
+  - Stage 2 operates ONLY on denoised data
+  - Never sees original noisy measurements
+- **REGALS**: EFA windows (Stage 1) → ALS refinement (Stage 2)
+  - Stage 2 operates ONLY on windowed data
+  - Similar architectural separation
+
+**Zhang 2025 Insight**: Two-stage optimization (factorize → optimize) is fundamentally suboptimal compared to joint optimization
+
+**Open Question**: What objective function should guide Molass denoising?
+- Current notebook: Generic smoothness (second-order differences)
+- Alternative: Parametric fit quality (how well EGH/SDM/EDM fits after denoising)
+- Alternative: Physical plausibility of fitted parameters
+- Alternative: Combination of multiple criteria
+
+#### Repository Reorganization
+- ✓ Moved `evidence/algorithms/` → `algorithms/` (workspace root)
+- ✓ Consolidated Zhang 2025 materials: notebooks, Python scripts, markdown analysis
+- ✓ Created `algorithms/temp_regals/` subfolder for REGALS-related explorations
+- **Rationale**: Algorithm explorations are distinct from literature evidence documentation
+
+#### REGALS Code Verification and Deep Discussion
+
+**Code Analysis:**
+- ✓ Verified notebook's REGALS description against actual Python implementation
+- ✓ Confirmed alternating least squares structure: `fit_profiles()` then `fit_concentrations()`
+- ✓ Verified closed-form solutions via `spsolve(AA + H, Ab)`
+- ✓ Confirmed regularization matrices H_profile and H_concentration
+- **Result**: Notebook comparison is accurate
+- **Documentation**: Created `algorithms/temp_regals/REGALS_code_verification.md`
+
+**Key Architectural Insights:**
+
+1. **REGALS vs Molass Denoising Architectures**
+   - **REGALS**: No separate denoising stage
+     - Operates directly on M_noisy
+     - IFT regularization provides implicit denoising during ALS iteration
+     - Real-space constraints (P(q) ↔ P(r) with dmax) naturally incorporated
+     - Regularization matrix H controls smoothness
+   - **Molass**: Explicit two-stage with separate SVD denoising
+     - Stage 0: M_noisy → SVD → M_clean (denoising)
+     - Stage 1 & 2: Parametric fitting operates only on M_clean
+     - Zhang 2025's critique applies: sequential denoising → optimization
+
+2. **Moore 1980 IFT Paper Analysis**
+   - Read foundational paper: "Small-Angle Scattering. Information Content and Error Analysis"
+   - **Key insight**: IFT IS implicit denoising via dimension reduction
+     - p(r) represented as truncated Fourier series: Σ(n=1 to nmax) aₙ·sin(πrn/d)
+     - Reduces 1000 measurements → ~20 coefficients = denoising
+     - Regularization matrix H provides smoothness
+     - Error propagation through covariance matrix
+   - **Validates user's intuition**: "Crucial denoising performed through IFT"
+   - **Implication**: REGALS already does joint optimization (no two-stage problem for denoising)
+
+3. **Pragmatic Solution for Molass: Dual Evaluation**
+   - **User's insight**: "Use M_noisy after solving with M_clean"
+   - **Approach**:
+     ```
+     Stage 0: M_noisy → SVD → M_clean
+     Stage 1 & 2: Optimize parameters to fit M_clean (smooth landscape)
+     Validation: Evaluate χ² against M_noisy (robustness check)
+     ```
+   - **Benefits**:
+     - Keeps existing optimizer (no algorithmic changes needed)
+     - Uses denoising for convergence aid
+     - Validates against ground truth (M_noisy)
+     - Detects overfitting to denoised features
+   - **Interpretation**:
+     - χ²_clean acceptable, χ²_noisy acceptable → robust solution ✓
+     - χ²_clean good, χ²_noisy poor → overfit to denoising artifacts ⚠️
+   - **Comparison to Zhang 2025**: Different philosophy
+     - Zhang: Joint optimization (change HOW you optimize)
+     - Dual eval: Pragmatic validation (optimize on clean, validate on noisy)
+     - More practical for Molass's parametric models
+
+4. **Convergence and Optimality Analysis**
+   - **REGALS ALS**: Guaranteed convergence to local minimum (convex subproblems)
+   - **Zhang 2025**: No convergence guarantee (non-convex joint problem)
+   - **Conclusion**: ALS superior for convergence properties
+   - **Potential Zhang application**: Gradient-informed initialization for ALS
+     - Use Zhang's insight to initialize better
+     - Then let ALS converge reliably
+     - Hybrid approach keeps best of both
+
+**Final Status**: Algorithm exploration complete, documented, ready to return to JOSS validation work
+
+---
+
 ### January 18, 2026 - Morning Session
 
 #### Mathematical Precision Refinements
@@ -654,6 +831,7 @@ Deeper questions about implicit functional forms, comparative performance, and a
 | Jan 20, 2026 (AM) | EFA Limitation 3 verification | ✓ Created limitation_3_tailing_effects.ipynb, discovered FIFO fails even for Gaussian peaks, negative window widths |
 | Jan 20, 2026 (PM) | Literature analysis: modern methods | ✓ Extracted 4 papers (45 pages), created SAXS_methods_analysis.md, identified critical gap in literature |
 | Jan 20, 2026 (Eve) | Documentation cleanup | ✓ Unified CHROMIXS spelling, updated PROJECT_STATUS.md with full session summary |
+| Jan 21, 2026 (AM-PM) | Zhang 2025 algorithm exploration | ✓ Created 3 notebooks (pedagogical, full demo, real data), identified two-stage architecture, verified REGALS code, analyzed Moore 1980 IFT, developed dual-evaluation approach |
 
 ---
 
