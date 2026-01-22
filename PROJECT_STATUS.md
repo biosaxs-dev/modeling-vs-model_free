@@ -113,7 +113,7 @@ Created detailed mathematical analysis in `explorations/` demonstrating the mult
 - ✓ Maintained `explorations/` as supporting mathematical analysis
 - ✓ Clarified repository purpose: JOSS claim validation (not standalone paper)
 
-### Phase 6: Algorithm Exploration - Zhang 2025 (✓ Complete - Jan 21, 2026)
+### Phase 6: Algorithm Exploration - Zhang 2025 (✓ Complete - Jan 21-22, 2026)
 - ✓ Analyzed Zhang 2025 paper: "Loss-Minimizing Model Compression via Joint Factorization Optimization"
 - ✓ Created `algorithms/` directory (moved from `evidence/algorithms/`)
 - ✓ **zhang2025_simple_concept.ipynb**: 3×3 pedagogical example demonstrating gradient·noise insight
@@ -143,6 +143,9 @@ Created detailed mathematical analysis in `explorations/` demonstrating the mult
   - Validate against M_noisy (robustness check)
   - Simple to implement (just add final evaluation)
   - Addresses Zhang 2025 concern differently (validation vs joint optimization)
+  - **Documented** in matrix_factorization_trends_2025.md (Jan 22)
+
+**Summary**: Algorithm exploration complete and documented. Zhang 2025 insights explored but tangential to main JOSS validation work. Ready to return to primary focus: extracting evidence for CHROMIXS/EFAMIX/REGALS claims.
 
 ---
 
@@ -832,6 +835,7 @@ Deeper questions about implicit functional forms, comparative performance, and a
 | Jan 20, 2026 (PM) | Literature analysis: modern methods | ✓ Extracted 4 papers (45 pages), created SAXS_methods_analysis.md, identified critical gap in literature |
 | Jan 20, 2026 (Eve) | Documentation cleanup | ✓ Unified CHROMIXS spelling, updated PROJECT_STATUS.md with full session summary |
 | Jan 21, 2026 (AM-PM) | Zhang 2025 algorithm exploration | ✓ Created 3 notebooks (pedagogical, full demo, real data), identified two-stage architecture, verified REGALS code, analyzed Moore 1980 IFT, developed dual-evaluation approach |
+| Jan 22, 2026 (AM) | Zhang 2025 documentation wrap-up | ✓ Documented dual-evaluation approach in matrix_factorization_trends_2025.md, closed algorithm exploration, ready to return to JOSS validation |
 
 ---
 

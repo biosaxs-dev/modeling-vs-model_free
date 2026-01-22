@@ -234,6 +234,145 @@ Potential: Could optimize directly for experimental objectives
 
 ---
 
+## Pragmatic Solution: Dual-Evaluation Approach
+
+### Motivation
+
+**Zhang 2025 critique**: Two-stage optimization (denoise → fit) is suboptimal compared to joint optimization
+
+**Challenge for Molass**: Implementing full joint optimization would require major algorithmic changes:
+- Rewrite optimizer to simultaneously handle denoising + parametric fitting
+- Define joint objective function combining data fit and physical constraints
+- No guarantee of convergence (non-convex joint problem)
+
+**Alternative insight**: Use denoising as optimization aid, but validate against ground truth
+
+### The Dual-Evaluation Strategy
+
+**Approach**:
+```python
+# Current Molass workflow
+M_clean = svd_denoise(M_noisy, k=analyst_chosen_rank)  # Stage 0
+params = optimize_parametric_model(M_clean)             # Stage 1 & 2
+
+# Proposed addition: Dual evaluation
+chi2_clean = evaluate(M_clean, params)   # Optimization objective (existing)
+chi2_noisy = evaluate(M_noisy, params)   # Validation check (NEW)
+```
+
+**Key principle**: Optimize on denoised data for convergence stability, but validate on original noisy data for robustness
+
+### Benefits
+
+1. **Simple implementation**: No algorithmic changes to optimizer
+   - Just add final evaluation step against M_noisy
+   - Reuse existing chi-square calculation code
+
+2. **Diagnostic capability**: Two quality metrics provide insight
+   - χ²_clean acceptable, χ²_noisy acceptable → Robust solution ✓
+   - χ²_clean good, χ²_noisy poor → Overfit to denoising artifacts ⚠️
+   - Quantitative ratio (χ²_noisy / χ²_clean) indicates overfitting severity
+
+3. **Conservative validation**: Doesn't overcommit to denoised features
+   - SVD may introduce artifacts (truncation effects)
+   - Parametric fit might exploit these artifacts
+   - M_noisy validation catches this problem
+
+4. **Familiar paradigm**: Similar to machine learning train/test split
+   - "Train" on M_clean (smooth optimization landscape)
+   - "Test" on M_noisy (real-world performance)
+   - Generalization gap = overfitting indicator
+
+### Comparison to Zhang 2025 Joint Optimization
+
+| Aspect | Zhang 2025 | Dual-Evaluation |
+|--------|-----------|-----------------|
+| **Philosophy** | Change HOW you optimize | Keep optimizer, add validation |
+| **Implementation** | Requires algorithm rewrite | Single line of code |
+| **Optimization target** | Joint (data + constraints) | Sequential (M_clean then validate) |
+| **Convergence** | No guarantee (non-convex) | Same as current (well-tested) |
+| **Diagnostic value** | Single metric | Two metrics (clean vs noisy) |
+| **Addresses Zhang critique** | Directly (joint optimization) | Indirectly (pragmatic validation) |
+
+### When Dual-Evaluation Detects Problems
+
+**Scenario 1: Overfitting to SVD truncation**
+- M_clean has sharp boundaries at chosen rank k
+- Parametric model fits these boundaries
+- But M_noisy shows these are artifacts
+- Result: χ²_clean ≈ 1.0, χ²_noisy >> 1.5 (failure detected)
+
+**Scenario 2: Noise-exploiting parameter values**
+- Optimizer finds parameters that "fit" denoising patterns
+- E.g., unrealistic skewness matching SVD basis functions
+- M_noisy validation reveals poor generalization
+- Result: Parameter values suspicious + high χ²_noisy (investigation needed)
+
+**Scenario 3: Robust solution (ideal)**
+- Parameters fit M_clean well (smooth optimization)
+- Same parameters fit M_noisy acceptably (robust)
+- Result: χ²_clean ≈ χ²_noisy ≈ 1.0 (success)
+
+### Architectural Context
+
+**REGALS**: Already avoids this problem
+- No separate SVD denoising stage
+- Operates directly on M_noisy
+- IFT regularization provides implicit denoising during ALS
+- Joint optimization already present (data fit + regularization)
+
+**Molass**: Explicit SVD denoising stage
+- Stage 0: M_noisy → SVD(k) → M_clean
+- Stage 1 & 2: Parametric fitting on M_clean only
+- Zhang 2025's critique directly applies
+- Dual-evaluation is pragmatic mitigation
+
+### Implementation Example
+
+```python
+# In Molass parametric fitting code
+def fit_parametric_model(M_noisy, k, model='EGH'):
+    # Stage 0: Denoising (existing)
+    M_clean = svd_denoise(M_noisy, rank=k)
+    
+    # Stage 1 & 2: Optimization (existing)
+    params = optimize(M_clean, model)
+    
+    # NEW: Dual evaluation
+    chi2_clean = compute_chi2(M_clean, params)
+    chi2_noisy = compute_chi2(M_noisy, params)  # Added validation
+    
+    # Diagnostic
+    if chi2_noisy / chi2_clean > 1.5:
+        warnings.warn(f"Overfitting detected: χ²_noisy/χ²_clean = {ratio:.2f}")
+    
+    return params, {'chi2_clean': chi2_clean, 
+                   'chi2_noisy': chi2_noisy,
+                   'overfitting_ratio': chi2_noisy / chi2_clean}
+```
+
+### Research Question Raised
+
+**Open question**: What threshold ratio indicates problematic overfitting?
+- Ratio = 1.0: Perfect (parameters generalize perfectly)
+- Ratio = 1.2: Acceptable? (slight overfitting to denoising)
+- Ratio = 1.5: Concerning? (significant dependence on denoised features)
+- Ratio > 2.0: Failure? (parameters exploiting artifacts)
+
+**Empirical investigation needed**: Test on diverse SEC-SAXS datasets to calibrate threshold
+
+### Conclusion
+
+The dual-evaluation approach offers a **pragmatic middle ground**:
+- Captures spirit of Zhang 2025's insight (validate against true objective)
+- Avoids complexity of full joint optimization
+- Provides diagnostic value for practitioners
+- Easy to implement in existing Molass codebase
+
+Not a replacement for joint optimization, but a practical validation strategy that addresses the same concern.
+
+---
+
 ## Conclusions: Latest Trends
 
 ### Algorithmic Trend (2025)

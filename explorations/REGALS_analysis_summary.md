@@ -56,12 +56,15 @@ $$\min_{P,C} \|M - PC\|^2$$
 $$\min_{P,C} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
 
 - **Result**: Still infinitely many solutions (orthogonal transformations only)
-- **Free parameters**: $\frac{n(n-1)}{2}$ (orthogonal group O(n))
+- **Free parameters**: $\frac{n(n-1)}{2}$ (dimension of orthogonal group O(n))
 - **What changed**:
   - Scale ambiguity **eliminated** (smoothness penalty changes with scale)
-  - Basis ambiguity **reduced** (from arbitrary $R$ to orthogonal $B$ only)
+  - Basis ambiguity **reduced** (from arbitrary invertible $R$ to orthogonal $B$ only)
 - **Mathematical insight**: $\|D^2(B^{-1}C)\|^2 = \|D^2C\|^2$ for orthogonal $B$
-- **Orthogonal group structure**: O(n) includes proper rotations (SO(n), det=+1) and improper rotations (det=-1, including reflections, rotoinversions, and orientation-reversing isometries)
+- **Orthogonal group O(n) structure**:
+  - **SO(n)** (det = +1): Special orthogonal group = proper rotations
+  - **det = -1**: Improper orthogonal transformations (reflections, rotoinversions, orientation-reversing isometries)
+  - For $n \gg 100$ (typical SEC-SAXS), improper transformations are far more complex than simple reflections
 
 ### Level 3: Add Non-Negativity
 $$\min_{P \geq 0, C \geq 0} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
@@ -69,9 +72,9 @@ $$\min_{P \geq 0, C \geq 0} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
 - **Result**: Unique solution or small discrete set
 - **Free parameters**: 0 or small discrete set (permutation ambiguity)
 - **What changed**: 
-  - Continuous ambiguity (n(n-1)/2 degrees of freedom) **eliminated**
+  - Continuous ambiguity ($n(n-1)/2$ degrees of freedom from O(n)) **eliminated**
   - Discrete permutation ambiguity **may persist** when components are similar
-  - Most random orthogonal transformations produce negative values (empirically verified)
+  - Most random orthogonal transformations (both proper rotations and improper transformations) produce negative values (empirically verified)
 
 ### Level 4: Full REGALS (Normalization + Compact Support + SAXS)
 $$\min_{\substack{P \geq 0, C \geq 0 \\ C(t) = 0 \text{ outside windows} \\ P \leftrightarrow P(r) \text{ with } d_{max} \\ \|P_k\| = 1}} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
@@ -163,16 +166,35 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
    - **Their statement**: "basis vectors can be mixed (or 'rotated') without changing χ²"
    - **Assessment**: They understand it's not literally rotations (hence the quotes), though clearer terminology would be "mixed" or "transformed"
 
-2. **"Orthogonal rotations"** (imprecise terminology for high dimensions)
-   - **Issue**: Redundant and imprecise for high-dimensional matrices
-   - **Better term**: "Orthogonal transformations" (includes proper rotations + improper rotations)
-   - **Mathematical precision**: For $n \gg 100$ (typical SEC-SAXS), improper rotations include far more than simple reflections (rotoinversions, orientation-reversing isometries)
+2. **"Orthogonal rotations"** (imprecise and redundant terminology)
+   - **Issue**: Conflates two distinct concepts from group theory
+   - **Correct terminology**:
+     - **Orthogonal transformations** = O(n) group (includes both det=+1 and det=-1)
+     - **Proper rotations** = SO(n) group (det=+1 only, a subgroup of O(n))
+     - **Improper orthogonal transformations** = det=-1 (reflections, rotoinversions, etc.)
+   - **Why "orthogonal rotations" is wrong**: "Rotation" specifically means SO(n) (det=+1), so "orthogonal rotations" is either redundant (if meaning SO(n)) or contradictory (if trying to include det=-1 cases)
+   - **Mathematical precision**: For $n \gg 100$ (typical SEC-SAXS), O(n) has dimension $n(n-1)/2$, with SO(n) as an index-2 normal subgroup
 
-### Orthogonal Group Structure
+### Orthogonal Group Structure (Precise Mathematical Classification)
 
-- **O(n)**: Full orthogonal group, dimension $\frac{n(n-1)}{2}$
-- **SO(n)**: Special orthogonal group (proper rotations), det = +1
-- **Improper rotations**: det = -1 (includes reflections, rotoinversions, and other orientation-reversing transformations)
+- **O(n)**: Full orthogonal group (all orthogonal matrices)
+  - Dimension: $\frac{n(n-1)}{2}$
+  - Determinant: +1 or -1
+  - Preserves lengths and angles (isometries of Euclidean space)
+  
+- **SO(n)**: Special orthogonal group (proper rotations only)
+  - A normal subgroup of O(n) with index 2
+  - Determinant: +1 (det=+1 is the defining property)
+  - Path-connected, preserves orientation
+  - These are true "rotations" in the geometric sense
+
+- **Improper orthogonal transformations**: (det = -1)
+  - NOT a subgroup, only a coset of SO(n)
+  - Includes: reflections, rotoinversions, orientation-reversing isometries
+  - For $n > 2$: More complex than simple reflections
+  - Example: Inversion through origin (all coordinates negated)
+
+- **Quotient**: O(n)/SO(n) ≅ {+1, -1} ≅ O(1)
 
 ---
 
@@ -247,11 +269,15 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
 
 2. **Fundamental underdeterminedness**: Matrix factorization $\min\|M-PC\|^2$ has infinitely many solutions without additional constraints or regularization
 
-3. **Four-layer constraint hierarchy**: Each layer (smoothness, non-negativity, normalization, SAXS) progressively eliminates ambiguities
+3. **Four-layer constraint hierarchy**: Each layer progressively eliminates ambiguities:
+   - Level 1 (data-fit): Infinite solutions (any invertible matrix)
+   - Level 2 (+ smoothness): Infinite solutions restricted to O(n) (orthogonal transformations)
+   - Level 3 (+ non-negativity): Unique or small discrete set
+   - Level 4 (+ full REGALS): Typically unique
 
 4. **Permutation ambiguity persists**: Even with all constraints, 5-50% of real-world cases may have discrete label-swapping ambiguity
 
-5. **Mathematical precision**: REGALS authors correctly identify mixing ambiguity as "any non-singular matrix" though use informal "'rotated'" terminology (with quotes)
+5. **Mathematical precision**: REGALS authors correctly identify mixing ambiguity as "any non-singular matrix", though use informal "'rotated'" terminology (with quotes). With smoothness regularization, ambiguity reduces to O(n) (orthogonal group), not just SO(n) (rotations)
 
 6. **Open research question**: What functional forms does smoothness regularization $\lambda\|D^2C\|^2$ actually favor? (Gaussian-like? Cubic splines? Other?)
 
@@ -276,9 +302,9 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
 
 ### Key Mathematical Results
 
-- **Orthogonal invariance of smoothness**: $\|D^2(B^{-1}C)\|^2 = \|D^2C\|^2$ for orthogonal $B$
-- **Scale elimination by regularization**: $\|D^2(C/\alpha)\|^2 = \|D^2C\|^2/\alpha^2$ creates unique optimum
-- **Non-negativity restricts O(n)**: Most random orthogonal transformations produce negative values
+- **O(n) invariance of smoothness**: $\|D^2(B^{-1}C)\|^2 = \|D^2C\|^2$ for all orthogonal $B \in$ O(n)
+- **Scale elimination by regularization**: $\|D^2(C/\alpha)\|^2 = \|D^2C\|^2/\alpha^2$ creates unique scale
+- **Non-negativity constraint restricts O(n)**: Most random orthogonal transformations (both proper rotations in SO(n) and improper transformations) produce negative values, violating physical constraints
 
 ---
 
