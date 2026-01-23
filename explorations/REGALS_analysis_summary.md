@@ -69,23 +69,24 @@ $$\min_{P,C} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
 ### Level 3: Add Non-Negativity
 $$\min_{P \geq 0, C \geq 0} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
 
-- **Result**: Unique solution or small discrete set
-- **Free parameters**: 0 or small discrete set (permutation ambiguity)
+- **Result**: Unique solution or **small discrete set of local minima**
+- **Free parameters**: 0 continuous parameters, but up to $k!$ discrete permutations possible
 - **What changed**: 
   - Continuous ambiguity ($n(n-1)/2$ degrees of freedom from O(n)) **eliminated**
   - Discrete permutation ambiguity **may persist** when components are similar
+  - **Key insight**: "Small discrete set" = discrete local minima (one per valid permutation)
   - Most random orthogonal transformations (both proper rotations and improper transformations) produce negative values (empirically verified)
 
 ### Level 4: Full REGALS (Normalization + Compact Support + SAXS)
 $$\min_{\substack{P \geq 0, C \geq 0 \\ C(t) = 0 \text{ outside windows} \\ P \leftrightarrow P(r) \text{ with } d_{max} \\ \|P_k\| = 1}} \|M - PC\|^2 + \lambda\|D^2C\|^2$$
 
-- **Result**: Unique solution (guaranteed for generic data)
-- **Free parameters**: 0 or small discrete set
+- **Result**: Unique solution (typically), or **small discrete set of local minima** (edge cases)
+- **Free parameters**: 0 continuous parameters, 0 or small number of valid permutations
 - **What changed**:
   - **Normalization**: Ensures no residual scaling freedom
-  - **Compact support**: Spatially separates components
-  - **SAXS constraints**: Distinguishes components by molecular size
-  - **Edge case**: Nearly identical components may still permit permutation ambiguity
+  - **Compact support**: Spatially separates components (reduces permutation ambiguity)
+  - **SAXS constraints**: Distinguishes components by molecular size (further reduces permutations)
+  - **Edge case**: Nearly identical components may still permit 2-6 discrete local minima (permutations)
 
 ---
 
@@ -126,7 +127,29 @@ $$\min_{\substack{P \geq 0, C \geq 0 \\ C(t) = 0 \text{ outside windows} \\ P \l
 
 ---
 
-## 4. The Permutation Ambiguity Problem
+## 4. The Permutation Ambiguity Problem as Discrete Local Minima
+
+### Unifying Perspective: Permutations ARE Local Minima
+
+**Critical insight**: "Small discrete set" in the constraint hierarchy = **discrete local minima** in the optimization landscape.
+
+**Each valid permutation is a local minimum**:
+- Component swap $(P_1, P_2, P_3) \to (P_2, P_1, P_3)$ creates different solution
+- Same or similar $\chi^2$ value (locally optimal)
+- Different physical interpretation (which component is which?)
+- ALS from single initialization converges to ONE of these randomly
+
+**Example**: 3-component system
+- Maximum $3! = 6$ possible permutations
+- Each permutation = one local minimum basin
+- No gradient path between basins (discrete jumps required)
+- Global optimization needed to explore all 6 possibilities
+
+**This explains two phenomena simultaneously**:
+1. **Permutation ambiguity** (Section 4): "Different initializations may converge to different permutations"
+2. **Need for global optimization** (global_optimization_gap.md): Single initialization insufficient
+
+**EFAMIX's trade-off makes sense**: By avoiding non-negativity constraints, they prevent creation of these discrete local minima branches—but sacrifice physical correctness (negative concentrations possible).
 
 ### When Discrete Ambiguity Persists
 
@@ -275,7 +298,7 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
    - Level 3 (+ non-negativity): Unique or small discrete set
    - Level 4 (+ full REGALS): Typically unique
 
-4. **Permutation ambiguity persists**: Even with all constraints, 5-50% of real-world cases may have discrete label-swapping ambiguity
+4. **Permutation ambiguity = discrete local minima**: Even with all constraints, 5-50% of real-world cases have 2-6 discrete local minima (valid permutations). Each is locally optimal; global optimization needed to explore all.
 
 5. **Mathematical precision**: REGALS authors correctly identify mixing ambiguity as "any non-singular matrix", though use informal "'rotated'" terminology (with quotes). With smoothness regularization, ambiguity reduces to O(n) (orthogonal group), not just SO(n) (rotations)
 
