@@ -43,8 +43,9 @@ REGALS content is distributed across three locations based on purpose:
 - `regals.py` - REGALS implementation
 - `efa.py` - EFA comparison code
 - `nifty.py` - Utilities
-- `REGALS_code_verification.md` - Verification notes
-**Note**: Complete copy of REGALS repository subfolder (.gitignored)
+- Complete copy of REGALS repository subfolder (.gitignored)
+
+**Documentation**: [code_verification.md](code_verification.md) - Detailed verification of REGALS alternating least squares implementation
 
 ## Primary Source
 
