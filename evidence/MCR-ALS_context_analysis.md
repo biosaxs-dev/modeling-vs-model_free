@@ -3,6 +3,8 @@
 ## Purpose
 Understand the broader MCR-ALS (Multivariate Curve Resolution - Alternating Least Squares) context from chemometrics and how it applies to SEC-SAXS deconvolution, particularly as the foundation for REGALS.
 
+**Related**: See [historical_development.md](historical_development.md) for the complete historical narrative integrating both EFA and MCR-ALS traditions.
+
 ## Sources
 - **Jaumot et al. (2004)**: "Application of multivariate resolution methods to the study of biochemical and biophysical processes" - comprehensive review
 - **Parker et al. (2018)**: "An endogenous dAMP ligand in Bacillus subtilis class Ib RNR..." - first application of regularized ALS to AEX-SAXS (precursor to REGALS)
@@ -216,6 +218,8 @@ For ANY non-singular matrix **T**, infinite solutions exist that fit the data eq
 
 **Key advance**: **Regularization reduces ambiguity MORE than soft constraints alone**
 
+**Detailed analysis**: See [../explorations/REGALS_analysis_summary.md](../explorations/REGALS_analysis_summary.md) for mathematical proof of the constraint hierarchy.
+
 ---
 
 ## Comparison: MCR-ALS vs. EFA vs. REGALS
@@ -290,6 +294,8 @@ For ANY non-singular matrix **T**, infinite solutions exist that fit the data eq
 - + Modern regularization theory (Tikhonov-Miller, Bayesian)
 - + SAXS-specific adaptations (P(r) basis, d_max constraints)
 - Solving the same rotation ambiguity problem as MCR-ALS/EFA but with more powerful tools
+
+**Verification**: See [regals/method_verification.md](regals/method_verification.md) for detailed verification of REGALS architecture claims.
 
 ---
 

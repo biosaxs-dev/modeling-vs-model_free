@@ -1,7 +1,7 @@
 # REGALS Method Verification
 
 ## Purpose
-Verify claims about REGALS architecture made in [historical_development.md](historical_development.md) by carefully reading the REGALS paper (Meisburger et al., 2021) and supporting information.
+Verify claims about REGALS architecture made in [historical_development.md](../historical_development.md) by carefully reading the REGALS paper (Meisburger et al., 2021) and supporting information.
 
 ## Sources
 - Main paper: "REGALS: a general method to deconvolve X-ray scattering data from evolving mixtures" (2021, Steve P. Meisburger, Da Xu, Nozomi Ando)

@@ -5,10 +5,10 @@
 **Date**: January 21, 2026
 
 **Key Sources**: 
-- Citation_dependency_graph.md
-- EFA_limitations_from_inventors.md
-- SAXS_methods_analysis.md
-- limitation_3_tailing_effects.ipynb (verification)
+- [citation_dependency_graph.md](citation_dependency_graph.md)
+- [efa_original/EFA_limitations_from_inventors.md](efa_original/EFA_limitations_from_inventors.md)
+- [SAXS_methods_analysis.md](SAXS_methods_analysis.md)
+- [efa_original/limitation_3_tailing_effects.ipynb](efa_original/limitation_3_tailing_effects.ipynb) (verification)
 
 ---
 
@@ -258,7 +258,7 @@ From SAXS_methods_analysis.md:
 
 **Solution Strategy**: **Add constraints to resolve ambiguity**
 
-From REGALS_analysis_summary.md, the constraint hierarchy:
+From [REGALS_analysis_summary.md](../explorations/REGALS_analysis_summary.md), the constraint hierarchy:
 - **Level 1** (data-fit only): Infinite solutions
 - **Level 2** (+ smoothness): Orthogonal ambiguity only  
 - **Level 3** (+ non-negativity): Almost unique (discrete permutation may persist)
@@ -308,7 +308,7 @@ From REGALS_analysis_summary.md, the constraint hierarchy:
 
 ### 1. FIFO Mathematical Impossibility
 
-**Discovery**: Our limitation_3_tailing_effects.ipynb (January 2026)
+**Discovery**: Our [limitation_3_tailing_effects.ipynb](efa_original/limitation_3_tailing_effects.ipynb) (January 2026)
 
 **Finding**: FIFO assumption fails even for ideal Gaussian peaks with sufficient overlap
 - Component 3 appears at frame 60 but backward EFA says "disappears" at frame 51
@@ -513,13 +513,13 @@ From REGALS_analysis_summary.md, the constraint hierarchy:
 - Meisburger et al. (2021) - REGALS
 
 ### Our Analysis
-- citation_dependency_graph.md - Who cites whom
-- EFA_limitations_from_inventors.md - Direct quotes from inventors
-- SAXS_methods_analysis.md - Modern methods comparison
-- MCR-ALS_context_analysis.md - Chemometrics parallel development and convergence
-- REGALS_method_verification.md - Verified REGALS architecture and constraints
-- limitation_3_tailing_effects.ipynb - FIFO mathematical impossibility proof
-- REGALS_analysis_summary.md - Constraint hierarchy analysis
+- [citation_dependency_graph.md](citation_dependency_graph.md) - Who cites whom
+- [efa_original/EFA_limitations_from_inventors.md](efa_original/EFA_limitations_from_inventors.md) - Direct quotes from inventors
+- [SAXS_methods_analysis.md](SAXS_methods_analysis.md) - Modern methods comparison
+- [MCR-ALS_context_analysis.md](MCR-ALS_context_analysis.md) - Chemometrics parallel development and convergence
+- [regals/method_verification.md](regals/method_verification.md) - Verified REGALS architecture and constraints
+- [efa_original/limitation_3_tailing_effects.ipynb](efa_original/limitation_3_tailing_effects.ipynb) - FIFO mathematical impossibility proof
+- [../explorations/REGALS_analysis_summary.md](../explorations/REGALS_analysis_summary.md) - Constraint hierarchy analysis
 
 ---
 
