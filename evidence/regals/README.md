@@ -1,9 +1,50 @@
 # REGALS Evidence
 
-## Claims to Validate
+## Purpose
 
-**From JOSS paper Research Impact Statement:**
-> "REGALS employs a two-stage approach combining EFA with L1 regularization, inheriting EFA's fundamental limitations in overlapping peak scenarios"
+This folder contains evidence extraction and verification work for REGALS (Regularized Alternating Least Squares) to validate claims made in the JOSS paper Research Impact Statement.
+
+## Contents
+
+### method_verification.md
+**Status**: ✅ **Complete** - Detailed verification of REGALS architecture and capabilities
+
+**Key Findings**:
+- ❌ **"Two-stage architecture" claim is incorrect** - REGALS uses iterative regularized ALS, not separate detection/resolution stages
+- ✅ **Compact support is optional** - REGALS can use multiple regularization strategies (smoothness, d_max, boundary conditions)
+- ⚠️ **More general than EFA** - Works for equilibrium titrations and time-resolved experiments, not just chromatography
+
+**Contains**:
+- Verification of 4 claims from historical_development.md
+- Direct quotes from Meisburger et al. (2021) paper and supporting information
+- Parameter tables from 4 datasets (BsRNR AEX-SAXS, PheH titration, MsbA time-resolved, CypA T-jump)
+- Corrected characterization of REGALS method
+- Implications for JOSS paper narrative
+
+## Related REGALS Content
+
+REGALS content is distributed across three locations based on purpose:
+
+### 1. Evidence Extraction (This Folder) 🎯 CORE
+**Path**: `evidence/regals/`
+**Purpose**: Validate JOSS paper Research Impact Statement claims
+**Contents**: method_verification.md
+
+### 2. Mathematical Analysis 📚 Supporting
+**Path**: [`explorations/REGALS_analysis_summary.md`](../../explorations/REGALS_analysis_summary.md)
+**Purpose**: Deep mathematical analysis of constraint hierarchy
+**Contents**: 4-level proof showing orthogonal invariance → regularization necessity
+**Note**: Exceeds JOSS requirements but provides valuable theoretical foundation
+
+### 3. Code Verification 📚 Supporting
+**Path**: [`algorithms/temp_regals/`](../../algorithms/temp_regals/)
+**Purpose**: Verify REGALS implementation and behavior
+**Contents**: 
+- `regals.py` - REGALS implementation
+- `efa.py` - EFA comparison code
+- `nifty.py` - Utilities
+- `REGALS_code_verification.md` - Verification notes
+**Note**: Complete copy of REGALS repository subfolder (.gitignored)
 
 ## Primary Source
 
@@ -11,41 +52,8 @@
 
 **DOI**: 10.1107/S2052252521000555
 
-## Supporting Sources (EFA Limitations)
+## Status
 
-### EFA Invention Paper
-**Paper**: Maeder, M. & Zilian, A. (1988). Evolving factor analysis, a new multivariate technique in chromatography. *Chemometrics and Intelligent Laboratory Systems*, 3, 205-213.
-
-**DOI**: 10.1016/0169-7439(88)80051-0
-
-### EFA Tutorial
-**Paper**: Keller, H.R. & Massart, D.L. (1991). Evolving factor analysis. *Chemometrics and Intelligent Laboratory Systems*, 12, 209-224.
-
-**DOI**: 10.1016/0169-7439(91)80125-S
-
-## Evidence to Extract
-
-### Two-Stage Process
-- [ ] Stage 1: EFA (component detection, window determination)
-- [ ] Stage 2: Regularized deconvolution (L1 + smoothness)
-- [ ] Section/figure showing this architecture
-
-### EFA Limitations Inherited
-From Maeder & Zilian (1988):
-- [ ] "Tailing seems to be the most serious difficulty"
-- [ ] Baseline sensitivity issues
-- [ ] Sequential elution assumption (FIFO)
-
-From Keller & Massart (1991):
-- [ ] "Rank of data matrix will be higher than number of underlying chemical species"
-- [ ] Rank inflation from instrumental nonlinearities
-- [ ] Quantification impossibility without external calibration
-
-### Overlapping Peak Context
-- [ ] How REGALS handles overlapping peaks via regularization
-- [ ] Limitations that persist despite regularization
-- [ ] Comparison to baseline-separated cases
-
-## Validation Notes
-
-*To be filled with specific quotes, method descriptions, and analysis demonstrating the two-stage architecture and inherited limitations.*
+- ✅ Method architecture verification complete
+- ✅ Key claims corrected
+- ⏳ JOSS paper narrative update pending (incorporate corrected characterization)

@@ -1,6 +1,32 @@
 # Explorations: Mathematical & Numerical Investigations
 
-This folder contains Jupyter notebooks for preliminary mathematical and numerical explorations supporting the paper "Implicit vs Explicit Modeling in SEC-SAXS Deconvolution."
+**Status**: ✅ Complete (January 17-22, 2026)  
+**Purpose**: Supporting analysis - **NOT required for JOSS validation**  
+**Relevance**: Rigorous mathematical foundations exceeding JOSS review needs
+
+---
+
+This folder contains Jupyter notebooks providing **mathematical deep dives** into matrix factorization underdeterminedness, regularization theory, and constraint hierarchies. While this work strengthens theoretical understanding and may support future research publications, **it is not directly required for JOSS Research Impact Statement validation**.
+
+---
+
+## Relationship to JOSS Validation
+
+### ❌ NOT Core to Validation
+
+These mathematical explorations are **supporting work** that exceeds JOSS requirements:
+- JOSS requires documenting **existing method limitations** from literature
+- These notebooks provide **mathematical proofs** of theoretical foundations
+- Different scope: rigorous derivations vs evidence extraction
+
+### ✅ Valuable Context
+
+While not required, these analyses:
+- Prove fundamental impossibility of "model-free" claims
+- Quantify ambiguity risks (5-50% of datasets)
+- Demonstrate expertise and deep understanding
+- Provide foundation for future research publications
+- Strengthen arguments in JOSS paper (can be cited as supporting evidence)
 
 ---
 

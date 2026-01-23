@@ -1,6 +1,12 @@
 # Evidence for JOSS Research Impact Statement
 
-This directory contains documented evidence supporting the claims made in the Molass Library JOSS paper's Research Impact Statement.
+**Status**: 🚧 In progress (Evidence extraction phase)  
+**Purpose**: Core validation work - **REQUIRED for JOSS validation**  
+**Priority**: **HIGH - Primary deliverable**
+
+---
+
+This directory contains **direct evidence extraction** from peer-reviewed papers supporting the claims made in the Molass Library JOSS paper's Research Impact Statement. This is the **core validation work** required for JOSS submission defense.
 
 ## Structure
 

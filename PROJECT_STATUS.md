@@ -1,5 +1,19 @@
 # Project Status & Resumption Guide
-**Last Updated**: January 20, 2026 (Evening)
+**Last Updated**: January 22, 2026 (Afternoon)
+
+---
+
+## 🎯 Priority Classification
+
+This repository contains three types of work:
+
+| Priority | Type | Status | Focus |
+|----------|------|--------|-------|
+| 🎯 **CORE** | JOSS validation evidence | 🚧 In progress | **Current priority** |
+| 📚 **Supporting** | Mathematical/algorithmic analysis | ✅ Complete | Valuable context, not required |
+| 📦 **Future** | Broader research agenda | ✅ Archived | After JOSS acceptance |
+
+**Current Focus**: Core validation work in `evidence/` directory (extracting claims from papers)
 
 ---
 
@@ -20,24 +34,28 @@
 
 ## Repository Structure
 
-| Directory/File | Purpose | Status |
-|----------------|---------|--------|
-| **evidence/** | Documented validation of JOSS claims | 🚧 In progress |
-| ├─ **chromixs/** | Evidence CHROMIXS defers overlapping peaks | ⏳ To be extracted |
-| ├─ **efamix/** | Quantified EFAMIX failure thresholds | ⏳ To be extracted |
-| └─ **regals/** | REGALS two-stage architecture & EFA limitations | ⏳ To be extracted |
-| **algorithms/** | Matrix factorization algorithm explorations | ✓ Complete |
-| ├─ zhang2025_simple_concept.ipynb | 3×3 pedagogical example | ✓ Complete |
-| ├─ zhang2025_joint_optimization_demo.ipynb | 100×50 full demonstration | ✓ Complete |
-| ├─ zhang2025_denoising_comparison.ipynb | Real data comparison with REGALS discussion | ✓ Complete |
-| └─ matrix_factorization_trends_2025.md | Zhang 2025 relevance analysis | ✓ Complete |
-| **explorations/** | Mathematical analysis (supporting) | ✓ Complete |
-| ├─ underdeterminedness_exploration.ipynb | Constraint hierarchy proof | ✓ Complete |
-| ├─ permutation_ambiguity_examples.ipynb | Discrete ambiguity scenarios | ✓ Complete |
-| └─ REGALS_analysis_summary.md | Comprehensive findings | ✓ Complete |
-| **archive/** | Original research project documents | ✓ Archived |
-| ├─ discussion_points.md | Broader research paper planning | Archived |
-| └─ detailed_approach.md | 18-week research implementation plan | Archived |
+| Directory/File | Purpose | Status | Priority |
+|----------------|---------|--------|----------|
+| **evidence/** | Documented validation of JOSS claims | 🚧 In progress | 🎯 **CORE** |
+| ├─ **chromixs/** | Evidence CHROMIXS defers overlapping peaks | ⏳ To be extracted | 🎯 **CORE** |
+| ├─ **efamix/** | Quantified EFAMIX failure thresholds | ⏳ To be extracted | 🎯 **CORE** |
+| └─ **regals/** | REGALS two-stage architecture & EFA limitations | ⏳ To be extracted | 🎯 **CORE** |
+| **molass/** | JOSS paper submission | ✓ Complete | 🎯 **CORE** |
+| **tools/** | PDF extraction utilities | ✓ Working | 🎯 **CORE** |
+| **reference_papers/** | Source PDFs | ✓ Available | 🎯 **CORE** |
+| **algorithms/** | Matrix factorization algorithm explorations | ✓ Complete | 📚 Supporting |
+| ├─ zhang2025_simple_concept.ipynb | 3×3 pedagogical example | ✓ Complete | 📚 Supporting |
+| ├─ zhang2025_joint_optimization_demo.ipynb | 100×50 full demonstration | ✓ Complete | 📚 Supporting |
+| ├─ zhang2025_denoising_comparison.ipynb | Real data comparison with REGALS discussion | ✓ Complete | 📚 Supporting |
+| └─ matrix_factorization_trends_2025.md | Zhang 2025 relevance analysis | ✓ Complete | 📚 Supporting |
+| **explorations/** | Mathematical analysis (supporting) | ✓ Complete | 📚 Supporting |
+| ├─ underdeterminedness_exploration.ipynb | Constraint hierarchy proof | ✓ Complete | 📚 Supporting |
+| ├─ permutation_ambiguity_examples.ipynb | Discrete ambiguity scenarios | ✓ Complete | 📚 Supporting |
+| ├─ smoothness_orthogonal_invariance_proof.ipynb | Rigorous proof of O(n) invariance for D^k operators | ✓ Complete | 📚 Supporting |
+| └─ REGALS_analysis_summary.md | Comprehensive findings | ✓ Complete | 📚 Supporting |
+| **archive/** | Original research project documents | ✓ Archived | 📦 Future |
+| ├─ discussion_points.md | Broader research paper planning | Archived | 📦 Future |
+| └─ detailed_approach.md | 18-week research implementation plan | Archived | 📦 Future |
 | **tools/** | PDF extraction utilities | ✓ Working |
 | **reference_papers/** | Source PDFs | ✓ Available |
 | *Validation Progress
@@ -147,27 +165,67 @@ Created detailed mathematical analysis in `explorations/` demonstrating the mult
 
 **Summary**: Algorithm exploration complete and documented. Zhang 2025 insights explored but tangential to main JOSS validation work. Ready to return to primary focus: extracting evidence for CHROMIXS/EFAMIX/REGALS claims.
 
+### Phase 7: Smoothness Orthogonal Invariance - Mathematical Deep Dive (✓ Complete - Jan 22, 2026)
+- ✓ **Created `explorations/smoothness_orthogonal_invariance_proof.ipynb`**: Rigorous mathematical proof exploring why smoothness regularization restricts matrix factorization ambiguity to orthogonal group O(n)
+- ✓ **Mathematical Framework**: 11 parts covering theory, proof, and comprehensive numerical validation
+  - Parts 1-6: Formal proof that ||D²(R⁻¹C)||²_F = ||D²C||²_F ⟺ R ∈ O(n)
+  - Part 7: Six numerical tests (all successful, preservation to ~10⁻¹⁶ machine precision)
+  - Part 8: Comparative testing of D¹ vs D² operators
+  - Parts 9-11: Theoretical implications, connections to literature, comprehensive summary
+- ✓ **Critical Discovery**: Initial hypothesis was too narrow
+  - **Expected**: Only D² (second derivative) has orthogonal invariance
+  - **Found**: D¹ (first derivative) ALSO has orthogonal invariance
+  - **Generalized**: ANY differential operator D^k has O(n) invariance property
+  - **Mathematical reason**: tr(C(D^k)ᵀD^kCᵀ(R⁻¹)ᵀR⁻¹) = tr(C(D^k)ᵀD^kCᵀ) when R is orthogonal
+- ✓ **Numerical Validation**: Comprehensive statistical testing
+  - 1000 random orthogonal transformations per test
+  - Tested on Gaussian peaks (symmetric) and general random matrices
+  - Both D¹ and D² preserved to machine precision (0.00% relative change)
+  - Non-orthogonal transformations break preservation (median 1.91× change)
+- ✓ **Key Insights Documented**:
+  - **Why D² preferred**: Not uniqueness of invariance, but regularization quality
+    - D¹ penalizes slope, D² penalizes curvature, D³ penalizes jerk
+    - D² is "sweet spot": invariant to linear trends, directly penalizes oscillations
+  - **Total vs component energy**: Orthogonal transformations preserve Σᵢ||D^k cᵢ||² (total) while redistributing individual ||D^k cᵢ||²
+  - **Novel contribution**: Explicit proof + generalization to all D^k operators (discovered through numerical exploration)
+- ✓ **Documentation Complete**: All parts updated to reflect generalized finding
+  - Part 11 summary revised to state theorem for any D^k
+  - Open questions updated (higher-order derivative question answered)
+  - Attribution notes added for novel discoveries
+
+**Context**: This work provides rigorous mathematical foundation for understanding why smoothness regularization (used in REGALS, REGALS-derived methods, and potentially Molass) effectively reduces factorization ambiguity. While exceeding JOSS validation needs, it strengthens the theoretical foundation of the field.
+
+**Summary**: Mathematical deep dive complete. Discovered general principle applies to all differential operators, not just D². Ready to return to JOSS validation priorities.
+
 ---
 
 ## Current Status Summary
 
 ### What's Complete (✓)
+
+#### 🎯 Core Validation Work
 1. **EFA Limitations Verified** (3 of 10):
    - Limitation 1 (Baseline problems) ✓
    - Limitation 2 (Noise sensitivity) ✓
    - Limitation 3 (Tailing/FIFO violations) ✓ - **Critical finding: more severe than expected**
    
-2. **Literature Analysis Complete**:
+### What's Remaining
 
-**Note**: Algorithm exploration (Zhang 2025) complete. Returning focus to JOSS validation.
-
+#### 🎯 Core Validation Work (Priority)
 1. **Continue EFA Limitation Verification**:
    - Limitation 4: No Quantification Without Calibration
    - Limitation 5: Resolution Limitation  
    - Limitation 9: Rank Inflation (noise-related)
    - Limitation 10: FIFO Assumption Failures (comprehensive)
    
-2. **Synthesize Findings for JOSS Paper**:
+2. **Extract Method-Specific Evidence**:
+   - CHROMIXS: Direct quotes showing deferral
+   - EFAMIX: Quantified thresholds (SNR, τ, separation)
+   - REGALS: Two-stage architecture documentation
+   
+3. **Synthesize Findings for JOSS Paper**:
+   - Update Research Impact Statement if needed
+   - Document evidence chain: EFA limitations → Modern workarounds → Molass contribution
    - Update Research Impact Statement if needed
    - Document evidence chain: EFA limitations → Modern workarounds → Molass contribution
    - Emphasize original contribution: explicit mathematical documentation of FIFO impossibility
@@ -836,6 +894,7 @@ Deeper questions about implicit functional forms, comparative performance, and a
 | Jan 20, 2026 (Eve) | Documentation cleanup | ✓ Unified CHROMIXS spelling, updated PROJECT_STATUS.md with full session summary |
 | Jan 21, 2026 (AM-PM) | Zhang 2025 algorithm exploration | ✓ Created 3 notebooks (pedagogical, full demo, real data), identified two-stage architecture, verified REGALS code, analyzed Moore 1980 IFT, developed dual-evaluation approach |
 | Jan 22, 2026 (AM) | Zhang 2025 documentation wrap-up | ✓ Documented dual-evaluation approach in matrix_factorization_trends_2025.md, closed algorithm exploration, ready to return to JOSS validation |
+| Jan 22, 2026 (PM) | Smoothness orthogonal invariance proof | ✓ Created smoothness_orthogonal_invariance_proof.ipynb (11 parts, 23 cells), discovered D^k generalization, completed rigorous mathematical proof with numerical validation, updated all documentation |
 
 ---
 
