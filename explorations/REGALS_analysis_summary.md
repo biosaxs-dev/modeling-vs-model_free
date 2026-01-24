@@ -1,14 +1,76 @@
 # REGALS Analysis: Constraint-Based vs Parametric Approaches
 
-**Date**: January 18, 2026  
+**Date**: January 18-24, 2026  
 **Context**: Mathematical comparison of constraint-based (REGALS) and parametric (Molass) methods for SEC-SAXS decomposition  
-**Attribution**: Analysis conducted in collaboration with GitHub Copilot (Claude Sonnet 4.5)
+**Attribution**: Analysis conducted in collaboration with GitHub Copilot (Claude Sonnet 4.5)  
+**Status**: Sections 1-3 contain established mathematical analysis. Section 4 presents working hypothesis requiring empirical validation.
 
 ---
 
 ## Executive Summary
 
-REGALS (Regularized Alternating Least Squares) represents a **constraint-based approach** to SEC-SAXS data decomposition, while Molass uses **parametric models** (Gaussian/EGH/SDM/EDM elution profiles). This analysis examines how REGALS' constraint hierarchy resolves fundamental underdeterminedness in matrix factorization and explores what functional forms these constraints may implicitly favor. Key questions: What regularization choices does REGALS make? How do these compare to explicit parametric assumptions?
+REGALS (Regularized Alternating Least Squares) represents a **constraint-based approach** to SEC-SAXS data decomposition, while Molass uses **parametric models** (Gaussian/EGH/SDM/EDM elution profiles). This analysis examines how REGALS' constraint hierarchy resolves fundamental underdeterminedness in matrix factorization and explores what functional forms these constraints may implicitly favor. 
+
+**Key findings**: Constraint hierarchy analysis (Sections 1-3) is mathematically rigorous. The connection between permutation ambiguity and discrete local minima (Section 4) is a working hypothesis requiring validation through computational experiments.
+
+Key questions: What regularization choices does REGALS make? How do these compare to explicit parametric assumptions? Does permutation ambiguity actually create discrete local minima?
+
+---
+
+## 0. Analytical Framework: The R-Centric Perspective
+
+### Why Focus on Transformation Matrix R?
+
+Every matrix factorization M = P·C that differs from ground truth (M = P_true·C_true) implies a **transformation matrix R**:
+
+$$R = P_{\text{true}}^{-1} \cdot P$$
+
+This connects any solution to the ground truth through:
+- $P = P_{\text{true}} \cdot R$
+- $C = R^{-1} \cdot C_{\text{true}}$
+
+**Organizing principle**: Understanding any factorization method requires asking three questions:
+1. **What space of R can the method explore?** (unconstrained? orthogonal only? discrete permutations?)
+2. **What constraints does the method place on R?** (smoothness penalties? non-negativity? physical constraints?)
+3. **Is R explicit or implicit?** (directly computed? emerges from (P,C) optimization?)
+
+### Applying This Framework to REGALS
+
+The 4-level constraint hierarchy (Section 2) is precisely a characterization of how constraints progressively restrict the space of possible R:
+
+| Level | Constraint Added | R Space | Dimension |
+|-------|------------------|---------|-----------|
+| 1 | Data-fit only | Any invertible matrix | $n^2$ continuous |
+| 2 | + Smoothness | Orthogonal O(n) | $\frac{n(n-1)}{2}$ continuous |
+| 3 | + Non-negativity | Discrete permutations | 0 continuous, $\leq n!$ discrete |
+| 4 | + Full REGALS | Unique (typically) | 0 (or small discrete set) |
+
+**Key insight**: REGALS doesn't optimize R explicitly—it optimizes (P,C) and R emerges implicitly. But analyzing what R values are accessible reveals the method's implicit assumptions.
+
+### Pedagogical Example: Explicit vs Implicit R
+
+The matrix transformations tutorial (`evidence/efa_original/matrix_transformations_tutorial.ipynb`) demonstrates this distinction:
+
+- **Part 8 (Implicit R)**: Shows ALS optimization trajectories in amplitude space + static transformed square
+  - R is never computed
+  - Hard to understand what R is doing
+  - Connection between trajectory and transformation unclear
+
+- **Part 9 (Explicit R)**: Computes R_t = P_true^† @ P_t at each iteration
+  - R's geometric evolution directly visualized
+  - Clear connection to orthogonal transformations
+  - Shows when R reaches goal (identity) or misses it
+
+**Lesson**: When analyzing any method's behavior, compute R explicitly rather than inferring from (P,C).
+
+### How This Framework Guides This Document
+
+- **Section 2**: Characterizes R space at each constraint level
+- **Section 3**: Asks what functional forms REGALS' R-constraints favor
+- **Section 4**: Explores whether discrete R choices (permutations) create discrete local minima
+- **Section 5**: Notes terminology imprecision about R transformations in literature
+
+Throughout, we ask: "What is R doing here?" to understand REGALS' implicit modeling choices.
 
 ---
 
@@ -127,31 +189,35 @@ $$\min_{\substack{P \geq 0, C \geq 0 \\ C(t) = 0 \text{ outside windows} \\ P \l
 
 ---
 
-## 4. The Permutation Ambiguity Problem as Discrete Local Minima
+## 4. Working Hypothesis: Permutation Ambiguity as Discrete Local Minima
 
-### Unifying Perspective: Permutations ARE Local Minima
+### Proposed Unifying Perspective (Requires Validation)
 
-**Critical insight**: "Small discrete set" in the constraint hierarchy = **discrete local minima** in the optimization landscape.
+**Working hypothesis**: "Small discrete set" in the constraint hierarchy **may represent discrete local minima** in the optimization landscape.
 
-**Each valid permutation is a local minimum**:
+**Proposed relationship** (not empirically validated):
+
+**If true, each valid permutation would be a local minimum**:
 - Component swap $(P_1, P_2, P_3) \to (P_2, P_1, P_3)$ creates different solution
-- Same or similar $\chi^2$ value (locally optimal)
+- Same or similar $\chi^2$ value (would be locally optimal if hypothesis correct)
 - Different physical interpretation (which component is which?)
 - ALS from single initialization converges to ONE of these randomly
 
-**Example**: 3-component system
+**Hypothetical example**: 3-component system
 - Maximum $3! = 6$ possible permutations
-- Each permutation = one local minimum basin
-- No gradient path between basins (discrete jumps required)
-- Global optimization needed to explore all 6 possibilities
+- If hypothesis correct: Each permutation = one local minimum basin
+- If hypothesis correct: No gradient path between basins (discrete jumps required)
+- If hypothesis correct: Global optimization needed to explore all 6 possibilities
 
-**This explains two phenomena simultaneously**:
+**If this hypothesis is correct, it would explain two phenomena simultaneously**:
 1. **Permutation ambiguity** (Section 4): "Different initializations may converge to different permutations"
 2. **Need for global optimization** (global_optimization_gap.md): Single initialization insufficient
 
 **EFAMIX's trade-off makes sense**: By avoiding non-negativity constraints, they prevent creation of these discrete local minima branches—but sacrifice physical correctness (negative concentrations possible).
 
-### When Discrete Ambiguity Persists
+### When Discrete Ambiguity Persists (Empirical Observation)
+
+**Note**: The existence of permutation ambiguity is empirically established. Whether each permutation corresponds to a separate local minimum is the hypothesis being explored.
 
 Even with all four constraint layers, **discrete permutation ambiguity** (component label swapping) can occur when:
 
@@ -253,6 +319,17 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
 
 ## 7. Next Steps for Mathematical Derivation
 
+### Priority 0: Validate Core Hypothesis
+
+**Goal**: Test whether permutation ambiguity actually creates discrete local minima
+
+**Approach**:
+1. Generate synthetic SEC-SAXS data with known ground truth
+2. Run REGALS from multiple random initializations
+3. Check if different permutations are isolated basins (no gradient path)
+4. Measure barrier height between permutations
+5. **Outcome**: Determines if Sections 4 hypothesis is correct
+
 ### Priority 1: Characterize REGALS' Implicit Functional Form
 
 **Goal**: What functional form does smoothness regularization $\lambda\|D^2C\|^2$ implicitly assume?
@@ -288,6 +365,8 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
 
 ## 8. Key Takeaways
 
+### Established Facts
+
 1. **Constraint-based vs parametric**: REGALS uses constraints and regularization; Molass uses explicit functional forms (Gaussian/EGH/SDM/EDM)
 
 2. **Fundamental underdeterminedness**: Matrix factorization $\min\|M-PC\|^2$ has infinitely many solutions without additional constraints or regularization
@@ -298,13 +377,27 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
    - Level 3 (+ non-negativity): Unique or small discrete set
    - Level 4 (+ full REGALS): Typically unique
 
-4. **Permutation ambiguity = discrete local minima**: Even with all constraints, 5-50% of real-world cases have 2-6 discrete local minima (valid permutations). Each is locally optimal; global optimization needed to explore all.
+4. **Permutation ambiguity exists empirically**: 5-50% of real-world SEC-SAXS cases show component label uncertainty
 
 5. **Mathematical precision**: REGALS authors correctly identify mixing ambiguity as "any non-singular matrix", though use informal "'rotated'" terminology (with quotes). With smoothness regularization, ambiguity reduces to O(n) (orthogonal group), not just SO(n) (rotations)
 
-6. **Open research question**: What functional forms does smoothness regularization $\lambda\|D^2C\|^2$ actually favor? (Gaussian-like? Cubic splines? Other?)
+6. **Single initialization in REGALS**: Paper describes one initialization from SVD + boundary conditions, no discussion of exploring multiple starting points
 
-7. **Both approaches are valid**: Choice depends on application, available prior knowledge, and whether explicit parametric specification or constraint-based emergence is preferred
+### Working Hypotheses (Require Validation)
+
+1. **Permutation ambiguity = discrete local minima**: Each valid permutation may correspond to a separate local minimum basin in the optimization landscape
+
+2. **Discrete jumps required**: If hypothesis correct, no continuous gradient path exists between different permutations
+
+### Open Research Questions
+
+1. **What functional forms does smoothness regularization $\lambda\|D^2C\|^2$ actually favor?** (Gaussian-like? Cubic splines? Other?)
+
+2. **Are the two hypotheses related?** If discrete oligomerization creates discrete permutation ambiguity, and permutation ambiguity creates discrete local minima, this would connect physical and mathematical structure
+
+### Methodological Considerations
+
+Both constraint-based (REGALS) and parametric (Molass) approaches are valid. Choice depends on application, available prior knowledge, and whether explicit parametric specification or constraint-based emergence is preferred
 
 ---
 
@@ -333,12 +426,20 @@ Even with all four constraint layers, **discrete permutation ambiguity** (compon
 
 ## 10. Conclusion
 
-REGALS represents a sophisticated **constraint-based approach** to SEC-SAXS decomposition. Our analysis demonstrates that:
+REGALS represents a sophisticated **constraint-based approach** to SEC-SAXS decomposition. Our analysis demonstrates:
+
+### Established Through This Analysis
 
 1. REGALS requires **four layers of constraints** to achieve uniqueness (smoothness, non-negativity, normalization, SAXS)
 2. Each constraint makes specific **regularization choices** that may favor certain functional forms
-3. Even with all constraints, **discrete permutation ambiguity** can persist (5-50% of cases)
-4. **Key open question**: What functional forms does smoothness regularization actually produce?
+3. Even with all constraints, **discrete permutation ambiguity** can persist (5-50% of cases, empirically observed)
+4. REGALS paper describes **single initialization** from SVD, no global optimization strategy
+
+### Working Hypotheses Requiring Validation
+
+1. **Permutation ambiguity creates discrete local minima**: Each valid permutation may be a separate basin
+2. **Connection to oligomerization**: Discrete physical states may create discrete mathematical structure
+3. **Functional forms favored by smoothness regularization**: Need to characterize what implicit assumptions are made
 
 The comparison between REGALS and Molass is best framed as **"constraint-based vs parametric"** rather than "model-free vs model-based." Both approaches make choices to resolve underdeterminedness; they differ in how those choices are specified.
 

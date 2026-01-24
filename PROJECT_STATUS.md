@@ -1,5 +1,33 @@
 # Project Status & Resumption Guide
-**Last Updated**: January 22, 2026 (Afternoon)
+**Last Updated**: January 24, 2026
+
+---
+
+## 🚀 Quick Session Initialization
+
+**For AI assistants**: When user says **"Initialize: modeling-vs-model_free context"**, read:
+1. `README.md` - Repository purpose (JOSS validation)
+2. `ORGANIZATION.md` - Core vs supporting work classification
+3. `PROJECT_STATUS.md` (this file) - Current progress and session log
+
+**Key context**:
+- JOSS validation repository for Molass Library paper
+- Focus: Document limitations of "model-free" methods (CHROMIXS, EFAMIX, REGALS)
+- Current priority: Evidence extraction in `evidence/` directory
+- Supporting work: Mathematical explorations, algorithm analysis (complete but not required)
+
+**Key conceptual insights** (resolved through hours of discussion):
+- **R-centric analysis principle**: Always frame matrix factorization discussions in terms of transformation matrix R
+  - Every factorization M = P·C implies R = P_true^(-1)·P connecting to ground truth
+  - Methods differ in: (1) What space of R they can explore, (2) What constraints they place on R, (3) Whether R is explicit or implicit
+  - **Key questions for any method**: What R does it assume? What R can it find? What R ambiguity remains?
+  - **Examples**:
+    - REGALS: Smoothness regularization constrains R to orthogonal group O(n)
+    - EFA: FIFO assumption implies sequential R evolution constraints
+    - Permutation ambiguity: Discrete R choices (component label swapping)
+    - Visualization: Compute R_t explicitly rather than inferring from (P,C) trajectories
+  - **Documentation**: See `evidence/efa_original/matrix_transformations_tutorial.ipynb` Parts 8-9 for explicit vs implicit R
+  - **Application**: Use this framework when analyzing any method's behavior, limitations, or comparisons
 
 ---
 
@@ -882,6 +910,62 @@ Deeper questions about implicit functional forms, comparative performance, and a
 
 ---
 
+### January 24, 2026 - Conceptual Framework Session
+
+#### R-Centric Analysis Principle Establishment
+**Context**: After hours of discussion about pedagogical flow in matrix_transformations_tutorial.ipynb, identified a fundamental organizing principle for all matrix factorization analysis.
+
+**The Breakthrough**: Understanding that all factorization discussions should be framed in terms of transformation matrix R:
+- Every factorization M = P·C implies R = P_true^(-1)·P
+- Methods differ in what R space they explore, what constraints they place on R, and whether R is explicit or implicit
+
+**Key Documentation Updates**:
+
+1. **PROJECT_STATUS.md Initialization Section**:
+   - Added "R-centric analysis principle" to Quick Session Initialization
+   - Documented three key questions for any method: What R does it assume? What R can it find? What R ambiguity remains?
+   - Provided concrete examples: REGALS constrains R to O(n), EFA implies sequential R, permutations = discrete R choices
+   - Referenced matrix_transformations_tutorial.ipynb Parts 8-9 as pedagogical example
+
+2. **REGALS_analysis_summary.md**:
+   - Added Section 0: "Analytical Framework: The R-Centric Perspective"
+   - Explained why focusing on R is the organizing principle
+   - Created table showing how 4-level constraint hierarchy restricts R space
+   - Connected to matrix transformations tutorial (implicit vs explicit R)
+   - Framed entire document as answering "What is R doing here?"
+
+3. **matrix_transformations_tutorial.ipynb**:
+   - Added pedagogical bridging cell between Parts 8 and 9
+   - Documents the confusion about implicit R in amplitude-space visualization
+   - Explains why explicit R computation (Part 9) resolves the pedagogical challenge
+   - Preserves "hours of confusion" as teaching moment
+   - Makes R-centric principle clear from the tutorial itself
+
+**Pedagogical Flow Review**:
+- Reviewed entire matrix_transformations_tutorial.ipynb structure
+- Confirmed Parts 1-7 build solid foundation (2D → 3D → factorization)
+- Verified Part 8 demonstrates local optimization with implicit R
+- Validated Part 9 explicitly computes R_t at each iteration
+- Part 10 strong conclusion about global optimization gap
+
+**Critical Insight**:
+The transition from implicit to explicit R analysis is not just a visualization choice—it's a fundamental methodological principle for understanding ANY matrix factorization method. This resolves confusion that "lasted hours" and provides a framework that will prevent similar confusion in future sessions.
+
+**Impact**:
+- Future AI sessions will initialize with this principle
+- REGALS analysis now explicitly organized around R constraints
+- Matrix transformations tutorial documents the pedagogical journey
+- All future method analyses will ask: "What is R doing here?"
+
+**Files Modified**:
+- `PROJECT_STATUS.md` - Added R-centric principle to initialization (lines 19-29)
+- `explorations/REGALS_analysis_summary.md` - Added Section 0 (57 new lines)
+- `evidence/efa_original/matrix_transformations_tutorial.ipynb` - Added pedagogical note cell between Parts 8-9
+
+**Status**: Framework complete and documented. Ready for future sessions with principled approach to matrix factorization analysis.
+
+---
+
 ## Session Log
 
 | Date | Session Summary | Key Outcomes |
@@ -895,6 +979,7 @@ Deeper questions about implicit functional forms, comparative performance, and a
 | Jan 21, 2026 (AM-PM) | Zhang 2025 algorithm exploration | ✓ Created 3 notebooks (pedagogical, full demo, real data), identified two-stage architecture, verified REGALS code, analyzed Moore 1980 IFT, developed dual-evaluation approach |
 | Jan 22, 2026 (AM) | Zhang 2025 documentation wrap-up | ✓ Documented dual-evaluation approach in matrix_factorization_trends_2025.md, closed algorithm exploration, ready to return to JOSS validation |
 | Jan 22, 2026 (PM) | Smoothness orthogonal invariance proof | ✓ Created smoothness_orthogonal_invariance_proof.ipynb (11 parts, 23 cells), discovered D^k generalization, completed rigorous mathematical proof with numerical validation, updated all documentation |
+| Jan 24, 2026 | R-centric framework establishment | ✓ Established R-centric analysis principle, updated PROJECT_STATUS.md initialization, added Section 0 to REGALS_analysis_summary.md, improved matrix_transformations_tutorial.ipynb pedagogical flow |
 
 ---
 

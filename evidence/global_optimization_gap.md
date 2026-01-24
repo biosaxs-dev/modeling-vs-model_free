@@ -132,25 +132,25 @@ Keller & Massart (1991), *Chemometrics and Intelligent Laboratory Systems*, 12, 
 
 ---
 
-## 5. Unifying Perspective: Permutation Ambiguity as Discrete Local Minima
+## 5. Working Hypothesis: Permutation Ambiguity as Discrete Local Minima
 
-### The Key Connection
+### A Possible Connection (Unvalidated)
 
-**Critical insight from constraint hierarchy analysis**: The "small discrete set" in Level 3-4 constraints **ARE discrete local minima**.
+**Hypothesis from constraint hierarchy analysis**: The "small discrete set" in Level 3-4 constraints **may represent discrete local minima**.
 
-**Each valid permutation = One local minimum**:
+**Proposed relationship** (not empirically validated):
 - Swapping component labels: $(P_1, P_2) \leftrightarrow (P_2, P_1)$
-- Creates different solution with similar $\chi^2$
-- Each is locally optimal (no gradient direction improves objective)
-- No continuous path between permutations (discrete jump required)
+- May create different solution with similar $\chi^2$
+- If true, each would be locally optimal (no gradient direction improves objective)
+- Would require discrete jump between permutations (not continuous path)
 
-### Two Problems Are Actually One
+### Two Problems May Be Related
 
 **Previously appeared as separate issues**:
 1. **Permutation ambiguity**: 5-50% of datasets have component label uncertainty
 2. **Lack of global optimization**: REGALS/EFAMIX use single initialization
 
-**Unified understanding**: These are **the same problem**
+**Proposed unified understanding** (speculative): These may be **manifestations of the same underlying problem**
 - Permutation ambiguity creates discrete local minima
 - Single initialization randomly selects one permutation
 - No mechanism to explore other valid permutations
@@ -159,9 +159,11 @@ Keller & Massart (1991), *Chemometrics and Intelligent Laboratory Systems*, 12, 
 ### Mathematical Structure
 
 **For $k$ components**: Up to $k!$ possible permutations
-- 2 components: 2 permutations (local minima)
-- 3 components: 6 permutations (local minima)
-- 4 components: 24 permutations (local minima)
+- 2 components: 2 permutations (potentially 2 local minima)
+- 3 components: 6 permutations (potentially 6 local minima)
+- 4 components: 24 permutations (potentially 24 local minima)
+
+**Note**: The one-to-one mapping between permutations and local minima is a working hypothesis, not empirically demonstrated.
 
 **Constraints reduce valid permutations**:
 - Compact support (different elution windows) → eliminates some permutations
@@ -174,12 +176,12 @@ Keller & Massart (1991), *Chemometrics and Intelligent Laboratory Systems*, 12, 
 - **Local optimization**: Explores continuous dimensions only
 - **Global optimization**: Explores both continuous AND discrete dimensions
 
-### EFAMIX's Trade-off Explained
+### EFAMIX's Trade-off: A Possible Interpretation
 
 Konarev et al. (2021) quote:
 > "constraints may lead to several local minima in the search"
 
-**New interpretation**: They're specifically concerned about **discrete local minima from permutation ambiguity**
+**Speculative interpretation**: They may be specifically concerned about **discrete local minima from permutation ambiguity**
 - Non-negativity + smoothness → creates permutation branches
 - Each valid permutation is a local minimum
 - Their optimizer cannot explore multiple branches
@@ -193,25 +195,25 @@ Konarev et al. (2021) quote:
 
 ---
 
-## 6. The Physical Origin: Discrete Oligomerization
+## 6. Speculative Framework: Discrete Oligomerization as Physical Origin
 
-### A Profound Connection
+### A Proposed Connection (Requires Validation)
 
-**Key insight**: The discrete mathematical structure (permutation ambiguity as discrete local minima) **mirrors the discrete physical structure** (oligomeric states).
+**Hypothesis**: The discrete mathematical structure (permutation ambiguity potentially creating discrete local minima) **may mirror the discrete physical structure** (oligomeric states).
 
-**Oligomerization is inherently discrete**:
+**Established fact - Oligomerization is inherently discrete**:
 - Monomer (1×), Dimer (2×), Trimer (3×), Tetramer (4×), Pentamer (5×)
 - **Cannot have**: 2.7-mer or 3.4-mer
 - Integer multiples of the monomer unit
 - **Discrete jumps** between states, not continuous transitions
 
-**Permutation ambiguity is inherently discrete**:
+**Established fact - Permutation ambiguity is inherently discrete**:
 - Component 1 = dimer, Component 2 = trimer (Assignment A)
 - Component 1 = trimer, Component 2 = dimer (Assignment B)
 - **Cannot have**: "60% dimer assignment, 40% trimer assignment"
 - **Discrete jumps** between labelings, not continuous interpolation
 
-**The mathematics reflects the physics**: Discrete optimization landscape ↔ Discrete biological states
+**Speculative connection**: The mathematics may reflect the physics - Discrete optimization landscape ↔ Discrete biological states. This correlation is suggestive but not proven causal.
 
 ### Why Oligomeric Series Are Hardest
 
@@ -243,9 +245,9 @@ From constraint hierarchy analysis, oligomeric series have **highest permutation
 
 ### The Assignment Problem
 
-**Each local minimum = One oligomer assignment**:
+**If the hypothesis is correct**: Each local minimum would correspond to one oligomer assignment.
 
-**Example: 3-peak system (trimer/tetramer/pentamer mixture)**
+**Hypothetical example: 3-peak system (trimer/tetramer/pentamer mixture)**
 
 | Local Minimum | Peak A | Peak B | Peak C | Objective $\chi^2$ |
 |---------------|--------|--------|--------|--------------------|
@@ -260,7 +262,7 @@ All three are **locally optimal** but represent **different physical interpretat
 
 **Single-initialization optimization** (REGALS, EFAMIX) randomly selects one assignment. **Global optimization** systematically evaluates all valid assignments.
 
-### The Discrete Nature Amplifies the Problem
+### Why Discrete Nature May Amplify the Problem
 
 **Continuous systems** (e.g., protein conformations):
 - Gradual shape changes
@@ -268,13 +270,13 @@ All three are **locally optimal** but represent **different physical interpretat
 - Local minima differ by objective function value
 - Can rank by goodness-of-fit
 
-**Discrete oligomeric systems**:
+**Discrete oligomeric systems** (hypothetically):
 - Abrupt identity changes (trimer ≠ tetramer)
 - Similar objective function values (all fit data well)
 - Cannot rank by $\chi^2$ alone (differences within noise)
 - **Requires physical validation**: Which assignment is biologically reasonable?
 
-**Implication**: For oligomeric series, permutation ambiguity is not just a mathematical nuisance—it reflects **genuine physical degeneracy** in the measurement.
+**Speculative implication**: If the hypothesis is correct, permutation ambiguity in oligomeric series may not just be a mathematical nuisance—it could reflect **genuine physical degeneracy** in the measurement.
 
 ### Opportunities for Structure-Aware Modeling
 
@@ -321,9 +323,9 @@ All three are **locally optimal** but represent **different physical interpretat
 
 **Result**: Model-free methods remain vulnerable to permutation ambiguity in oligomeric systems because they cannot leverage the **discrete structure** inherent in oligomerization.
 
-### Research Implications
+### Research Implications (If Hypothesis Validated)
 
-**Fundamental insight**: When the physical system has discrete structure (oligomerization), the optimization landscape acquires discrete branches (local minima). This is not a flaw—it's an **accurate mathematical representation** of physical degeneracy.
+**Proposed insight**: If the connection is real, when the physical system has discrete structure (oligomerization), the optimization landscape may acquire discrete branches (local minima). This would not be a flaw—it would be an **accurate mathematical representation** of physical degeneracy.
 
 **Three approaches to handle this**:
 
@@ -593,23 +595,31 @@ All three are **locally optimal** but represent **different physical interpretat
 
 ## 12. Key Takeaways
 
-### Research Findingss**: 
-> "How much does global vs. local optimization improve decomposition quality in practice?"
+### Established Facts
 
-> "Can oligomer-aware parametric models resolve discrete ambiguity in oligomeric series by encoding physical structure?"
+1. **EFAMIX explicitly avoids constraints** due to local minima → sacrifices physical correctness
+2. **REGALS accepts local convergence** from single initialization → no optimality verification
+3. **Dimensionality gap**: Model-free (~600 params) vs. parametric (~15 params) determines tractability
+4. **35-year problem**: Acknowledged since Keller 1991, unaddressed in modern SAXS tools
+5. **Permutation ambiguity exists**: 5-50% of datasets show component label uncertainty
+6. **Oligomerization is discrete**: Physical chemistry fact
 
-Answering thesecepts local convergence** from single initialization → no optimality verification
-3. **Permutation ambiguity = discrete local minima**: Each valid permutation is a separate local minimum basin
-4. *4Dimensionality gap**: Model-free (~600 params) vs. parametric (~15 params) determines tractability
-5. **35-year problem**: Acknowledged since Keller 1991, unaddressed in modern SAXS tools
+### Working Hypotheses (Require Validation)
+
+1. **Permutation ambiguity = discrete local minima**: Each valid permutation may be a separate local minimum basin
+2. **Discrete oligomerization causes discrete minima**: Physical discreteness may create mathematical discreteness
+3. **Oligomeric series are hardest**: 30-50% ambiguity risk may be due to physical similarity creating degenerate assignments
 
 ### Scientific Implications
 
-**For model-free methods**:
+**For model-free methods** (established):
 - Current tools provide **a** solution, not proven optimal
-- Different initializations may yield different results (5-50% of cases) = discrete local minima
-- Each valid permutation is a separate local minimum
+- Different initializations may yield different results (5-50% of cases)
 - No systematic uncertainty quantification
+
+**If hypothesis is correct** (speculative):
+- Each valid permutation would be a separate local minimum
+- Single initialization randomly selects one discrete branch
 - No exploration of alternative permutations
 
 **For parametric methods**:
@@ -660,7 +670,14 @@ Answering this requires comparative benchmarking (beyond JOSS scope, future work
 
 ### Immediate Next Steps (This Repository)
 
-1. **Quantitative demonstration**: Create notebook showing local minima in synthetic data
+1. **Validate core hypothesis**: Does permutation ambiguity actually create discrete local minima?
+   - Generate SEC-SAXS data with known ground truth
+   - Optimize from multiple random initializations
+   - Check if different permutations are separate local minima (isolated basins)
+   - Quantify barrier height between permutations
+   - **Critical**: This empirical test determines if Sections 5-6 are correct
+
+2. **Quantitative demonstration**: Create notebook showing local minima in synthetic data
    - Generate SEC-SAXS data with known 
 
 4. **Oligomer-aware modeling**: Structure-constrained parametric models
@@ -701,7 +718,7 @@ Answering this requires comparative benchmarking (beyond JOSS scope, future work
 
 ---
 
-**Document Status**: Research finding, not for publication  
+**Document Status**: Research finding with speculative hypotheses, not for publication  
 **Purpose**: Establish scientific foundation for future comparative studies  
-**Attribution**: Analysis conducted January 23, 2026, with AI assistance (GitHub Copilot, Claude Sonnet 4.5)  
-**Note**: All claims based on documented facts from peer-reviewed literature; no unsupported assertions about method superiority
+**Attribution**: Analysis conducted January 23-24, 2026, with AI assistance (GitHub Copilot, Claude Sonnet 4.5)  
+**Note**: Sections 1-4 based on documented facts from peer-reviewed literature. Sections 5-6 present working hypotheses requiring empirical validation. No claims of method superiority without benchmarking.
