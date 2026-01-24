@@ -9,6 +9,7 @@
 1. `README.md` - Repository purpose (JOSS validation)
 2. `ORGANIZATION.md` - Core vs supporting work classification
 3. `PROJECT_STATUS.md` (this file) - Current progress and session log
+4. `R_CENTRIC_FRAMEWORK.md` - Analytical framework for all matrix factorization analysis
 
 **Key context**:
 - JOSS validation repository for Molass Library paper
@@ -16,18 +17,11 @@
 - Current priority: Evidence extraction in `evidence/` directory
 - Supporting work: Mathematical explorations, algorithm analysis (complete but not required)
 
-**Key conceptual insights** (resolved through hours of discussion):
-- **R-centric analysis principle**: Always frame matrix factorization discussions in terms of transformation matrix R
-  - Every factorization M = P·C implies R = P_true^(-1)·P connecting to ground truth
-  - Methods differ in: (1) What space of R they can explore, (2) What constraints they place on R, (3) Whether R is explicit or implicit
-  - **Key questions for any method**: What R does it assume? What R can it find? What R ambiguity remains?
-  - **Examples**:
-    - REGALS: Smoothness regularization constrains R to orthogonal group O(n)
-    - EFA: FIFO assumption implies sequential R evolution constraints
-    - Permutation ambiguity: Discrete R choices (component label swapping)
-    - Visualization: Compute R_t explicitly rather than inferring from (P,C) trajectories
-  - **Documentation**: See `evidence/efa_original/matrix_transformations_tutorial.ipynb` Parts 8-9 for explicit vs implicit R
-  - **Application**: Use this framework when analyzing any method's behavior, limitations, or comparisons
+**Key conceptual framework**:
+- **R-centric analysis principle**: See `R_CENTRIC_FRAMEWORK.md` for comprehensive documentation
+  - Always frame matrix factorization discussions in terms of transformation matrix R
+  - Three key questions: What R does it assume? What R can it find? What R ambiguity remains?
+  - Application: Use this framework when analyzing any method's behavior, limitations, or comparisons
 
 ---
 
