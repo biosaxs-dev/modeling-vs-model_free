@@ -202,10 +202,54 @@ The `archive/` directory contains the original research agenda. After JOSS publi
 
 ---
 
+## Cross-Repository Workflow
+
+### learnsaxs Integration
+
+**Repository relationship**:
+- **learnsaxs** (separate repo): Pedagogical SAXS education, pure teaching focus
+- **modeling-vs-model_free** (this repo): JOSS validation, research hypothesis testing
+
+**Work organization** (Option C - Split Approach):
+- **Physics simulation** → Developed in learnsaxs (pedagogical focus)
+- **Method validation** → Done in modeling-vs-model_free (research focus)
+
+**Context transfer policy** (Combination of Options 1 + 4):
+
+When creating notebooks in learnsaxs that support research questions here:
+
+1. **Option 1 - Design Notes**: Create detailed technical specification
+   - Example: `SEC-SAXS-DESIGN-NOTES.md` in learnsaxs repo
+   - Contains: Physics equations, implementation guidance, success criteria
+   - Audience: AI assistants, developers
+   
+2. **Option 4 - Context Cell**: Add brief context in notebook itself
+   - Example: Use `NOTEBOOK-CONTEXT-CELL.md` template
+   - Contains: Pedagogical purpose, research motivation link, scope clarification
+   - Audience: Notebook users (students, researchers)
+
+**Reference copy workflow**:
+- `temp_learnsaxs/` in this repo is .gitignored (not version controlled)
+- Copy FROM learnsaxs TO temp_learnsaxs/ as needed for AI context
+- Automated in initialization: `Copy-Item -Recurse ..\learnsaxs\* temp_learnsaxs\ -Force`
+- Master lives in learnsaxs, reference copy is disposable
+
+**Data flow**:
+```
+learnsaxs repository:
+  └─ Generate synthetic dataset with ground truth
+     └─ Export as .npz with metadata
+        └─ Copy to modeling-vs-model_free/evidence/synthetic_data/
+           └─ Use for method validation notebooks here
+```
+
+---
+
 ## Summary
 
 **Core = Evidence extraction for JOSS validation**  
 **Supporting = Mathematical/algorithmic deep dives exceeding JOSS needs**  
-**Archived = Future research beyond current scope**
+**Archived = Future research beyond current scope**  
+**learnsaxs = Separate pedagogical repo (physics simulation, teaching focus)**
 
 This organization ensures focused progress on JOSS validation while preserving valuable supporting work for future use.

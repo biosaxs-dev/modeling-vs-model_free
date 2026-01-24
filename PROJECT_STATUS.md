@@ -5,7 +5,16 @@
 
 ## 🚀 Quick Session Initialization
 
-**For AI assistants**: When user says **"Initialize: modeling-vs-model_free context"**, read:
+**For AI assistants**: When user says **"Initialize: modeling-vs-model_free context"**:
+
+### Step 1: Copy learnsaxs Reference (if needed for context)
+```powershell
+# Repositories assumed at same level: GitHub/modeling-vs-model_free and GitHub/learnsaxs
+Copy-Item -Recurse ..\learnsaxs\* temp_learnsaxs\ -Force
+```
+Note: `temp_learnsaxs/` is .gitignored (learnsaxs is master, this is reference copy only)
+
+### Step 2: Read Core Documents
 1. `README.md` - Repository purpose (JOSS validation)
 2. `ORGANIZATION.md` - Core vs supporting work classification
 3. `PROJECT_STATUS.md` (this file) - Current progress and session log
@@ -16,6 +25,7 @@
 - Focus: Document limitations of "model-free" methods (CHROMIXS, EFAMIX, REGALS)
 - Current priority: Evidence extraction in `evidence/` directory
 - Supporting work: Mathematical explorations, algorithm analysis (complete but not required)
+- **learnsaxs**: Separate pedagogical repository (copy in temp_learnsaxs/ for reference only)
 
 **Key conceptual framework**:
 - **R-centric analysis principle**: See `R_CENTRIC_FRAMEWORK.md` for comprehensive documentation
@@ -904,7 +914,7 @@ Deeper questions about implicit functional forms, comparative performance, and a
 
 ---
 
-### January 24, 2026 - Conceptual Framework Session
+### January 24, 2026 - Session 1: Conceptual Framework
 
 #### R-Centric Analysis Principle Establishment
 **Context**: After hours of discussion about pedagogical flow in matrix_transformations_tutorial.ipynb, identified a fundamental organizing principle for all matrix factorization analysis.
@@ -960,6 +970,77 @@ The transition from implicit to explicit R analysis is not just a visualization 
 
 ---
 
+### January 24, 2026 - Session 2: Cross-Repository Workflow & SEC-SAXS Design
+
+#### Comprehensive SEC-SAXS Toy Experiment Planning
+
+**Context**: Discussed creating end-to-end physics-based simulation connecting electron density → SAXS → SEC → I(q,t) matrix, motivated by Section 6 speculation in `evidence/global_optimization_gap.md` about discrete oligomerization creating discrete local minima.
+
+**Repository Architecture Decision**:
+- Reviewed temp_learnsaxs/ contents (reference copy from separate learnsaxs repository)
+- **Agreed on Option C (Split Approach)**:
+  - **learnsaxs repository** = Master, pedagogical focus (physics simulation)
+  - **modeling-vs-model_free repository** = Validation focus (method testing, hypothesis validation)
+  - temp_learnsaxs/ = .gitignored reference copy (disposable)
+
+**Context Transfer Policy (Options 1 + 4)**:
+
+1. **Option 1 - Design Notes** (for developers/AI):
+   - Created `temp_learnsaxs/SEC-SAXS-DESIGN-NOTES.md`
+   - Complete technical specification: physics equations, implementation guidance, parameters
+   - Documents pedagogical mission while acknowledging research motivation
+   - To be copied to learnsaxs repository as master document
+
+2. **Option 4 - Context Cell** (for notebook users):
+   - Created `temp_learnsaxs/NOTEBOOK-CONTEXT-CELL.md`
+   - Brief context explanation (markdown or Python comment versions)
+   - Explains dual purpose: teaching (primary) + research dataset generation (secondary)
+   - To be inserted in actual notebook when created
+
+**Key Physical Relationships Specified**:
+- Real space: Build oligomers from monomer electron density (discrete 1×, 2×, 3×)
+- Structural properties: Rg calculation from density, Rg → Rh conversion
+- SEC separation: Rh → elution volume via calibration curve
+- Peak shapes: Gaussian or EMG concentration profiles with overlap
+- SAXS profiles: Use existing learnsaxs utilities (FFT, spherical averaging)
+- Complete matrix: M = P·C with realistic noise
+
+**Workflow Integration**:
+
+1. **Updated initialization** (PROJECT_STATUS.md):
+   - Added Step 1: Automated copy from ../learnsaxs/ to temp_learnsaxs/
+   - Assumes both repos at same level under GitHub/ folder
+   - Ensures latest learnsaxs content available for context
+
+2. **Documented cross-repository workflow** (ORGANIZATION.md):
+   - Added "Cross-Repository Workflow" section
+   - Explains learnsaxs integration and split approach
+   - Documents Options 1 + 4 policy for future reference
+   - Clarifies data flow: learnsaxs generates → modeling-vs-model_free validates
+
+**Expected Deliverable**:
+- Synthetic SEC-SAXS dataset (I(q,t) matrix) with known ground truth
+- Oligomer identities, concentrations, elution positions documented
+- Reusable for both teaching and research purposes
+
+**Next Steps**:
+- Copy design documents to learnsaxs repository (master)
+- Develop notebook in learnsaxs (Part 2 of pedagogical series)
+- Use generated dataset for validation work in this repository (future)
+
+**Files Created**:
+- `temp_learnsaxs/SEC-SAXS-DESIGN-NOTES.md` - Technical specification
+- `temp_learnsaxs/NOTEBOOK-CONTEXT-CELL.md` - User-facing context
+
+**Files Modified**:
+- `PROJECT_STATUS.md` - Updated initialization with copy step
+- `ORGANIZATION.md` - Added cross-repository workflow section
+- `.gitignore` - Already had temp*/ pattern (confirmed)
+
+**Status**: Design complete, workflow documented, ready for implementation in learnsaxs repository.
+
+---
+
 ## Session Log
 
 | Date | Session Summary | Key Outcomes |
@@ -973,7 +1054,8 @@ The transition from implicit to explicit R analysis is not just a visualization 
 | Jan 21, 2026 (AM-PM) | Zhang 2025 algorithm exploration | ✓ Created 3 notebooks (pedagogical, full demo, real data), identified two-stage architecture, verified REGALS code, analyzed Moore 1980 IFT, developed dual-evaluation approach |
 | Jan 22, 2026 (AM) | Zhang 2025 documentation wrap-up | ✓ Documented dual-evaluation approach in matrix_factorization_trends_2025.md, closed algorithm exploration, ready to return to JOSS validation |
 | Jan 22, 2026 (PM) | Smoothness orthogonal invariance proof | ✓ Created smoothness_orthogonal_invariance_proof.ipynb (11 parts, 23 cells), discovered D^k generalization, completed rigorous mathematical proof with numerical validation, updated all documentation |
-| Jan 24, 2026 | R-centric framework establishment | ✓ Established R-centric analysis principle, updated PROJECT_STATUS.md initialization, added Section 0 to REGALS_analysis_summary.md, improved matrix_transformations_tutorial.ipynb pedagogical flow |
+| Jan 24, 2026 (AM) | R-centric framework establishment | ✓ Established R-centric analysis principle, updated PROJECT_STATUS.md initialization, added Section 0 to REGALS_analysis_summary.md, improved matrix_transformations_tutorial.ipynb pedagogical flow |
+| Jan 24, 2026 (PM) | Cross-repository workflow & SEC-SAXS design | ✓ Reviewed temp_learnsaxs structure, agreed on Option C split approach, created SEC-SAXS-DESIGN-NOTES.md and NOTEBOOK-CONTEXT-CELL.md, documented Options 1+4 policy, updated initialization with auto-copy, added cross-repository workflow to ORGANIZATION.md |
 
 ---
 
