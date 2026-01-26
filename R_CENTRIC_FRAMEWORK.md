@@ -74,7 +74,7 @@ From `explorations/underdeterminedness_exploration.ipynb`:
 
 ## Pedagogical Example: Implicit vs Explicit R
 
-From `evidence/efa_original/matrix_transformations_tutorial.ipynb`:
+From `explorations/matrix_transformations_tutorial.ipynb`:
 
 ### Part 8: Implicit R Visualization
 - Shows amplitude-space trajectories during local optimization
@@ -141,7 +141,7 @@ When starting a new session: "Initialize: modeling-vs-model_free context"
 Three key files now organized around R:
 1. **PROJECT_STATUS.md**: R-centric principle in initialization section
 2. **explorations/REGALS_analysis_summary.md**: Section 0 frames entire analysis around R
-3. **evidence/efa_original/matrix_transformations_tutorial.ipynb**: Pedagogical note about implicit vs explicit R
+3. **explorations/matrix_transformations_tutorial.ipynb**: Pedagogical note about implicit vs explicit R
 
 ### Future Work
 All method analyses in this repository will:
@@ -155,7 +155,7 @@ All method analyses in this repository will:
 ## References
 
 **Within this repository**:
-- `evidence/efa_original/matrix_transformations_tutorial.ipynb` - Parts 8-9 (pedagogical example)
+- `explorations/matrix_transformations_tutorial.ipynb` - Parts 8-9 (pedagogical example)
 - `explorations/underdeterminedness_exploration.ipynb` - 4-level constraint hierarchy
 - `explorations/REGALS_analysis_summary.md` - Section 0 (R-centric framework application)
 - `PROJECT_STATUS.md` - Session log (Jan 24, 2026)

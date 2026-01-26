@@ -32,8 +32,44 @@ While not required, these analyses:
 
 ## Current Notebooks
 
-### 1. `underdeterminedness_exploration.ipynb`
-**Status**: ✓ Complete  
+### 1. `matrix_transformations_tutorial.ipynb`
+**Status**: ✓ Complete (January 23-24, 2026)  
+**Purpose**: Comprehensive mathematical foundation for understanding matrix transformations, rotation matrices, and constraint hierarchies
+
+**Overview**: 12-part tutorial covering fundamental concepts from basic matrix algebra through advanced topics like discrete permutation ambiguity. Originally created to verify EFA limitations, evolved into rigorous mathematical foundations supporting the entire research project.
+
+**Key Parts**:
+- Parts 1-7: Matrix transformations, rotation matrices, orthogonal groups
+- Parts 8-9: Implicit vs explicit R-centric framework (pedagogical breakthrough)
+- Part 10: Constraint hierarchy (4-level uniqueness conditions)
+- Part 11: Discrete permutation ambiguity from group theory
+- Part 12: Summary and implications
+
+**Complementary Notebook**: Works with `discrete_ambiguity_demonstration.ipynb` to provide dual perspective on group-theoretic permutation structure.
+
+---
+
+### 2. `discrete_ambiguity_demonstration.ipynb`
+**Status**: ✓ Complete (January 25-26, 2026)  
+**Purpose**: Demonstrate that permutation ambiguity arises from transformation group structure (GL(2) disconnected components), not parameter space geometry
+
+**Overview**: 6-part demonstration showing the "singularity barrier" — continuous transformations between permuted solutions must pass through singular matrices (det=0), creating discrete basins in optimization landscape.
+
+**Key Visualizations**:
+- **Part 4**: Determinant tracking showing det evolution: +1 → 0 → -1
+- **Part 5**: Dual visualization (parameter space + transformation space)
+  - Left: PCA projection showing connected feasible space with interpolation path
+  - Right: 5 matrix heatmaps showing transformation evolution through singularity
+- Demonstrates three distinct spaces: feasible (CONNECTED), optimization (discrete minima), group GL(2) (DISCONNECTED)
+
+**Breakthrough Insight**: "Singularity barriers create energy barriers that keep optimization algorithms within one permutation basin." This explains why methods like REGALS find discrete solutions despite connected feasible space.
+
+**Complementary Notebook**: Extends `matrix_transformations_tutorial.ipynb` Part 11 with detailed visualization and group theory analysis.
+
+---
+
+### 3. `underdeterminedness_exploration.ipynb`
+**Status**: ✓ Complete (January 18, 2026)  
 **Purpose**: Demonstrate fundamental ambiguities in matrix factorization and test if regularization resolves them
 
 **Part 1: Unconstrained Problem** (Cells 1-17)
@@ -63,16 +99,38 @@ While not required, these analyses:
 **Impact for Paper**: Powerful evidence that REGALS requires **FOUR layers** of implicit modeling assumptions, not just one!
 
 **Related Files**:
-- Generates: `../basis_ambiguity.png` (6 concentration profiles with identical data fit)
-- Generates: `../regularization_ambiguity.png` (6 profiles with identical regularized objective)
+- Generates: `basis_ambiguity.png` (6 concentration profiles with identical data fit)
+- Generates: `regularization_ambiguity.png` (6 profiles with identical regularized objective)
 
 **Corresponds to**: Track 1, Step 1.1 in `detailed_approach.md`
 
 ---
 
+### 4. `permutation_ambiguity_examples.ipynb`
+**Status**: ✓ Complete  
+**Purpose**: Quantify the risk of discrete permutation ambiguity in real-world datasets
+
+**Key Finding**: 5-50% of real-world SEC-SAXS datasets may exhibit permutation ambiguity depending on peak separation, similarity, and noise levels.
+
+---
+
+### 5. `smoothness_orthogonal_invariance_proof.ipynb`
+**Status**: ✓ Complete (January 22, 2026)  
+**Purpose**: Rigorous mathematical proof that smoothness regularization restricts factorization ambiguity to orthogonal group O(n)
+
+**Key Discovery**: Orthogonal invariance applies to ALL differential operators D^k (not just D²):
+- D¹ (first derivative) has O(n) invariance
+- D² (second derivative) has O(n) invariance  
+- D³ and higher also have O(n) invariance
+- D² preferred because it penalizes curvature (sweet spot for regularization)
+
+**Mathematical Framework**: 11 parts with formal proof, numerical validation, and comprehensive testing (1000 random orthogonal transformations).
+
+---
+
 ## Planned Notebooks
 
-### 2. `implicit_functional_form.ipynb` (Planned)
+### `implicit_functional_form.ipynb` (Planned)
 - **Purpose**: Derive what functional form smoothness regularization implies
 - **Approaches**:
   - Variational calculus (minimize $\|D^2C\|^2$ → cubic splines)
@@ -81,7 +139,7 @@ While not required, these analyses:
 - **Goal**: Show conditions where REGALS ≈ Gaussian mixture model
 - **Corresponds to**: Track 1, Steps 1.2-1.4 in `detailed_approach.md`
 
-### 3. `efa_noise_sensitivity.ipynb` (Planned - CRITICAL!)
+### `efa_noise_sensitivity.ipynb` (Planned - CRITICAL!)
 - **Purpose**: Quantify practical limitations of EFA's "automatic" component detection
 - **Tests**:
   - Noise impact on singular value spectra (SNR = 100, 50, 20, 10, 5)
@@ -90,7 +148,7 @@ While not required, these analyses:
 - **Goal**: Identify SNR threshold where EFA becomes unreliable
 - **Corresponds to**: Track 2, Step 2.3b in `detailed_approach.md`
 
-### 4. `simulation_studies.ipynb` (Planned)
+### `simulation_studies.ipynb` (Planned)
 - **Purpose**: Compare REGALS, EFAMIX, and Molass on synthetic data
 - **Test cases**:
   - Gaussian peaks (does REGALS ≈ Molass-Gaussian?)

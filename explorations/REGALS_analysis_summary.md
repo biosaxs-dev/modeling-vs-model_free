@@ -49,7 +49,7 @@ The 4-level constraint hierarchy (Section 2) is precisely a characterization of 
 
 ### Pedagogical Example: Explicit vs Implicit R
 
-The matrix transformations tutorial (`evidence/efa_original/matrix_transformations_tutorial.ipynb`) demonstrates this distinction:
+The matrix transformations tutorial (`explorations/matrix_transformations_tutorial.ipynb`) demonstrates this distinction:
 
 - **Part 8 (Implicit R)**: Shows ALS optimization trajectories in amplitude space + static transformed square
   - R is never computed
