@@ -66,6 +66,8 @@ While not required, these analyses:
 
 **Complementary Notebook**: Extends `matrix_transformations_tutorial.ipynb` Part 11 with detailed visualization and group theory analysis.
 
+**Led to**: [permutation_selection_reliability_study.md](permutation_selection_reliability_study.md) - Research question arising from this demonstration ("How lucky are model-free approaches at selecting the correct permutation?")
+
 ---
 
 ### 3. `underdeterminedness_exploration.ipynb`
@@ -125,6 +127,80 @@ While not required, these analyses:
 - D² preferred because it penalizes curvature (sweet spot for regularization)
 
 **Mathematical Framework**: 11 parts with formal proof, numerical validation, and comprehensive testing (1000 random orthogonal transformations).
+
+---
+
+### 6. `permutation_selection_reliability_study.md`
+**Status**: 🔄 In Progress (January 26, 2026)  
+**Purpose**: Quantify how reliably model-free regularization constraints select the physically correct permutation when discrete alternatives exist
+
+**Overview**: Computational study proposal arising from discrete_ambiguity_demonstration.ipynb insights. Tests the critical question: "How lucky are model-free approaches?"
+
+**Research Questions**:
+- **Frequency**: How often do multiple permutations satisfy all constraints equally well?
+- **Selection bias**: Do regularization constraints naturally prefer the correct permutation?
+- **Risk**: What fraction of analyses might find wrong permutation with excellent fit?
+
+**Proposed Approach**:
+- **Part 1**: Synthetic data with known ground truth (25 test cases, 20-50 random initializations each)
+- **Part 2**: Real data multi-start analysis (10-20 diverse SEC-SAXS datasets)
+- **Metrics**: Accuracy, consistency, ambiguity, objective discrimination
+- **Timeline**: 6-8 weeks implementation
+
+**Expected Outcomes**:
+- **High reliability** (>95%): Local optimization sufficient
+- **Moderate reliability** (70-95%): Post-hoc validation recommended
+- **Low reliability** (<70%): Global optimization required
+
+**Why it matters**: Transforms philosophical debate (model-free vs model-based) into empirical science with actionable guidance for practitioners.
+
+**Relation to other work**: Direct application of discrete_ambiguity_demonstration insights; tests effectiveness of constraints from underdeterminedness_exploration hierarchy.
+
+---
+
+### 7. `permutation_reliability_pilot.ipynb`
+**Status**: ✅ Complete (January 26, 2026)  
+**Purpose**: Pilot implementation for Part 1 (Synthetic Data) of permutation_selection_reliability_study.md - test feasibility and discover critical optimization vs selection distinction
+
+**Overview**: Complete workflow from synthetic data generation through multi-start optimization to reliability quantification, using pure Python implementation (no REGALS dependency for initial testing).
+
+**Implementation Details**:
+- **Test case**: 2 components, Gaussian profiles, moderate overlap (4σ separation), SNR=100
+- **Ground truth**: Known concentration and SAXS profiles
+- **Method**: Simple non-negative ALS (Alternating Least Squares)
+- **Experiment**: 10 random initializations to detect permutation variability
+- **Analysis**: Correlation-based permutation identification, statistical testing
+
+**Key Components**:
+- Part 1: Synthetic data generation (M = P^T · C with realistic parameters)
+- Part 2: SVD analysis (baseline rank determination)
+- Part 3: Simple ALS implementation (clean reference without external dependencies)
+- Part 4: Multi-start experiment (test initialization sensitivity)
+- Part 5: Statistical analysis and interpretation
+
+**Outputs**: 5 figures
+- `permutation_pilot_ground_truth.png` (4-panel: concentrations, SAXS profiles, clean/noisy data)
+- `permutation_pilot_svd.png` (scree plot + cumulative variance)
+- `permutation_pilot_als_convergence.png` (error + parameter change)
+- `permutation_pilot_als_comparison.png` (4-panel comparison with ground truth)
+- `permutation_pilot_multistart_errors.png` (error distribution + scatter)
+- `permutation_pilot_smoothness_comparison.png` (4-panel: selection rates, objectives, scatter, summary table)
+
+**Key Results**:
+- **Non-negativity**: 40% success, objectives identical (perfect ambiguity)
+- **Smoothness (λ=1.0)**: 10% success, correct objective 4800× better (selection works, optimization fails)
+- **Critical finding**: Smoothness enables selection but creates optimization trap
+- **Validates**: REGALS' EFA initialization is structurally necessary, not just convenient
+
+**Profound Implication**: Distinguishes **selection capability** (can you tell which is better?) from **optimization reliability** (will local search find it?). Smoothness solves the first but exacerbates the second!
+
+**Next Steps**:
+1. Test different λ values (does stronger smoothness help or hurt?)
+2. Test harder cases (more overlap → likely worse)
+3. Document for paper (direct evidence of hidden modeling requirement)
+4. Consider: Is global optimization unavoidable for reliable deconvolution?
+
+**Relation to other work**: Provides computational proof for permutation_selection_reliability_study.md research question; transforms philosophical debate into quantified optimization challenge.
 
 ---
 

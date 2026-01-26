@@ -459,6 +459,93 @@ From [REGALS_analysis_summary.md](../explorations/REGALS_analysis_summary.md), t
 
 ---
 
+## The Selection Problem: A Fundamental Challenge Revealed (January 2026)
+
+### Discovery from Discrete Ambiguity Analysis
+
+Today's work on discrete permutation ambiguity ([discrete_ambiguity_demonstration.ipynb](../explorations/discrete_ambiguity_demonstration.ipynb)) reveals a profound challenge:
+
+**The Problem**:
+1. Discrete permutation candidates exist (2-6 typically for 2-3 components)
+2. These are **topologically disconnected** (GL(2) components: det>0 vs det<0)
+3. Cannot reach each other without crossing singularity (det=0)
+4. Local optimization finds ONE candidate (whichever basin it starts in)
+5. **All candidates may have nearly identical objective values**
+
+**The Critical Question**:
+> **Which permutation corresponds to physical reality?**
+
+### Two Possibilities
+
+**Possibility 1: Lucky by Design**
+- Model-free regularization (smoothness, non-negativity, compact support) might **naturally prefer** the physically correct permutation
+- If true: method succeeds without being aware of alternatives
+- **Requires**: Implicit physical knowledge encoded in constraint choices
+- **Problem**: No guarantee, no validation mechanism
+
+**Possibility 2: Selection Required**
+- Multiple permutations satisfy ALL constraints equally well
+- Optimization finds whichever candidate is in the starting basin
+- **Requires**: Additional physical information to select correct one
+- **Implies**: Need for **global optimization with physical constraints**
+
+### Why This Matters
+
+**For REGALS and similar methods**:
+- **If lucky**: Regularization choices implicitly select correct permutation → success without explicit awareness
+- **If unlucky**: Find incorrect permutation with excellent fit → silent failure
+- **No distinction**: Both cases look identical from optimization perspective (good χ², smooth profiles, non-negative)
+
+**For explicit parametric models (Molass)**:
+- Physical constraints built into model form (peak shapes, elution order expectations)
+- Can incorporate prior knowledge explicitly
+- Transparent about which permutation is assumed
+
+### The Need for Global Optimization
+
+After today's demonstration, it becomes clear:
+
+**Local optimization is insufficient when discrete candidates exist**, unless:
+1. Regularization/constraints implicitly eliminate wrong permutations (lucky), OR
+2. Global search with physical validation explicitly selects correct permutation
+
+**Required capabilities**:
+- Awareness that multiple permutations exist
+- Physical criteria to distinguish them
+- Validation against experimental expectations
+- Transparent reporting when ambiguity detected
+
+**Currently missing in model-free approaches**:
+- No explicit check for alternative permutations
+- No reporting when discrete ambiguity exists
+- Implicit assumption that local optimum = physical truth
+- User must manually validate component assignments
+
+### Implications for Method Development
+
+This reveals a **fundamental limitation of pure local optimization**:
+
+**Quote from today's work**:
+> "Singularity barriers create energy barriers that keep optimization algorithms within one permutation basin."
+
+**Consequence**:
+- Method finds ONE solution (local minimum in one basin)
+- Alternative permutations in other basins remain unexplored
+- Physical correctness depends on either:
+  - **Luck**: Starting in the right basin
+  - **Wisdom**: Constraint choices that eliminate wrong basins
+  - **Post-hoc validation**: Expert recognizes incorrect assignment
+
+**What's needed going forward**:
+1. **Global optimization** that explores multiple basins
+2. **Physical validation** criteria to select among candidates
+3. **Ambiguity detection** that warns when discrete alternatives exist
+4. **Transparent reporting** of which permutation was selected and why
+
+This is not a criticism of existing methods—it's a **structural challenge** that was implicit in the mathematics but only becomes clear after rigorous analysis of the discrete ambiguity problem.
+
+---
+
 ## Conclusions for JOSS Paper
 
 ### Historical Arc
@@ -493,10 +580,15 @@ From [REGALS_analysis_summary.md](../explorations/REGALS_analysis_summary.md), t
 - Provides **alternative approach**: explicit parametric models with clear physical interpretation
 - **Different philosophy**: Model-based (Molass) vs. model-free regularization (REGALS)
 - **Complementary to REGALS**: Where REGALS uses flexible regularization, Molass uses explicit peak models
+- **Reveals fundamental challenge**: Discrete permutation ambiguity requires global optimization or physical validation
 
 ### Key Message for Reviewers
 
-> "SEC-SAXS deconvolution methods emerged from two parallel scientific traditions: EFA from chromatography (1987) and MCR-ALS from chemometrics (1995-2004). Both independently identified the rotation ambiguity problem. REGALS (2021) synthesized these traditions, applying MCR-ALS with flexible regularization (smoothness, compact support, d_max) to resolve ambiguity more robustly than EFA's FIFO assumptions or MCR's soft constraints alone. REGALS works across experiment types (chromatography, titration, time-resolved) but still relies on SVD-based rank determination and user-specified parameters. Molass represents a complementary approach: explicit parametric peak models (Gaussian/EGH/SDM/EDM) that provide transparent physical interpretation, independent peak modeling, and direct parameter estimation without requiring model-free regularization."
+> "SEC-SAXS deconvolution methods emerged from two parallel scientific traditions: EFA from chromatography (1987) and MCR-ALS from chemometrics (1995-2004). Both independently identified the rotation ambiguity problem. REGALS (2021) synthesized these traditions, applying MCR-ALS with flexible regularization (smoothness, compact support, d_max) to resolve ambiguity more robustly than EFA's FIFO assumptions or MCR's soft constraints alone. REGALS works across experiment types (chromatography, titration, time-resolved) but relies on local optimization that may encounter discrete permutation ambiguity.
+>
+> Recent mathematical analysis (January 2026) reveals that discrete permutation candidates exist due to topological disconnection in the transformation group GL(2). Local optimization finds ONE candidate without exploring alternatives. This creates a fundamental challenge: selecting the physically correct permutation requires either (1) implicit guidance from regularization choices that naturally prefer the correct solution, or (2) explicit global optimization with physical validation criteria. 
+>
+> Molass represents a complementary approach: explicit parametric peak models (Gaussian/EGH/SDM/EDM) that provide transparent physical interpretation, independent peak modeling, and direct parameter estimation. The explicit model form allows incorporating physical expectations (peak shapes, elution order) that can guide permutation selection when ambiguity exists."
 
 ---
 

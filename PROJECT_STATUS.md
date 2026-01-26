@@ -82,6 +82,69 @@ These four notebooks/documents provide rigorous theoretical support:
 
 ---
 
+## 🎯 Today's Breakthrough (January 26, 2026)
+
+### From Understanding Discrete Ambiguity → Questioning Selection Reliability
+
+**Morning**: Repository reorganization
+- Moved matrix_transformations_tutorial.ipynb to explorations/
+- Streamlined PROJECT_STATUS.md (created SESSION_HISTORY.md for detailed logs)
+- Clear focus on 4 key mathematical foundations
+
+**Afternoon**: Critical realization about selection problem
+- **Question asked**: After demonstrating discrete permutation candidates exist (separated by singularity barriers), how do model-free methods select the physically correct one?
+- **Two possibilities identified**:
+  1. **Lucky**: Regularization constraints implicitly prefer correct permutation
+  2. **Selection required**: Need global optimization with physical validation
+- **Implication**: Local optimization may be structurally insufficient unless regularization "gets lucky"
+
+**New research question formalized**: "How lucky are model-free approaches?"
+- Created [permutation_selection_reliability_study.md](explorations/permutation_selection_reliability_study.md)
+- Proposes computational study with synthetic + real data
+- Tests: Frequency, selection bias, silent failure risk
+- Outcome: Quantify when local optimization suffices vs when global search needed
+
+**Updated**: [historical_development.md](evidence/historical_development.md)
+- Added "The Selection Problem: A Fundamental Challenge Revealed" section
+- Documents that this is empirically testable, not philosophical
+- Connects to broader need for validation in model-free methods
+
+**Status**: Pilot study complete with profound findings
+
+**Implementation complete**: [permutation_reliability_pilot.ipynb](explorations/permutation_reliability_pilot.ipynb)
+- ✅ Full workflow: synthetic data → SVD → simple ALS → smoothness-regularized ALS
+- ✅ Multi-start experiments (10 runs each, 2 methods)
+- ✅ Statistical analysis and permutation detection
+- ✅ 5 figures generated with comprehensive visualizations
+
+**Key Findings** (simplest test case: 2 components, moderate overlap, SNR=100):
+
+1. **Non-negativity alone (40% success)**:
+   - 40% correct order, 60% swapped
+   - Objectives IDENTICAL (p=0.88)
+   - Pure ambiguity - random initialization determines outcome
+
+2. **Smoothness regularization (10% success, but...)**:
+   - Only 10% correct order, 90% swapped (WORSE selection!)
+   - BUT objectives DRAMATICALLY different (p<0.0001)
+   - Correct solution: objective = 0.000068
+   - Swapped solution: objective = 0.329 (4800× WORSE!)
+   - t-statistic: -46311 (massive difference)
+
+3. **Critical insight**: Smoothness ENABLES selection but FAILS optimization
+   - IF you could evaluate both permutations → easy to pick correct one
+   - BUT random initialization → 90% get trapped in wrong basin
+   - Swapped permutation is a powerful attractor
+
+4. **Validates REGALS architecture necessity**:
+   - EFA initialization essential to avoid wrong basin
+   - Two-stage approach not optional - it's structurally required
+   - Local optimization insufficient without good starting point
+
+**Implications**: This provides direct computational evidence that model-free methods require careful initialization strategies - exactly the hidden modeling choice your paper argues about!
+
+---
+
 ## 📂 Repository Structure
 
 ```
