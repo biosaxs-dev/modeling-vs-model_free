@@ -20,6 +20,7 @@ JOSS validation repository for **Molass Library** paper ([#9424](https://github.
 2. **PROJECT_STATUS.md** (this file) - Current focus
 3. **R_CENTRIC_FRAMEWORK.md** - Analytical framework
 4. **explorations/README.md** - Mathematical foundations overview
+5. **explorations/orthogonal_invariance_journey.md** ⭐ - Research narrative (discovery → proof → testing)
 
 ### Key Context Framework
 - **R-centric analysis**: Frame all matrix factorization in terms of transformation matrix R
@@ -82,9 +83,29 @@ These four notebooks/documents provide rigorous theoretical support:
 
 ---
 
-## 🎯 Today's Breakthrough (January 26, 2026)
+## 🎯 Latest Breakthroughs
 
-### From Understanding Discrete Ambiguity → Questioning Selection Reliability
+### January 27, 2026: Problem-Informed Q-Matrix Design SUCCESS ✓✓
+
+**Major Discovery**: Frequency-domain band-pass filtering achieves 90% reliability while maintaining orthogonal invariance!
+
+**Results from problem_informed_Q_design.ipynb**:
+- **Baseline** (standard smoothness): 35% success
+- **Spatial weighting**: 75% success (γ=0.5)
+- **Frequency filtering**: **90% success** (cutoffs 0.05, 0.7) ✓✓
+- **Combined spatial+ridge**: 85% success (γ=0.5, ε=0.01) ✓✓
+
+**Key Insight**: Problem-class knowledge (expected peak widths) can be incorporated into fixed Q-matrix design to prevent degeneracy without breaking invariance. The fundamental limitation from Part 11D was due to **generic** ridge, not inherent impossibility.
+
+**Implications**:
+1. Trade-off (invariance ↔ effectiveness) CAN be resolved
+2. New research direction: Problem-specific Q-matrix design principles
+3. Frequency domain outperforms spatial domain for SEC-SAXS
+4. Answers Open Research Question #3 with definitive YES
+
+---
+
+### January 26, 2026: From Understanding Discrete Ambiguity → Questioning Selection Reliability
 
 **Morning**: Repository reorganization
 - Moved matrix_transformations_tutorial.ipynb to explorations/
@@ -302,6 +323,8 @@ minimize: χ² + λ_C ||D²C||² + λ_P ||D²P||²
 
 - **SESSION_HISTORY.md** - Detailed development log (session-by-session)
 - **explorations/README.md** - Complete overview of mathematical notebooks
+- **explorations/orthogonal_invariance_journey.md** ⭐ - Research narrative from discovery to fundamental limitation theorem
+- **explorations/problem_informed_Q_design.ipynb** ✓✓ - **BREAKTHROUGH**: Frequency-domain Q achieves 90% reliability while maintaining invariance (resolves Open Research Question #3)
 - **ORGANIZATION.md** - Repository structure and priorities
 - **archive/** - Original research project plans (for future)
 
