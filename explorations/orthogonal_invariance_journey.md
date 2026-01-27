@@ -10,7 +10,7 @@
 
 ```
    Discovery              Formalization            Practical Test            Deep Question
-   (Jan 17)              (Jan 22)                 (Jan 26)                  (Jan 27)
+   (Jan 17)              (Jan 22)                 (Jan 26)                  (Jan 27 AM)
        │                     │                        │                         │
        ▼                     ▼                        ▼                         ▼
 underdetermin...  →  smoothness_orthog... → permutation_reliab... → Can invariance +
@@ -24,6 +24,33 @@ exploration.ipynb    onal_invariance_      pilot.ipynb               effectivene
      (conjecture)         Added Part 11:        Hybrid solution       Result: No -
                          Practical caveat      (100% success)        fundamental
                          (degeneracy)                                limitation
+                                                                           │
+                                                                           ▼
+                                                                    Problem-informed Q:
+                                                                    Parts 11E-F
+                                                                    (Jan 27 AM)
+                                                                           │
+                                                                           ▼
+                                                                    Frequency-domain Q:
+                                                                    90% SUCCESS! ✓✓
+                                                                    Trade-off resolved
+                                                                           │
+       ┌───────────────────────────────────────────────────────────────────┘
+       │
+       ▼
+  Deeper Question                        
+  (Jan 27 PM)
+       │
+       ▼
+WHY additive?              
+objective_combination_
+rules_exploration.ipynb
+       │
+       ▼
++ vs × vs log
+encodes AND vs OR
+logic (fundamental
+modeling choice!)
 ```
 
 ---
@@ -353,7 +380,128 @@ Form: $Q = (D^2)^T D^2 + \epsilon I$
 
 ---
 
-## 🎯 Summary: The Complete Arc
+## 📍 Stage 6: The Deeper Question - Why Additive? (objective_combination_rules_exploration.ipynb)
+
+**Location**: New standalone notebook  
+**Date**: January 27, 2026 (evening)  
+**Status**: ✅ Complete - Reveals most fundamental modeling choice
+
+### The Question
+
+After exploring what to regularize (Stage 1-5), a deeper question emerged:
+
+**Why $A + \lambda B$ rather than $A \times B$ or $\log A + \log B$?**
+
+Before choosing what Q matrix to use, before choosing which regularizer, there's an even more fundamental choice: **How should constraints combine mathematically?**
+
+### What Was Explored
+
+**Five combination rules systematically tested**:
+1. **Additive**: $A + \lambda B$
+2. **Multiplicative**: $A \times \lambda B$
+3. **Log-additive**: $\log A + \lambda \log B$
+4. **Max**: $\max(A, \lambda B)$
+5. **Weighted power**: $A^p + \lambda B^q$
+
+**Key experiment**: Extreme cases to reveal logical structure
+- Case 1: A ≈ 0, B = 100 (perfect fit, very rough)
+- Case 2: A = 100, B ≈ 0 (poor fit, perfectly smooth)
+- Case 3: A = 1, B = 1 (balanced)
+
+### The Discovery
+
+**Operators encode constraint interaction logic**:
+
+- **Additive (+)**: "AND" logic
+  - Case 1 score: 100
+  - Case 2 score: 100
+  - Case 3 score: 2.0 ← **Preferred**
+  - **Must satisfy BOTH constraints simultaneously**
+
+- **Multiplicative (×)**: Different logic  
+  - Case 1 score: $2 \times 10^{-8}$ ← **Preferred**
+  - Case 2 score: $2 \times 10^{-8}$ ← **Preferred**
+  - Case 3 score: 1.0
+  - **Allows one constraint to dominate**
+
+**Same solution, vastly different scores**: Range from $10^{-28}$ to 0.31 depending on operator!
+
+### Probabilistic Interpretation
+
+**Additive form has deep meaning**:
+$$A + \lambda B \leftrightarrow -\log p(M|P,C) - \log p(C)$$
+
+Encodes:
+- Gaussian likelihood (data-fit)
+- Gaussian prior (smoothness)
+- Independence assumption
+
+**Alternative operators → different probabilistic models**:
+- Multiplicative: Non-standard
+- Log-additive: Log-normal distributions
+- Each encodes different beliefs about noise/constraints
+
+### Why This Is The Most Fundamental
+
+**Hierarchy of modeling choices discovered**:
+1. **Deepest** (Stage 6): Combination operator → Logical structure of constraints
+2. **Deep** (Stages 4-5): Q matrix design → What to penalize
+3. **Moderate** (Stages 1-3): Regularizer type → Differential operator choice
+4. **Shallow**: Weight λ → How much to penalize
+
+**REGALS's additive choice is NOT neutral**:
+- Encodes "AND" logic (must satisfy both data-fit AND smoothness)
+- Assumes Gaussian distributions
+- Alternative operators would give fundamentally different solutions
+- **This is implicit modeling at the most primitive mathematical level**
+
+### Files & Evidence
+
+- **Notebook**: [objective_combination_rules_exploration.ipynb](objective_combination_rules_exploration.ipynb)
+  - 8 parts, 17 cells, systematic exploration
+  - Extreme cases demonstrate AND vs OR logic explicitly
+  - Trade-off surface visualizations
+  - Complete probabilistic interpretation
+
+- **Output**: `objective_combination_rules_comparison.png`
+  - 4-panel contour plots
+  - Shows different optimization landscapes for each operator
+
+- **Updated**: [underdeterminedness_exploration.ipynb](underdeterminedness_exploration.ipynb)
+  - Level 2 now explicitly discusses operator choice
+  - Logical structure (AND vs OR)
+  - Probabilistic interpretation
+
+### Connection to Broader Work
+
+**Enhances JOSS paper argument**:
+> "Before asking what to regularize, methods must choose how constraints interact mathematically. The additive form (+) encodes 'AND' logic and Gaussian assumptions—a fundamental modeling choice never made explicit."
+
+**Opens new research direction**:
+- Could alternative operators help degeneracy problems?
+- Would multiplicative form allow/prevent component collapse?
+- Can operators be adaptive based on data characteristics?
+
+### Decision Points for Future
+
+⭐ **Test alternative operators in actual optimization**:
+- Run ALS with multiplicative objective
+- Does log-additive help degeneracy?
+- Hybrid approaches that switch operators?
+
+⭐ **Formal characterization**:
+- Under what conditions does each operator guarantee uniqueness?
+- Connection to multi-objective optimization?
+- Game-theoretic interpretation (minimax ↔ max operator)?
+
+❓ **Practical impact**:
+- Does operator choice matter for real SEC-SAXS?
+- Problem-class specific operators?
+- Could explain method performance differences?
+
+---
+
+## 🎯 Summary: The Complete Arc (Updated)
 
 ### What We've Established
 
@@ -377,6 +525,11 @@ Form: $Q = (D^2)^T D^2 + \epsilon I$
    - Tested: $Q = (D^2)^T D^2 + \epsilon I$
    - **Answer: No** - marginal improvement but insufficient
    - **Conclusion**: Fundamental limitation of fixed $Q$ approach
+
+6. **Deeper Question** (Stage 6): Why additive combination?
+   - Explored: $A + \lambda B$ vs $A \times B$ vs $\log A + \log B$ vs $\max(A, B)$
+   - **Answer: Operator encodes logical structure** - addition = "AND" logic
+   - **Conclusion**: Most fundamental modeling choice yet discovered
 
 ### The Broader Implication
 
@@ -412,12 +565,20 @@ Form: $Q = (D^2)^T D^2 + \epsilon I$
    - Is Gaussian assumption the real limitation?
    - Explore non-Gaussian priors that maintain some invariance
 
+5. **Why ADDITIVE combination?** ✓ **EXPLORED: FUNDAMENTAL** (January 27, 2026 PM)
+   - **Question**: Why $A + \lambda B$ rather than $A \times B$ or $\log(A) + \log(B)$?
+   - **Result**: Operator choice encodes logical structure (AND vs OR) - see [objective_combination_rules_exploration.ipynb](objective_combination_rules_exploration.ipynb)
+   - **Key finding**: Addition = "AND" logic (must satisfy both), Multiplication allows extremes
+   - **Implication**: Even MORE fundamental than regularizer choice - the combination operator itself is modeling!
+   - **Next**: How would alternative operators change REGALS behavior? Would × allow degeneracy? Would log-additive help?
+
 ---
 
 ## 📚 Cross-References
 
 ### Related Notebooks
-- [underdeterminedness_exploration.ipynb](underdeterminedness_exploration.ipynb) - Origin of conjecture
+- [underdeterminedness_exploration.ipynb](underdeterminedness_exploration.ipynb) - Origin of conjecture, Level 2 now discusses operator choice
+- [objective_combination_rules_exploration.ipynb](objective_combination_rules_exploration.ipynb) - NEW: Systematic exploration of +, ×, log, max operators
 - [smoothness_orthogonal_invariance_proof.ipynb](smoothness_orthogonal_invariance_proof.ipynb) - Full proof + testing
 - [permutation_reliability_pilot.ipynb](permutation_reliability_pilot.ipynb) - Empirical context
 - [discrete_ambiguity_demonstration.ipynb](discrete_ambiguity_demonstration.ipynb) - Why permutations matter
@@ -428,15 +589,24 @@ Form: $Q = (D^2)^T D^2 + \epsilon I$
 - [PROJECT_STATUS.md](../PROJECT_STATUS.md) - Current research status
 
 ### Key Figures
-- underdeterminedness_exploration.ipynb: Figure showing identical objectives across rotations
+- underdeterminedness_exploration.ipynb: Figure showing identical objectives across rotations  
+- underdeterminedness_exploration.ipynb: Level 2 hierarchy cell (updated with operator choice discussion)
 - smoothness_orthogonal_invariance_proof.ipynb Part 11: Degeneracy mechanism diagram
 - smoothness_orthogonal_invariance_proof.ipynb Part 11D: ALS vs Fixed P comparison plots
+- objective_combination_rules_exploration.ipynb: 4-panel contour plots showing different optimization landscapes
 
 ---
 
 ## 📝 Version History
 
-- **v1.1** (January 27, 2026): Research Question #3 answered
+- **v1.2** (January 27, 2026 PM): Research Question #5 explored - Combination operator choice
+  - Added Stage 6: objective_combination_rules_exploration.ipynb
+  - Discovered: Operator choice (+, ×, log) encodes logical structure (AND vs OR)
+  - Most fundamental modeling choice yet identified
+  - Updated flow diagram with Stage 6
+  - Links to new notebook and updated underdeterminedness_exploration Level 2
+
+- **v1.1** (January 27, 2026 AM): Research Question #3 answered
   - Added breakthrough result: Frequency-domain Q achieves 90% reliability
   - Links to problem_informed_Q_design.ipynb
   - Confirms trade-off can be resolved with problem-informed Q design

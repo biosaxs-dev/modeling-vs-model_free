@@ -269,7 +269,59 @@ While not required, these analyses:
 
 ---
 
-### 9. `orthogonal_invariance_journey.md` ⭐
+### 9. `objective_combination_rules_exploration.ipynb`
+**Status**: ✅ Complete (January 27, 2026)  
+**Purpose**: Investigate how different mathematical operators for combining constraints (+, ×, log, max) encode different logical relationships and lead to fundamentally different solutions
+
+**Context**: Supporting analysis for `underdeterminedness_exploration.ipynb` Level 2 discussion - demonstrates that operator choice is itself a modeling decision
+
+**Key Question**: Why $A + \lambda B$ rather than $A \times B$, $\log(A) + \log(B)$, or other combinations?
+
+**8-Part Investigation**:
+- Part 1-2: Test data generation (SEC-SAXS synthetic data)
+- Part 3: Same solution, different operators → vastly different scores
+- Part 4: Extreme solutions to probe logical structure (perfect fit+rough, poor fit+smooth, balanced)
+- Part 5: Trade-off surface visualization (contour plots showing optimization landscapes)
+- Part 6: AND vs OR logic demonstration (additive forces balance, multiplicative allows extremes)
+- Part 7-8: Implications for "model-free" claims and summary
+
+**Five Combination Rules Tested**:
+1. **Additive** ($A + \lambda B$): "AND" logic - must satisfy both constraints
+2. **Multiplicative** ($A \times \lambda B$): Asymmetric trade-offs allowed
+3. **Log-additive** ($\log A + \lambda \log B$): Scale-invariant, multiplicative in original space
+4. **Max** ($\max(A, \lambda B)$): Worst-case logic
+5. **Weighted power** ($A^p + \lambda B^q$): Generalized form
+
+**Critical Results**:
+- **Extreme Case 1** (A≈0, B=100): Additive scores 100, Multiplicative scores $2\times10^{-8}$
+- **Extreme Case 2** (A=100, B≈0): Additive scores 100, Multiplicative scores $2\times10^{-8}$
+- **Balanced Case** (A=1, B=1): Additive scores 2.0, Multiplicative scores 1.0
+- **Interpretation**: Additive forces simultaneous satisfaction (AND), Multiplicative allows extremes
+
+**Probabilistic Connection**: Additive form corresponds to Gaussian assumptions:
+- $A + \lambda B$ in optimization ↔ $-\log p(M|P,C) - \log p(C)$ in Bayesian
+- Assumes: Gaussian noise + Gaussian prior + independence
+- Alternative operators imply different probabilistic models
+
+**Paper Argument**: Strengthens "model-free" critique by showing implicit modeling at most fundamental level:
+1. Before choosing regularizer type (smoothness, sparsity, etc.)
+2. Before choosing constraint weights (λ values)
+3. Must choose how constraints interact logically (AND vs OR)
+4. **Operator choice encodes beliefs about constraint satisfaction logic**
+
+**Outputs**: 
+- `objective_combination_rules_comparison.png` - 4-panel contour plots showing different optimization landscapes
+
+**Future Directions**:
+1. Test on real SEC-SAXS data - does operator choice matter in practice?
+2. Formal Bayesian interpretation of each rule
+3. Hybrid approaches - adaptive rules that switch based on data?
+
+**Why it matters**: Reveals that even the mathematical structure of combining terms is a modeling decision, not a neutral technical detail. REGALS's additive form implicitly assumes "AND" logic and Gaussian distributions.
+
+---
+
+### 10. `orthogonal_invariance_journey.md` ⭐
 **Status**: ✅ Complete (January 27, 2026)  
 **Type**: Research narrative document (not notebook)  
 **Purpose**: Map the conceptual flow from discovery → proof → applicability testing → fundamental limitation discovery

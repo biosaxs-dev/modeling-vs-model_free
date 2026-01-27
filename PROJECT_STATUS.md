@@ -85,7 +85,39 @@ These four notebooks/documents provide rigorous theoretical support:
 
 ## 🎯 Latest Breakthroughs
 
-### January 27, 2026: Problem-Informed Q-Matrix Design SUCCESS ✓✓
+### January 27, 2026 (Evening): Objective Function Combination Rules - Fundamental Modeling Choice
+
+**New Discovery**: The mathematical operator combining terms (+, ×, log) is itself a modeling decision that encodes logical structure!
+
+**Key Insight**: Before even choosing WHAT to regularize, methods must choose HOW to combine terms:
+- **Addition (+)**: "AND" logic - must satisfy both data-fit AND smoothness
+- **Multiplication (×)**: Allows asymmetric trade-offs - minimizing either term helps
+- **Log-additive**: Scale-invariant, multiplicative in original space
+- **Max**: Worst-case logic - only largest violation matters
+
+**Created**: [objective_combination_rules_exploration.ipynb](explorations/objective_combination_rules_exploration.ipynb)
+- 8-part systematic exploration (17 cells, complete)
+- Tests 5 different combination rules on same solutions
+- Demonstrates AND vs OR logic explicitly with extreme cases
+- Visualizes trade-off surfaces showing different optimization landscapes
+
+**Critical Finding**: Same solution scores VASTLY differently under different operators (range: $10^{-28}$ to $0.31$). For extreme cases:
+- Additive prefers balanced solutions (score = 2.0)
+- Multiplicative prefers extremes (score = $2 \times 10^{-8}$)
+
+**Paper Argument Enhanced**: Reveals modeling assumptions at the MOST FUNDAMENTAL level:
+1. Not just "which regularizer" (D² vs D¹)
+2. Not just "how to weight" (λ value)
+3. But "how constraints interact" (+ vs × encodes AND vs OR logic)
+4. **REGALS's additive form is implicit modeling of constraint satisfaction logic**
+
+**Status**: Complete exploration ready for future investigation of how alternative forms change solution landscape and method behavior
+
+**Updated**: [underdeterminedness_exploration.ipynb](explorations/underdeterminedness_exploration.ipynb) Level 2 now explicitly discusses operator choice and its logical/probabilistic implications
+
+---
+
+### January 27, 2026 (Afternoon): Problem-Informed Q-Matrix Design SUCCESS ✓✓
 
 **Major Discovery**: Frequency-domain band-pass filtering achieves 90% reliability while maintaining orthogonal invariance!
 
