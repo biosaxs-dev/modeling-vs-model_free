@@ -1,5 +1,5 @@
 # Project Status & Quick Start
-**Last Updated**: January 26, 2026
+**Last Updated**: January 28, 2026 (Late Evening)
 
 ---
 
@@ -18,9 +18,11 @@ JOSS validation repository for **Molass Library** paper ([#9424](https://github.
 ### Read These Core Documents
 1. **README.md** - Repository purpose
 2. **PROJECT_STATUS.md** (this file) - Current focus
-3. **R_CENTRIC_FRAMEWORK.md** - Analytical framework
-4. **explorations/README.md** - Mathematical foundations overview
-5. **explorations/orthogonal_invariance_journey.md** ⭐ - Research narrative (discovery → proof → testing)
+3. **NOTATION_CONVENTION.md** - Matrix factorization notation ($M = PC$)
+4. **R_CENTRIC_FRAMEWORK.md** - Analytical framework
+5. **explorations/README.md** - Mathematical foundations overview
+6. **explorations/orthogonal_invariance_overview.md** ⭐ - Research journey summary (START HERE for context)
+7. **explorations/orthogonal_invariance_journey.md** - Full technical details (9 stages)
 
 ### Key Context Framework
 - **R-centric analysis**: Frame all matrix factorization in terms of transformation matrix R
@@ -85,35 +87,306 @@ These four notebooks/documents provide rigorous theoretical support:
 
 ## 🎯 Latest Breakthroughs
 
+### January 28, 2026 (Late Evening): Documentation Structure & Notation Standardization
+
+**Major Repository Improvements**: Comprehensive reorganization and standardization for clarity and pedagogical accessibility.
+
+**1. Notation Convention Standardized**:
+- **Unified notation**: All documentation now uses $M = PC$ (matches JOSS paper)
+- **Previous inconsistency**: Some docs used $M = CP^T$ (transpose convention)
+- **New reference**: [NOTATION_CONVENTION.md](NOTATION_CONVENTION.md) created
+  - Explains why $M = PC$ is preferred (standard NMF convention, cleaner math)
+  - Documents matrix dimensions and physical interpretations
+  - $P$ = scattering curves (q-values × components, columns = spectra)
+  - $C$ = elution curves (components × frames, rows = time series)
+  - Solution: $P = M \cdot C^{+}$ (direct pseudoinverse)
+
+**2. Pedagogical Structure Created**:
+- **New**: [orthogonal_invariance_overview.md](explorations/orthogonal_invariance_overview.md)
+  - Executive summary table of all 9 stages
+  - Narrative summaries without heavy math (~15 min read)
+  - Clear JOSS validation takeaways
+  - Navigation guide for different reader levels
+  - Context restoration for AI/future sessions
+- **Enhanced**: [matrix_transformations_tutorial.ipynb](explorations/matrix_transformations_tutorial.ipynb)
+  - Added notation notice linking to NOTATION_CONVENTION.md
+  - New "Further Reading" section with cross-references
+  - New "Quick Reference" section (concepts, formulas, constraint hierarchy)
+  - Clear connections: Tutorial parts → Journey stages
+- **Updated**: [orthogonal_invariance_journey.md](explorations/orthogonal_invariance_journey.md)
+  - Added navigation section at top
+  - Links to overview for quick start
+  - Guidance on when to read which document
+
+**3. Terminology Precision**:
+- **Renamed**: `degeneracy_scope_diagnostic.ipynb` → `multiple_minima_diagnostic.ipynb`
+- **Updated throughout**: "Fundamental Limitation Theorem" → "Multiple Minima Conjecture"
+  - Acknowledges lack of formal proof (scientific precision)
+  - Broader scope: degeneracy, permutation, shift failures (not just degeneracy)
+- **All references updated**: PROJECT_STATUS.md, journey.md, overview.md, README.md
+
+**Learning Paths Now Clear**:
+```
+Level 1: New to orthogonal matrices
+   └─→ matrix_transformations_tutorial.ipynb (visual 2D examples)
+
+Level 2: Understand basics, want big picture
+   └─→ orthogonal_invariance_overview.md (executive summary)
+
+Level 3: Need full technical details
+   └─→ orthogonal_invariance_journey.md (9 stages, proofs)
+
+Reference: Need formulas/notation
+   └─→ NOTATION_CONVENTION.md + Tutorial Quick Reference
+```
+
+**Why This Matters**:
+- **Accessibility**: Different entry points for different expertise levels
+- **Consistency**: Single notation convention eliminates confusion
+- **Future-proof**: Context restoration guides help AI assistants
+- **JOSS ready**: Clear narrative from limitations to Molass solution
+
+**Files Created**:
+- `NOTATION_CONVENTION.md` - Standard reference for $M = PC$ convention
+- `explorations/orthogonal_invariance_overview.md` - Pedagogical entry point
+
+**Files Enhanced**:
+- `matrix_transformations_tutorial.ipynb` - Cross-references + Quick Reference
+- `orthogonal_invariance_journey.md` - Navigation section
+- `PROJECT_STATUS.md` - References NOTATION_CONVENTION.md
+
+**Status**: ✅ Complete - Repository now has clear structure from beginner to expert
+
+---
+
+### January 28, 2026 (Evening): Stage 8 - Incompatibility Discovery in 3D Design Space
+
+**Critical Negative Result**: Log-additive + frequency Q = **0% success** (incompatible!)
+
+**Research Question**: Does Stage 5's frequency Q breakthrough work with Stage 7's log-additive winner?
+- Hypothesis: >50% success (best of both worlds)
+- Reality: **0%** - WORSE than log-additive + generic Q (25%)
+
+**Created**: [log_additive_frequency_Q_test.ipynb](explorations/log_additive_frequency_Q_test.ipynb) (Stage 8 first experiment)
+- Tests exact frequency Q from Stage 5 with log-additive objective
+- 20-trial multi-start, same correlated profiles setup
+- Complete failure: all trials stuck at identical poor local minimum
+
+**Three-Dimensional Design Space**:
+| Configuration | Success Rate | Finding |
+|--------------|--------------|---------|
+| Additive + frequency Q | 90% | ✓ Stage 5 breakthrough |
+| Log-additive + generic Q | 25% | ✓ Stage 7 winner |
+| **Log-additive + frequency Q** | **0%** | ❌ **INCOMPATIBLE** |
+
+**Why This Matters**:
+
+1. **The design space has structure** - not all combinations work:
+   - Operator choice (Stage 6-7): Additive vs Log-additive vs Multiplicative
+   - Q form (Stage 4): Fixed form theorem $S(C) = \text{tr}(CQC^T)$
+   - Q design (Stage 5): Generic vs Frequency vs Spatial vs Ridge
+   - **These three dimensions interact** - some combinations incompatible!
+
+2. **Destructive interference mechanism**:
+   - Frequency Q designed for linear penalty: $S(C) = \text{tr}(CQC^T)$
+   - Log-additive uses logarithmic: $\log(\text{tr}(CQC^T))$
+   - Gradient becomes: $\nabla_C = \frac{\lambda}{\text{tr}(CQC^T)} \cdot 2CQ$ (adaptive inverse scaling)
+   - Adaptive scaling conflicts with frequency-domain structure Q tries to enforce
+   - Result: 0% (worse than 25%) indicates active interference, not just incompatibility
+
+3. **Stage 5's breakthrough is operator-specific, not universal**:
+   - Frequency Q worked for **additive** operator (90%)
+   - Does NOT work for **log-additive** operator (0%)
+   - Need operator-specific Q design principles
+
+**Profound Implications**:
+
+1. **Hidden compatibility constraints**: Even "model-free" choices must respect structural compatibility between operator and regularizer design
+2. **Cannot mix-and-match arbitrarily**: Success requires understanding interaction between operator gradient structure and Q geometry
+3. **Stages 4-5 need re-examination**: Fixed form theorem and Q design may need adaptation for each operator type
+
+**Open Questions**:
+- Why 0% (destructive) rather than 25% (neutral)? What mechanism causes active interference?
+- Can frequency Q be adapted for log-space? Or fundamentally incompatible?
+- What Q designs ARE compatible with log-additive's adaptive gradients?
+- Does fixed form theorem need modification? $S(C) = \text{tr}(CQC^T)$ vs $\text{tr}(\log(C) Q \log(C)^T)$?
+
+**Status**: Critical negative result documented, mechanism investigation needed
+
+**Updated**: [orthogonal_invariance_journey.md](explorations/orthogonal_invariance_journey.md) v1.6 with Stage 8 experimental results  
+**New**: [orthogonal_invariance_overview.md](explorations/orthogonal_invariance_overview.md) - Pedagogical entry point
+
+---
+
+### January 28, 2026 (Late Evening): Stage 8 Diagnostic - Multiple Minima Conjecture Refined
+
+**Critical Discovery**: The Multiple Minima Conjecture (Stage 5) is NOT about degenerate solutions being better—it's about a **complex landscape with many local minima of similar quality**!
+
+**Research Question**: Is the conjecture about objective structure (all optimizers affected) or optimization method (ALS-specific)?
+
+**Created**: [multiple_minima_diagnostic.ipynb](explorations/multiple_minima_diagnostic.ipynb)
+- Tests whether degenerate solution has LOWER objective value
+- Compares Basin-hopping (global optimizer) vs ALS baselines
+- Uses realistic SEC-SAXS setup (Guinier-Porod profiles, r≈0.88)
+- Tests both additive and log-additive objectives
+
+**Key Findings**:
+
+1. **Hypothesis Test: Degenerate vs True Solution Objectives**
+   ```
+   Additive:     True = 0.40 << Degenerate = 40.01 (99× better!)
+   Log-additive: True = -1.28 < Degenerate = 3.10 (4.4 units better)
+   ```
+   **→ TRUE solution IS the global optimum, NOT degenerate**
+
+2. **Basin-hopping Results** (Surprising!):
+   - Additive + Basin-hopping: **0%** (vs ALS baseline: 35%) ❌
+   - Log-additive + Basin-hopping: **0%** (vs ALS baseline: 25%) ❌
+   **→ Global optimization performs WORSE than ALS**
+
+3. **Resolution: Multiple Different Local Minima**
+   - ALS finds: Degenerate solutions (one flat, one bimodal)
+   - Basin-hopping finds: Permuted/shifted solutions (wrong structure)
+   - Both types: Similar objectives (0.40-0.44), high error (0.9-1.5)
+   **→ The landscape has MANY comparable minima, not just degenerate**
+
+**Refined Understanding of Multiple Minima Conjecture**:
+
+**Original interpretation** (Stage 5): "Fixed Q can't prevent degeneracy because degenerate solution is better"
+
+**Refined understanding** (Diagnostic): "Fixed Q creates complex landscapes with multiple local minima:"
+- True solution: obj ≈ 0.40 (global optimum) ✓
+- Permuted/shifted: obj ≈ 0.40-0.44 (comparable) ← Basin-hopping finds these
+- Degenerate: obj ≈ 40 (much worse) ← ALS sometimes gets trapped
+
+**Critical Insights**:
+
+1. **The problem is MORE subtle than degeneracy**
+   - Not "degenerate is better" but "many minima of similar quality"
+   - ALS's constrained alternation sometimes helps (35%, 25%)
+   - Basin-hopping's freedom can hurt—explores wrong basins (0%)
+
+2. **Conjecture applies broadly to all optimizers**
+   - Both ALS and Basin-hopping fail (different failure modes)
+   - Neither the degeneracy-specific nor just ALS-specific
+   - Fundamental property of objective landscape structure
+
+3. **Validates Molass's explicit constraints approach**
+   - Even with: correct global optimum + global optimizer + log-additive
+   - Still fails without explicit constraints (0%)
+   - Molass's Rg-consistency and parametric models address this
+   - **For JOSS**: Conjecture validates why explicit modeling is necessary
+
+**Updated Conjecture Statement**:
+> For SEC-SAXS with correlated profiles, objective functions using only fixed quadratic smoothness regularization create optimization landscapes with **multiple local minima (degenerate, permuted, shifted solutions) of comparable objective value**, preventing reliable component recovery regardless of optimization method (ALS or global). This limitation necessitates additional physical constraints for reliable decomposition.
+
+**Implications for JOSS**:
+- Objective structure alone insufficient (even when true solution is global optimum)
+- Global optimization doesn't automatically solve it (Basin-hopping: 0%)
+- Molass's explicit constraints (Rg-consistency, parametric models) address the **multiple minima problem**
+- Strongly supports claim that explicit modeling addresses "model-free" limitations
+
+**Status**: Diagnostic complete, conjecture refined, terminology updated throughout repository
+
+---
+
+### January 28, 2026 (Morning): The λ-Placement Paradox - Where Regularization Weight Enters Matters!
+
+**Profound Discovery**: Mathematical equivalence ≠ practical equivalence when λ placement differs between formulations!
+
+**Research Question**: Are Stages 1-5 findings (invariance, degeneracy) operator-specific or fundamental?
+
+**Created**: [objective_operators_invariance_exploration.ipynb](explorations/objective_operators_invariance_exploration.ipynb) (Stage 7)
+- 19 cells, 8 major sections, complete multi-start experiments
+- Tests 4 operators: Additive (+), Multiplicative (×), Log-additive (log), Max
+- 20 trials per operator on correlated profiles (r≈0.88, degeneracy-prone)
+
+**Key Findings**:
+
+1. **Orthogonal Invariance** ✓
+   - ALL operators preserve invariance (σ < 10⁻¹⁰)
+   - Stages 1-2 mathematical elegance holds universally
+   - Reason: f(A,B) preserved for any function f when A and B individually preserved
+
+2. **Degeneracy Behavior** (Multi-Start Experiment, λ=0.1):
+   - Additive: **0%** success (worse than Stage 5's 35%!)
+   - Multiplicative: **0%** success (balance enforcement FAILED)
+   - **Log-additive: 25% success** (CLEAR WINNER) ✓
+   - Max: **0%** success (worst-case logic no help)
+   - Zero degeneracy across all operators (ALS with L-BFGS-B more stable)
+
+3. **The λ-Placement Paradox** ⚠️ (Critical Mathematical Discovery):
+   - While $\min(A \times B) \equiv \min(\log A + \log B)$ mathematically...
+   - **Multiplicative**: Implements $A \times \lambda B$ (linear scaling)
+   - **Log-additive**: Implements $\log A + \lambda \log B = \log(A \times B^\lambda)$ (power scaling)
+   - With λ=0.1 and B=100:
+     - Multiplicative: $0.1 \times 100 = 10.0$ (strong penalty)
+     - Log-additive: $100^{0.1} = 1.585$ (weak penalty, **6.3× difference**)
+
+4. **Adaptive Gradient Structure Explains Everything**:
+   - Multiplicative: $\frac{\partial f}{\partial B} = \lambda A$ (constant, traps in poor minima)
+   - Log-additive: $\frac{\partial f}{\partial B} = \frac{\lambda}{B}$ (adaptive inverse scaling)
+   - When B large (poor smoothness): Log-additive weakens penalty, allows data-fit focus
+   - When B small (good smoothness): Log-additive strengthens penalty, maintains smoothness
+   - **This adaptive behavior creates more navigable optimization landscape**
+
+**Profound Implications**:
+
+1. **Hidden modeling choices go deeper than thought**:
+   - Not just which regularizer (D² vs D¹)
+   - Not just weighting (λ value)
+   - Not just combination operator (+ vs ×)
+   - **But WHERE λ enters the formula** (linear vs power scaling)
+
+2. **Mathematical equivalence ≠ practical equivalence**:
+   - Two formulations mathematically identical (log transforms)
+   - BUT different λ placements create vastly different optimization dynamics
+   - Success rate: 25% vs 0% (practical difference is massive)
+
+3. **"Model-free" contains cascade of implicit choices**:
+   - Stage 6: WHETHER to combine objectives (+ vs separate)
+   - Stage 7: HOW to combine (operator choice)
+   - **NEW**: HOW λ enters (scaling structure)
+   - Each creates different optimization landscape with measurable reliability impact
+
+**Answer to Meta-Question**: Problems are **operator-dependent through gradient structure**, but subtly. The critical factor is adaptive gradient scaling ($1/B$) vs constant/coupled gradients, not just term coupling alone.
+
+**Status**: Complete with surprising discoveries that reveal deep connection between mathematical formulation and optimization behavior
+
+**Updated**: [orthogonal_invariance_journey.md](explorations/orthogonal_invariance_journey.md) now includes Stage 7 with flow diagram showing progression from Stage 6
+
+---
+
 ### January 27, 2026 (Evening): Objective Function Combination Rules - Fundamental Modeling Choice
 
-**New Discovery**: The mathematical operator combining terms (+, ×, log) is itself a modeling decision that encodes logical structure!
+**New Discovery**: The mathematical operator combining terms (+, ×, log) is itself a modeling decision that determines optimization dynamics through gradient structure!
 
 **Key Insight**: Before even choosing WHAT to regularize, methods must choose HOW to combine terms:
-- **Addition (+)**: "AND" logic - must satisfy both data-fit AND smoothness
-- **Multiplication (×)**: Allows asymmetric trade-offs - minimizing either term helps
-- **Log-additive**: Scale-invariant, multiplicative in original space
-- **Max**: Worst-case logic - only largest violation matters
+- **Addition (+)**: "OR"-like behavior - allows trade-offs between constraints (∂/∂A = 1, independent gradients)
+- **Multiplication (×)**: "AND"-like enforcement - forces balance between constraints (∂/∂A = B, coupled gradients)
+- **Log-additive**: Also "AND"-like (multiplicative in original space)
+- **Max**: Strongest "AND" enforcement - only worst violation matters
 
 **Created**: [objective_combination_rules_exploration.ipynb](explorations/objective_combination_rules_exploration.ipynb)
-- 8-part systematic exploration (17 cells, complete)
+- 8-part systematic exploration (18 cells including gradient analysis, complete)
 - Tests 5 different combination rules on same solutions
-- Demonstrates AND vs OR logic explicitly with extreme cases
+- Demonstrates gradient-based trade-off vs balance enforcement explicitly
 - Visualizes trade-off surfaces showing different optimization landscapes
+- **Critical correction**: Uses gradient analysis (not naive interpretation) to classify operators
 
 **Critical Finding**: Same solution scores VASTLY differently under different operators (range: $10^{-28}$ to $0.31$). For extreme cases:
-- Additive prefers balanced solutions (score = 2.0)
-- Multiplicative prefers extremes (score = $2 \times 10^{-8}$)
+- Additive prefers balanced solutions (score = 2.0) - but gradients allow trading
+- Multiplicative global extremes exist (score = $2 \times 10^{-8}$) - but gradients enforce balance
 
 **Paper Argument Enhanced**: Reveals modeling assumptions at the MOST FUNDAMENTAL level:
 1. Not just "which regularizer" (D² vs D¹)
 2. Not just "how to weight" (λ value)
-3. But "how constraints interact" (+ vs × encodes AND vs OR logic)
-4. **REGALS's additive form is implicit modeling of constraint satisfaction logic**
+3. But "how constraints interact" (gradient structure determines optimization dynamics)
+4. **REGALS's additive form allows marginal trade-offs - implicit modeling of constraint interaction**
 
 **Status**: Complete exploration ready for future investigation of how alternative forms change solution landscape and method behavior
 
-**Updated**: [underdeterminedness_exploration.ipynb](explorations/underdeterminedness_exploration.ipynb) Level 2 now explicitly discusses operator choice and its logical/probabilistic implications
+**Updated**: [underdeterminedness_exploration.ipynb](explorations/underdeterminedness_exploration.ipynb) Level 2 now explicitly discusses operator choice with correct gradient-based analysis
 
 ---
 
@@ -204,6 +477,7 @@ These four notebooks/documents provide rigorous theoretical support:
 c:\Users\takahashi\GitHub\modeling-vs-model_free\
 ├── README.md                  # Repository purpose
 ├── PROJECT_STATUS.md          # ← This file (current focus)
+├── NOTATION_CONVENTION.md     # 🔑 Matrix factorization notation (M = PC)
 ├── SESSION_HISTORY.md         # Detailed development log
 ├── R_CENTRIC_FRAMEWORK.md     # 🔑 Analytical framework
 │
@@ -214,11 +488,20 @@ c:\Users\takahashi\GitHub\modeling-vs-model_free\
 │   └── efa_original/          # EFA limitation verifications (1-4 complete)
 │
 ├── explorations/              # 📚 MATHEMATICAL FOUNDATIONS (complete)
-│   ├── matrix_transformations_tutorial.ipynb          # 🔑 Comprehensive foundations
+│   ├── matrix_transformations_tutorial.ipynb          # 🔑 Visual guide (updated with cross-refs)
 │   ├── discrete_ambiguity_demonstration.ipynb         # 🔑 Group theory visualization
 │   ├── smoothness_orthogonal_invariance_proof.ipynb   # 🔑 D^k invariance proof
 │   ├── underdeterminedness_exploration.ipynb          # Constraint hierarchy
 │   ├── permutation_ambiguity_examples.ipynb           # Discrete ambiguity risk
+│   ├── objective_combination_rules_exploration.ipynb  # Stage 6: Operator choice (AND vs OR)
+│   ├── objective_operators_invariance_exploration.ipynb # Stage 7: λ-placement paradox ✓
+│   ├── log_additive_frequency_Q_test.ipynb            # Stage 8: Incompatibility discovery
+│   ├── multiple_minima_diagnostic.ipynb               # Stage 9: Conjecture refinement ✓
+│   ├── orthogonal_invariance_overview.md              # ⭐ Research summary (START HERE)
+│   ├── orthogonal_invariance_journey.md               # 🔬 Full technical narrative (9 stages)
+│   ├── operator_logic_clarification.md                # Canonical reference (AND/OR confusion)
+│   ├── permutation_reliability_pilot.ipynb            # Selection problem study
+│   ├── problem_informed_Q_design.ipynb                # 90% success with frequency filtering ✓✓
 │   ├── REGALS_analysis_summary.md                     # Comprehensive findings
 │   └── discrete_structure_propagation_theory.md       # Topological framework
 │
@@ -242,6 +525,20 @@ c:\Users\takahashi\GitHub\modeling-vs-model_free\
 ---
 
 ## ✅ What's Complete
+
+### Documentation Structure (NEW - January 28, 2026 Evening) ✓
+- ✓ NOTATION_CONVENTION.md - Standard $M = PC$ reference
+- ✓ orthogonal_invariance_overview.md - Pedagogical entry point with executive summary
+- ✓ matrix_transformations_tutorial.ipynb - Enhanced with cross-references and quick reference
+- ✓ All docs updated to consistent notation (matches JOSS paper)
+- ✓ Clear learning paths: Beginner → Overview → Deep dive
+
+### Research Journey (9 Stages Complete) ✓
+- ✓ Stage 1-2: Discovery and proof of orthogonal invariance
+- ✓ Stage 3-5: Multiple Minima Conjecture formulated
+- ✓ Stage 6-7: Operator choice investigation (log-additive 25% winner)
+- ✓ Stage 8: 3D framework with incompatibility discovery
+- ✓ Stage 9: Conjecture refined (applies to all optimizers)
 
 ### Mathematical Foundations (4 Key Files) ✓
 - ✓ matrix_transformations_tutorial.ipynb
@@ -353,10 +650,27 @@ minimize: χ² + λ_C ||D²C||² + λ_P ||D²P||²
 
 ## 📖 Additional Resources
 
+### Core Documentation (Start Here)
+- **NOTATION_CONVENTION.md** 🔑 - Standard $M = PC$ convention explained
+- **explorations/orthogonal_invariance_overview.md** ⭐ - Research journey summary (9 stages, RECOMMENDED START)
+- **explorations/matrix_transformations_tutorial.ipynb** 📚 - Visual guide for beginners (updated with cross-refs)
+- **explorations/orthogonal_invariance_journey.md** 🔬 - Full technical narrative with proofs and experiments
+
+### Session & Development History
 - **SESSION_HISTORY.md** - Detailed development log (session-by-session)
 - **explorations/README.md** - Complete overview of mathematical notebooks
-- **explorations/orthogonal_invariance_journey.md** ⭐ - Research narrative from discovery to fundamental limitation theorem
+
+### Research Notebooks (Stages 6-9)
+- **explorations/objective_combination_rules_exploration.ipynb** ✓ (Stage 6) - Operator choice (AND vs OR logic) affects optimization dynamics
+- **explorations/objective_operators_invariance_exploration.ipynb** ✓ (Stage 7) - **λ-placement paradox**: Log-additive achieves 25% success via adaptive gradient scaling
+- **explorations/log_additive_frequency_Q_test.ipynb** ✓ (Stage 8) - **INCOMPATIBILITY**: Log-additive + frequency Q = 0%
+- **explorations/multiple_minima_diagnostic.ipynb** ✓ (Stage 9) - Conjecture refined: applies to all optimizers
+
+### Key Breakthroughs
 - **explorations/problem_informed_Q_design.ipynb** ✓✓ - **BREAKTHROUGH**: Frequency-domain Q achieves 90% reliability while maintaining invariance (resolves Open Research Question #3)
+- **explorations/operator_logic_clarification.md** - Canonical reference for gradient-based operator analysis
+
+### Repository Organization
 - **ORGANIZATION.md** - Repository structure and priorities
 - **archive/** - Original research project plans (for future)
 

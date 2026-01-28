@@ -321,43 +321,61 @@ While not required, these analyses:
 
 ---
 
-### 10. `orthogonal_invariance_journey.md` ⭐
-**Status**: ✅ Complete (January 27, 2026)  
-**Type**: Research narrative document (not notebook)  
-**Purpose**: Map the conceptual flow from discovery → proof → applicability testing → fundamental limitation discovery
+### 10. Research Journey Documentation ⭐
 
-**Overview**: Comprehensive documentation of the orthogonal invariance research arc spanning 5 stages across 3 notebooks. Serves as a navigation guide showing decision points, achievements, and areas for future reconsideration.
+**Status**: ✅ 9 stages complete (January 17-28, 2026)  
+**Entry Point**: Start with [orthogonal_invariance_overview.md](orthogonal_invariance_overview.md) 📖  
+**Full Details**: See [orthogonal_invariance_journey.md](orthogonal_invariance_journey.md) 🔬
 
-**The Five Stages**:
+#### Overview Document (NEW - Recommended Start)
+**File**: `orthogonal_invariance_overview.md`  
+**Purpose**: Quick-start guide with executive summary, key findings, and JOSS validation takeaways
+
+**Contents**:
+- Executive summary table of all 9 stages
+- Brief narrative of each stage (without heavy math)
+- Key insights for JOSS validation
+- Navigation guide (when to read which document)
+- Context restoration for future sessions
+
+**Read this first if you want**: Big picture, JOSS arguments, quick understanding of key findings.
+
+#### Journey Document (Full Technical Details)
+**File**: `orthogonal_invariance_journey.md`  
+**Purpose**: Complete research narrative from discovery → proof → framework → refined understanding
+
+**The Nine Stages**:
 1. **Discovery** (underdeterminedness_exploration.ipynb): Smoothness preserves orthogonal transformations
 2. **Proof** (smoothness_orthogonal_invariance_proof.ipynb Parts 1-10): Generalized to all D^k operators
 3. **Reality Check** (Parts 11): Mathematical elegance ≠ practical effectiveness (0% success empirically)
 4. **Generalization** (Part 11A): S(C) = tr(CQC^T) necessary/sufficient form, trade-off identified
-5. **The Exciting Part** (Parts 11B-D): Can ridge regularization prevent degeneracy while maintaining invariance? → **No** (fundamental limitation proven)
+5. **Ridge Test** (Parts 11B-D): Can ridge prevent degeneracy while maintaining invariance? → **No** (fundamental limitation)
+6. **Operator Logic** (objective_combination_rules_exploration.ipynb): Why additive? Gradient structure determines constraint interaction
+7. **Meta-Analysis** (objective_operators_invariance_exploration.ipynb): Are findings operator-specific? Log-additive achieves 25%!
+8. **3D Framework**: Operator × Q-form × Q-design space, incompatibilities discovered (log-additive + frequency Q = 0%)
+9. **Diagnostic** (multiple_minima_diagnostic.ipynb): Applies to all optimizers - even Basin-hopping fails (0%) without explicit constraints
 
-**Why This Document Exists**:
-- User recognized need to clarify grand context across multiple notebooks
-- Provides roadmap for picking up research threads later
-- Documents decision points (e.g., ridge regularization choice and rationale)
-- Makes explicit the "why exciting?" question and what was learned
-- Links achievements to broader implications for JOSS paper
+**Read this if you want**: Full mathematical proofs, experimental details, methodology, decision points, ASCII flow diagram.
 
-**Key Achievement**: Discovered fundamental limitation theorem (informal):
-> For SEC-SAXS with correlated profiles, no fixed quadratic form can simultaneously maintain orthogonal invariance AND prevent degeneracy when both P and C are optimized.
+**Key Achievement**: Multiple Minima Conjecture:
+> For SEC-SAXS with correlated profiles, objective functions using only fixed quadratic smoothness regularization create optimization landscapes with multiple local minima (degenerate, permuted, shifted solutions) of comparable objective value, preventing reliable component recovery regardless of optimization method (ALS or global optimizers).
+>
+> **Note**: This is a conjecture based on empirical observations across 9 stages. Formal proof would require rigorous mathematical definitions of conditions (correlation thresholds, λ ranges, problem sizes) under which multiple minima emerge. Stage 9 diagnostic confirms it applies to all tested optimizers (ALS and Basin-hopping), not just ALS-specific limitations.
 
-**Decision Points Documented for Future**:
-- ⭐ Reconsider ridge approach with different parameters
-- ⭐ Explore other invariant penalties (mixed derivatives, spatial weighting, graph Laplacian)
-- ⭐ Characterize fundamental limits formally
-- ❓ Alternative: Accept invariance-breaking, characterize "how much" needed
+**JOSS Validation Impact**: Strongly validates Molass's explicit parametric constraints approach. Even with:
+- ✅ Correct global optimum (true solution is best)
+- ✅ Global optimizer (Basin-hopping)
+- ✅ Better objective operator (log-additive)
+
+System **still fails (0%)** without explicit constraints (Rg-consistency, parametric models).
 
 **Cross-References**:
-- Spans 3 notebooks + 1 pilot study
+- Spans 6+ notebooks across explorations/
 - Connects to R_CENTRIC_FRAMEWORK.md (analytical approach)
 - Supports REGALS_analysis_summary.md (why constraints needed)
 - Informs PROJECT_STATUS.md (current research state)
 
-**Why it matters**: Transforms scattered discoveries into coherent narrative, making it possible to understand "where we are" and "where we could go next" in the research journey.
+**Why it matters**: Provides **theoretical foundation** for JOSS validation - transforms scattered discoveries into coherent narrative explaining why "model-free" approaches have fundamental limitations that Molass addresses through explicit modeling.
 
 ---
 
