@@ -352,4 +352,5 @@ This framework helps articulate why existing "model-free" methods have limitatio
 
 **Version**: 1.0  
 **Contributors**: Research conducted January 17-28, 2026  
-**License**: Part of modeling-vs-model_free JOSS validation repository
+**License**: MIT License - Part of modeling-vs-model_free research repository
+

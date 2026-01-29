@@ -1,5 +1,7 @@
 # Modeling vs Model-Free SEC-SAXS Analysis
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repository explores the fundamental behavior of SEC-SAXS decomposition methods through mathematical analysis, computational experiments, and literature review. **Our goal is to contribute to the SEC-SAXS community's understanding of when and why different approaches succeed or fail.**
 
 ## Purpose
@@ -149,6 +151,12 @@ GitHub repository. https://github.com/biosaxs-dev/modeling-vs-model_free
 - Referencing documented method limitations (EFA, CHROMIXS, EFAMIX, REGALS)
 
 **Status**: This is an active research repository with original contributions to SEC-SAXS methodology. A formal manuscript may be submitted for peer review in the future.
+
+---
+
+## License
+
+This repository is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this work with attribution.
 
 ---
 
