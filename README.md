@@ -83,7 +83,6 @@ Follow the learning path:
 ### 📝 **JOSS reviewers?**
 Focus on:
 - This README and "Origin Note" above for context
-- [PAPER_UPDATES_SUMMARY.md](PAPER_UPDATES_SUMMARY.md) for recent changes to JOSS submission
 - [evidence/](evidence/) for Research Impact Statement support
 - Mathematical work in `explorations/` is valuable context but not required for review
 
