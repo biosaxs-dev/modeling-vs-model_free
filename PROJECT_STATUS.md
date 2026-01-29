@@ -5,9 +5,11 @@
 
 ## 🎯 What This Repository Is
 
-JOSS validation repository for **Molass Library** paper ([#9424](https://github.com/openjournals/joss-reviews/issues/9424)).
+Research repository investigating the fundamental behavior of SEC-SAXS decomposition methods through mathematical analysis, computational experiments, and literature review.
 
-**Mission**: Document that existing "model-free" methods (CHROMIXS, EFAMIX, REGALS) have limitations that Molass addresses through explicit parametric modeling.
+**Mission**: To contribute to the SEC-SAXS community's understanding of when and why different matrix factorization approaches succeed or fail, revealing the implicit modeling choices in "model-free" methods and how explicit parametric approaches address these challenges.
+
+**Origin**: This work began as supporting evidence for the Molass Library JOSS paper ([#9424](https://github.com/openjournals/joss-reviews/issues/9424)), but evolved into broader research contributions relevant to the entire SEC-SAXS community.
 
 ---
 
@@ -481,10 +483,10 @@ c:\Users\takahashi\GitHub\modeling-vs-model_free\
 ├── SESSION_HISTORY.md         # Detailed development log
 ├── R_CENTRIC_FRAMEWORK.md     # 🔑 Analytical framework
 │
-├── evidence/                  # 🎯 JOSS VALIDATION (in progress)
-│   ├── chromixs/              # ⏳ CHROMIXS deferral evidence
-│   ├── efamix/                # ⏳ EFAMIX threshold evidence
-│   ├── regals/                # ⏳ REGALS two-stage evidence
+├── evidence/                  # 📖 LITERATURE EVIDENCE (in progress)
+│   ├── chromixs/              # ⏳ CHROMIXS documented limitations
+│   ├── efamix/                # ⏳ EFAMIX quantified thresholds
+│   ├── regals/                # ⏳ REGALS architecture and dependencies
 │   └── efa_original/          # EFA limitation verifications (1-4 complete)
 │
 ├── explorations/              # 📚 MATHEMATICAL FOUNDATIONS (complete)
@@ -560,28 +562,28 @@ c:\Users\takahashi\GitHub\modeling-vs-model_free\
 
 ## ⏳ What's Next
 
-### Priority 1: Extract Method Evidence (🎯 Core JOSS Validation)
+### Priority 1: Complete Literature Evidence Documentation
 
 **CHROMIXS** (30 min):
-- Extract quotes showing deferral to other methods
+- Extract quotes showing documented limitations for overlapping peaks
 - Source: `tools/chromixs_paper.txt`
 - Target: `evidence/chromixs/`
 
 **EFAMIX** (45 min):
-- Document quantified thresholds (SNR, τ, separation)
+- Document quantified failure thresholds (SNR, τ, separation)
 - Source: `tools/efamix_paper.txt`
 - Target: `evidence/efamix/`
 
 **REGALS** (60 min):
-- Document two-stage architecture
-- Extract EFA limitation quotes
+- Document two-stage architecture and EFA dependencies
+- Extract limitation quotes from inventors
 - Sources: `tools/extracted_papers.txt` + `tools/efa_papers.txt`
 - Target: `evidence/regals/`
 
-### Priority 2: Synthesize for JOSS Paper (1-2 hours)
-- Review evidence chain
-- Update Research Impact Statement if needed
-- Ensure citations align with evidence
+### Priority 2: Synthesis and Dissemination
+- Consider preprint/manuscript preparation (bioRxiv/arXiv)
+- Update repository documentation for broader accessibility
+- Synthesize findings for JOSS review response
 
 ---
 

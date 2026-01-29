@@ -19,6 +19,8 @@ When decomposing time-resolved scattering data $M$ into scattering profiles ($P$
 
 $$M = PC$$
 
+> **Note**: Throughout this document, $M = PC$ and related equalities represent optimization problems (finding $P$ and $C$ that minimize $\|M - PC\|^2$ plus regularization terms) rather than exact equalities. This is implicit in the discussion but important for understanding the practical context. See [NOTATION_CONVENTION.md](../NOTATION_CONVENTION.md) for details.
+
 This equation is **underdetermined** - infinitely many solutions exist. Any invertible transformation matrix $R$ gives an equally valid solution:
 
 $$M = PC = (PR)(R^{-1}C) = P'C'$$

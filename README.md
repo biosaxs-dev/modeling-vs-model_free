@@ -44,11 +44,48 @@ Matrix factorization algorithm trends and REGALS code verification
 
 ### Supporting Materials
 - `tools/`: PDF extraction utilities and extracted papers
-- `reference_papers/`: Source materials
+- `reference_papers/`: Bibliographic documentation with full citations and DOIs (with local PDFs not unloaded to GitHub)
 - `molass/`: JOSS paper context
 - `archive/`: Future research directions
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for detailed progress and [ORGANIZATION.md](ORGANIZATION.md) for complete structure.
+
+## Getting Started
+
+Different readers have different needs. Choose your path:
+
+### 📊 **Just want the findings?**
+Read the "Major Discoveries" section below, then explore:
+- [orthogonal_invariance_overview.md](explorations/orthogonal_invariance_overview.md) - Executive summary of 9-stage research journey (~15 min read)
+- Individual discovery notebooks in `explorations/` for details
+
+### 🔍 **Evaluating methods for your work?**
+Start with:
+- "Impact" section below for practical guidance
+- [evidence/](evidence/) folder for documented limitations from paper authors
+- [REGALS_analysis_summary.md](explorations/REGALS_analysis_summary.md) for comprehensive method comparison
+
+### 🧮 **Want to understand the mathematics?**
+Follow the learning path:
+1. **Beginner**: [matrix_transformations_tutorial.ipynb](explorations/matrix_transformations_tutorial.ipynb) - Visual 2D examples
+2. **Overview**: [orthogonal_invariance_overview.md](explorations/orthogonal_invariance_overview.md) - Big picture without heavy math
+3. **Deep dive**: [orthogonal_invariance_journey.md](explorations/orthogonal_invariance_journey.md) - Full technical details (9 stages)
+4. **Reference**: [NOTATION_CONVENTION.md](NOTATION_CONVENTION.md) for formulas and notation
+
+### 🔬 **Building on this research?**
+- Check "How to Cite" section below
+- Review [PROJECT_STATUS.md](PROJECT_STATUS.md) for current status
+- See `algorithms/` for code implementations and verification
+- Note AI collaboration methodology in "AI-Assisted Research" section
+
+### 📝 **JOSS reviewers?**
+Focus on:
+- This README and "Origin Note" above for context
+- [PAPER_UPDATES_SUMMARY.md](PAPER_UPDATES_SUMMARY.md) for recent changes to JOSS submission
+- [evidence/](evidence/) for Research Impact Statement support
+- Mathematical work in `explorations/` is valuable context but not required for review
+
+**Quick reference**: See [QUICK_START.md](QUICK_START.md) for fast orientation.
 
 ## Key Findings & Status
 

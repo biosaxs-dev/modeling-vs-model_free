@@ -11,6 +11,16 @@ This repository uses the **same convention as the JOSS paper** (`molass/paper.md
 
 $$M = PC$$
 
+**Note on Interpretation**: Throughout this repository, $M = PC$ and related equalities (such as $M = (PR)(R^{-1}C)$ in transformation discussions) are **presented as simple equalities for brevity and accessibility**, but they represent **optimization problems** rather than exact equalities. In practice, methods find $P$ and $C$ that minimize:
+
+$$\|M - PC\|^2 + \text{regularization terms}$$
+
+where regularization terms include smoothness constraints, non-negativity, and other physical constraints. Importantly, this is a **low-rank approximation**: $P$ and $C$ have much smaller inner dimension (number of components, typically 2-3) compared to $M$'s dimensions (hundreds of q-values × frames), meaning we approximate complex data with a small number of underlying components. This approximation framework (rather than exact equality) is implicit in most discussions but critical for understanding:
+- Why multiple solutions exist (optimization can find different local minima)
+- Why initialization strategies matter (different starting points → different solutions)
+- Why optimization can fail (getting stuck in poor local minima)
+- Why explicit constraints (like Molass's approach) are necessary to guide optimization
+
 Where:
 - **$M$**: Measured data matrix (q-values × frames)
   - Rows: SAXS q-values

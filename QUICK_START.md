@@ -1,14 +1,16 @@
 # Quick Start Guide
 
-**Purpose**: Fast orientation to repository structure and current priorities
+**Purpose**: Fast orientation to repository structure and navigation
 
 ---
 
 ## 🎯 What is this repository?
 
-**Primary Goal**: Validate Research Impact Statement claims for Molass Library JOSS paper ([#9424](https://github.com/openjournals/joss-reviews/issues/9424))
+**Research Mission**: Investigate the fundamental behavior of SEC-SAXS decomposition methods through mathematical analysis, computational experiments, and literature review to contribute to the SEC-SAXS community's understanding.
 
-**Current Status**: Evidence extraction phase (core validation work in progress)
+**Origin**: This work began as supporting evidence for the Molass Library JOSS paper ([#9424](https://github.com/openjournals/joss-reviews/issues/9424)), but evolved into broader research contributions.
+
+**Current Status**: Mathematical foundations complete; literature evidence extraction in progress
 
 ---
 
@@ -17,76 +19,87 @@
 ```
 modeling-vs-model_free/
 │
-├── 🎯 CORE WORK (Required for JOSS validation)
-│   ├── evidence/              Evidence extraction from papers
-│   │   ├── efa_original/      ✅ EFA limitations (3/10 complete)
-│   │   ├── chromixs/          ⏳ CHROMIXS deferral evidence
-│   │   ├── efamix/            ⏳ EFAMIX thresholds
-│   │   └── regals/            ⏳ REGALS architecture
-│   ├── molass/                ✅ JOSS paper submission
-│   ├── tools/                 ✅ PDF extraction utilities
-│   └── reference_papers/      ✅ Source PDFs
+├── 🔬 MATHEMATICAL FOUNDATIONS (Complete)
+│   └── explorations/          Original research contributions
+│       ├── orthogonal_invariance_overview.md  ⭐ START HERE
+│       ├── orthogonal_invariance_journey.md   Full 9-stage narrative
+│       ├── matrix_transformations_tutorial.ipynb
+│       ├── smoothness_orthogonal_invariance_proof.ipynb
+│       ├── discrete_ambiguity_demonstration.ipynb
+│       ├── multiple_minima_diagnostic.ipynb
+│       ├── problem_informed_Q_design.ipynb (90% breakthrough)
+│       └── REGALS_analysis_summary.md
 │
-├── 📚 SUPPORTING WORK (Valuable but not required)
-│   ├── explorations/          ✅ Mathematical deep dives
-│   │   ├── underdeterminedness_exploration.ipynb
-│   │   ├── permutation_ambiguity_examples.ipynb
-│   │   ├── smoothness_orthogonal_invariance_proof.ipynb
-│   │   └── REGALS_analysis_summary.md
-│   └── algorithms/            ✅ Algorithm explorations (Zhang 2025)
-│       ├── zhang2025_simple_concept.ipynb
-│       ├── zhang2025_joint_optimization_demo.ipynb
-│       ├── zhang2025_denoising_comparison.ipynb
-│       ├── matrix_factorization_trends_2025.md
+├── 📖 LITERATURE EVIDENCE (In Progress)
+│   └── evidence/              Documented limitations from papers
+│       ├── efa_original/      ✅ EFA limitations verified
+│       ├── chromixs/          ⏳ CHROMIXS documentation
+│       ├── efamix/            ⏳ EFAMIX thresholds
+│       └── regals/            ⏳ REGALS architecture
+│
+├── 💻 ALGORITHM ANALYSIS (Complete)
+│   └── algorithms/            Matrix factorization trends
+│       ├── zhang2025_*.ipynb  Zhang 2025 analysis
 │       └── temp_regals/       REGALS code verification
 │
-└── 📦 FUTURE WORK (Archived)
-    └── archive/               ✅ Broader research agenda (post-JOSS)
-        ├── discussion_points.md
-        └── detailed_approach.md
+└── 📚 SUPPORTING MATERIALS
+    ├── tools/                 PDF extraction utilities
+    ├── reference_papers/      Bibliography (PDFs not in repo)
+    ├── molass/                JOSS paper context
+    └── archive/               Future research directions
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### New to this project?
-1. Read [README.md](README.md) - Repository purpose
-2. Read [ORGANIZATION.md](ORGANIZATION.md) - Core vs supporting work breakdown
-3. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) - Detailed status and session log
+### 📊 Just want the findings?
+- **Start**: [orthogonal_invariance_overview.md](explorations/orthogonal_invariance_overview.md) (~15 min)
+- **Deep dive**: Individual notebooks in `explorations/`
+- **Summary**: README.md "Major Discoveries" section
 
-### Continuing work?
-1. Read [PROJECT_STATUS.md](PROJECT_STATUS.md) - "What's Remaining" section
-2. Check priority: Focus on 🎯 **CORE** work first
-3. See "Immediate Priorities" section for next steps
+### 🔍 Evaluating SEC-SAXS methods?
+- **Practical guidance**: README.md "Impact" section
+- **Documented limitations**: `evidence/` folder
+- **Method comparison**: [REGALS_analysis_summary.md](explorations/REGALS_analysis_summary.md)
 
-### Want to understand the math?
-- See `explorations/` directory (📚 supporting work)
-- Not required for JOSS, but provides rigorous foundations
+### 🧮 Want the mathematical details?
+1. **Beginner**: [matrix_transformations_tutorial.ipynb](explorations/matrix_transformations_tutorial.ipynb)
+2. **Overview**: [orthogonal_invariance_overview.md](explorations/orthogonal_invariance_overview.md)
+3. **Technical**: [orthogonal_invariance_journey.md](explorations/orthogonal_invariance_journey.md)
+4. **Reference**: [NOTATION_CONVENTION.md](NOTATION_CONVENTION.md)
 
-### Want to understand algorithms?
-- See `algorithms/` directory (📚 supporting work)  
-- Zhang 2025 analysis and REGALS code verification
+### 🔬 Building on this research?
+- Review [PROJECT_STATUS.md](PROJECT_STATUS.md) for current state
+- Check "How to Cite" in README.md
+- See `algorithms/` for implementations
+
+### 📝 Continuing development?
+- [PROJECT_STATUS.md](PROJECT_STATUS.md) - Current priorities
+- Focus on literature evidence extraction (`evidence/`)
+- See "What's Next" section below
 
 ---
 
-## ⏭️ Current Priority
+## ⏭️ What's Next
 
-**Next Task**: Extract method-specific evidence
+**Current Focus**: Complete literature evidence documentation
 
-1. **CHROMIXS** - Extract quotes showing deferral to other methods
+1. **CHROMIXS** - Document limitations for overlapping peaks
    - Source: `tools/chromixs_paper.txt`
    - Target: `evidence/chromixs/`
    
-2. **EFAMIX** - Extract quantified thresholds
+2. **EFAMIX** - Extract quantified failure thresholds (SNR, τ, separation)
    - Source: `tools/efamix_paper.txt`
    - Target: `evidence/efamix/`
    
-3. **REGALS** - Document two-stage architecture
+3. **REGALS** - Document two-stage architecture and EFA dependencies
    - Sources: `tools/extracted_papers.txt`, `tools/efa_papers.txt`
    - Target: `evidence/regals/`
 
-**Estimated Time**: 3-5 hours of focused extraction work
+**Then**: Consider preprint/manuscript preparation for broader dissemination
+
+**Estimated Time**: 3-5 hours for evidence extraction
 
 ---
 
@@ -122,30 +135,22 @@ modeling-vs-model_free/
 
 ---
 
-## 🎓 For JOSS Reviewers
-
-Focus on:
-- ✅ `evidence/` - Direct validation of claims
-- ✅ `molass/paper.md` - The submission itself
-- ✅ `README.md` - Purpose statement
-
-Skip (supporting work, not required):
-- ❌ `explorations/` - Mathematical deep dives
-- ❌ `algorithms/` - Algorithm explorations  
-- ❌ `archive/` - Future research plans
-
----
-
 ## 🔗 Quick Links
 
-- **JOSS Issue**: [#9424](https://github.com/openjournals/joss-reviews/issues/9424)
 - **GitHub Repo**: [biosaxs-dev/modeling-vs-model_free](https://github.com/biosaxs-dev/modeling-vs-model_free)
+- **JOSS Context**: [Issue #9424](https://github.com/openjournals/joss-reviews/issues/9424)
+- **Paper Updates**: [PAPER_UPDATES_SUMMARY.md](PAPER_UPDATES_SUMMARY.md)
 
 ---
 
 ## 💡 Key Insight
 
-This repository demonstrates that **"model-free" is a misnomer**:
-- All methods require modeling assumptions (proven in `explorations/`)
-- Difference is **transparency** of assumptions (explicit vs implicit)
-- JOSS validation documents the **limitations** that implicit assumptions create
+This repository reveals that **"model-free" is a misnomer**:
+- All matrix factorization methods make modeling assumptions (proven mathematically)
+- The difference is **transparency**: explicit parametric models vs. implicit regularization choices
+- Understanding these hidden choices helps practitioners:
+  - Select appropriate methods for their data
+  - Recognize when results may be unreliable
+  - Design better constraints for challenging cases
+
+**Core finding**: Even with mathematically elegant regularization, optimization landscapes can have multiple comparable local minima—necessitating either global search strategies or additional physical constraints (like Molass's Rg-consistency and parametric models).

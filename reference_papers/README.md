@@ -1,10 +1,10 @@
 # Reference Papers
 
-This folder contains PDF copies of papers cited in the evidence validation work. PDFs are .gitignored and managed elsewhere.
+This folder provides bibliographic documentation with full citations and DOIs for papers used in this research. PDFs are maintained locally but excluded from version control for copyright compliance.
 
 ## Purpose
 
-Maintain a local reference library for JOSS Research Impact Statement validation. Papers are used for quote extraction, method verification, and historical analysis.
+Maintain comprehensive bibliographic records for research papers used in evidence validation, quote extraction, method verification, and historical analysis.
 
 ## Papers
 
