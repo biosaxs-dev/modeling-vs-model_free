@@ -110,7 +110,6 @@ GitHub repository. https://github.com/biosaxs-dev/modeling-vs-model_free
 - Implementing frequency-domain Q-matrix design or other regularization strategies
 - Discussing initialization requirements for SEC-SAXS decomposition
 - Referencing documented method limitations (EFA, CHROMIXS, EFAMIX, REGALS)
-- Building on the R-centric analytical framework
 
 **Status**: This is an active research repository with original contributions to SEC-SAXS methodology. A formal manuscript may be submitted for peer review in the future.
 
