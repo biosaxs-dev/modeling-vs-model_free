@@ -1,5 +1,5 @@
 # Project Status & Quick Start
-**Last Updated**: January 28, 2026 (Late Evening)
+**Last Updated**: January 29, 2026
 
 ---
 
@@ -88,6 +88,39 @@ These four notebooks/documents provide rigorous theoretical support:
 ---
 
 ## 🎯 Latest Breakthroughs
+
+### January 29, 2026: Notation Accessibility for Broader Audience
+
+**Motivation**: While $M = PC$ notation is standard and convenient, it can mislead readers unfamiliar with matrix factorization optimization into thinking it represents exact equality rather than an approximation problem.
+
+**Key Improvements**:
+
+**1. NOTATION_CONVENTION.md Enhanced** (Authoritative Reference):
+- **Clarified scope**: "Throughout this repository, $M = PC$ and related equalities...are **presented as simple equalities for brevity and accessibility**, but they represent **optimization problems**"
+- **Full objective documented**: Methods minimize $\|M - PC\|^2 + \text{regularization terms}$ (smoothness, non-negativity, etc.)
+- **Low-rank approximation emphasized**: P and C have much smaller inner dimension (2-3 components) compared to M's full dimensions (hundreds of q-values × frames)
+- **Four key implications listed**: Why multiple solutions, initialization strategies, optimization failures, and explicit constraints matter
+- **Pedagogical framing**: Explains the notation choice is intentional for accessibility while warning about technical reality
+
+**2. orthogonal_invariance_overview.md Updated**:
+- **Single comprehensive note** after first $M = PC$ appearance: "Throughout this document, $M = PC$ and related equalities represent optimization problems...rather than exact equalities. This is implicit in the discussion but important for understanding the practical context."
+- **Broader scope**: Covers subsequent transformations like $M = (PR)(R^{-1}C)$ implicitly
+
+**3. molass/paper.md Clarified** (JOSS Submission):
+- **After equation (1)**: "Roughly speaking, in practice methods find P and C that minimize $\|M - PC\|^2$ (plus regularization terms) rather than achieving exact equality"
+- **"Roughly speaking" qualifier**: Acknowledges full objective includes smoothness, non-negativity, compact support beyond just data fit
+
+**Why This Matters**:
+- **Accessibility preserved**: Simple $M = PC$ notation remains for readability
+- **Accuracy ensured**: Warnings prevent misunderstanding for general researchers
+- **Proper reference hierarchy**: NOTATION_CONVENTION.md is comprehensive, other docs point there for details
+- **Community contribution**: Non-specialists (experimental SAXS users, method evaluators) can now understand the approximation framework without getting lost in optimization details
+
+**Philosophy**: Balance "easiness for broader audience" with technical accuracy through strategic warnings rather than cluttering all discussions with full optimization formalism.
+
+**Status**: ✅ Complete - Notation now accessible to general SEC-SAXS community while maintaining technical precision for specialists
+
+---
 
 ### January 28, 2026 (Late Evening): Documentation Structure & Notation Standardization
 
@@ -528,12 +561,19 @@ c:\Users\takahashi\GitHub\modeling-vs-model_free\
 
 ## ✅ What's Complete
 
-### Documentation Structure (NEW - January 28, 2026 Evening) ✓
+### Documentation Structure ✓
+**January 28, 2026**: Notation standardization and pedagogical structure
 - ✓ NOTATION_CONVENTION.md - Standard $M = PC$ reference
 - ✓ orthogonal_invariance_overview.md - Pedagogical entry point with executive summary
 - ✓ matrix_transformations_tutorial.ipynb - Enhanced with cross-references and quick reference
 - ✓ All docs updated to consistent notation (matches JOSS paper)
 - ✓ Clear learning paths: Beginner → Overview → Deep dive
+
+**January 29, 2026**: Notation accessibility for broader audience
+- ✓ NOTATION_CONVENTION.md - Enhanced with optimization framework explanation, low-rank approximation emphasis, practical implications
+- ✓ orthogonal_invariance_overview.md - Added comprehensive note covering all equalities throughout document
+- ✓ molass/paper.md - Clarified M=PC represents optimization with regularization terms
+- ✓ Philosophy established: Balance brevity/accessibility with technical accuracy through strategic warnings
 
 ### Research Journey (9 Stages Complete) ✓
 - ✓ Stage 1-2: Discovery and proof of orthogonal invariance
